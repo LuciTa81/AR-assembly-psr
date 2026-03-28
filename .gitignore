@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Data
+data/raw/
+data/tmp/
+*.jpg
+*.jpeg
+*.png
+*.mp4
+*.avi
+*.mov
+*.zip
+
+# Logs and outputs
+*.log
+*.pth
+*.onnx
+*.pt
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+
+# OS
+.DS_Store
+Thumbs.db
