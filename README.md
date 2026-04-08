@@ -11,7 +11,7 @@ The system uses a **Quest 3 client**, a **Python inference server**, and a **par
 This project targets a **single fixed workcell** and a **single assembly object**:
 
 - **Object**: Commercial industrial enclosure + dummy PCB module
-- **Platform**: Quest 3 (main), school PC with GTX 1660 (runtime), home PC with RTX 5090 (training)
+- **Platform**: Quest 3 (main), school PC server (runtime), home PC with RTX 5090 (training)
 - **Core pipeline**: 
   1. Session recording
   2. ArUco-based workspace alignment
