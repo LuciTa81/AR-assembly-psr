@@ -1,0 +1,45 @@
+layout_version: roi_layout_v1
+image:
+  width: 800
+  height: 600
+rois:
+  lid:
+    x: 290
+    y: 25
+    w: 272
+    h: 428
+  base_front:
+    x: 289
+    y: 457
+    w: 273
+    h: 117
+  enclosure:
+    x: 238
+    y: 35
+    w: 325
+    h: 500
+  inner_area:
+    x: 292
+    y: 153
+    w: 225
+    h: 190
+  screw_a:
+    x: 272
+    y: 38
+    w: 72
+    h: 64
+  screw_b:
+    x: 486
+    y: 38
+    w: 72
+    h: 64
+  screw_c:
+    x: 247
+    y: 338
+    w: 82
+    h: 88
+  screw_d:
+    x: 480
+    y: 333
+    w: 82
+    h: 88

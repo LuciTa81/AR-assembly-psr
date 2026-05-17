@@ -1,0 +1,15 @@
+layout_version: roi_layout_v1
+image:
+  width: 800
+  height: 600
+rois:
+  lid:
+    x: 290
+    y: 25
+    w: 272
+    h: 428
+  base_front:
+    x: 289
+    y: 457
+    w: 273
+    h: 117

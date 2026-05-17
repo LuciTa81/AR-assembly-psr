@@ -38,3 +38,26 @@ UserSettings/
 # OS
 .DS_Store
 Thumbs.db
+
+datasets/
+outputs/
+runs/
+
+data/raw_sessions/
+datasets/
+outputs/
+runs/
+models/**/*.pt
+.venv/
+.venv_mp/
+__pycache__/
+*.pyc
+
+data/raw_sessions/
+datasets/
+outputs/
+runs/
+models/
+*.pt
+
+refs/roi_templates/
