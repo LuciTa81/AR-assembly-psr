@@ -1,0 +1,111 @@
+layout_version: marker_layout_v2_calibrated
+dictionary: DICT_4X4_50
+image:
+  width: 800
+  height: 600
+calibration:
+  frame_id: '1'
+  image_path: data\raw_sessions\session_17\frames\000001.jpg
+  outer_anchor_rule: ID0_outer_TL, ID2_outer_TR, ID5_outer_BR, ID3_outer_BL
+  dst_outer:
+  - - 45.0
+    - 45.0
+  - - 755.0
+    - 45.0
+  - - 755.0
+    - 555.0
+  - - 45.0
+    - 555.0
+description: 'Calibrated six-marker layout. Corner order is the same as OpenCV ArUco
+  detection order for each marker: top-left, top-right, bottom-right, bottom-left
+  in marker coordinate.'
+markers:
+  0:
+    name: top_left
+    row: top
+    col: left
+    corners:
+    - - 45.0
+      - 45.0
+    - - 148.17
+      - 44.92
+    - - 148.87
+      - 142.5
+    - - 49.41
+      - 140.91
+  1:
+    name: top_center
+    row: top
+    col: center
+    corners:
+    - - 338.69
+      - 42.52
+    - - 444.01
+      - 39.51
+    - - 445.39
+      - 138.63
+    - - 345.51
+      - 144.52
+  2:
+    name: top_right
+    row: top
+    col: right
+    corners:
+    - - 643.08
+      - 49.53
+    - - 755.0
+      - 45.0
+    - - 753.88
+      - 143.18
+    - - 650.87
+      - 150.48
+  3:
+    name: bottom_left
+    row: bottom
+    col: left
+    corners:
+    - - 42.82
+      - 445.63
+    - - 155.97
+      - 446.54
+    - - 156.4
+      - 555.76
+    - - 45.0
+      - 555.0
+  4:
+    name: bottom_center
+    row: bottom
+    col: center
+    corners:
+    - - 339.4
+      - 449.24
+    - - 452.63
+      - 450.81
+    - - 455.28
+      - 560.26
+    - - 341.01
+      - 559.96
+  5:
+    name: bottom_right
+    row: bottom
+    col: right
+    corners:
+    - - 649.63
+      - 456.15
+    - - 753.69
+      - 453.49
+    - - 755.0
+      - 555.0
+    - - 648.17
+      - 557.99
+quality_rules:
+  min_markers: 3
+  min_points: 12
+  require_both_rows: true
+  min_column_span: 2
+  ransac_reproj_threshold: 8.0
+  min_inlier_ratio: 0.55
+  max_reprojection_error: 12.0
+fallback:
+  use_previous_h: true
+  max_fallback_gap: 2

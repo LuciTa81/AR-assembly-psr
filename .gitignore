@@ -61,3 +61,23 @@ models/
 *.pt
 
 refs/roi_templates/
+
+
+# Generated outputs
+outputs/
+datasets/
+runs/
+__pycache__/
+*.pyc
+
+# Local data/model files
+data/raw_sessions/
+models/
+*.pt
+
+# Keep ROI reference templates
+!refs/
+!refs/roi_templates_v2/
+!refs/roi_templates_v2/**/*.jpg
+!refs/roi_templates_v2/**/*.png
+
