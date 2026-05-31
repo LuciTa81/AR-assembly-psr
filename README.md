@@ -1,42 +1,44 @@
-# AR-Assisted Assembly Step Recognition
+# AR-Assisted Procedure Step Recognition for Industrial Enclosure Assembly
 
-This repository contains an end-to-end pipeline for **procedure step recognition (PSR)** in a fixed-sequence industrial enclosure assembly task.
+This repository contains an end-to-end pipeline for **AR-based assembly guidance** and **procedure step recognition (PSR)** in a fixed-sequence industrial enclosure assembly task.
 
-The project is currently organized around two tracks:
+The goal is to recognize the current assembly step from camera frames, keep the estimate stable over time, and use that state estimate for AR guidance, warning, replay, and session logging.
 
-1. **Machine-learning team project**
-   - Offline HMM-based step recognition for recorded assembly sessions.
-   - Current priority: improve and document `session_17` performance.
-
-2. **Graduation project**
-   - Real-time AR assembly guidance using a wearable display and a Python inference server.
-   - This track is kept as the long-term direction, but real-time integration is not the current focus.
-
-The latest verified offline pipeline uses ArUco-based workspace warping, YOLO detections, ROI evidence, ROI delta, MediaPipe auxiliary features, FSM smoothing, and HMM temporal reasoning.
+The current repository includes a verified offline **HMM v2 evaluation pipeline** for `session_17`. This offline pipeline is used as the current working baseline before moving the same step-recognition logic into a real-time AR runtime.
 
 ---
 
 ## 1. Project Overview
 
-The target task is a controlled industrial enclosure assembly sequence.
+This project targets a controlled workcell with one assembly object and a fixed order of operations.
 
 | Item | Description |
 | :--- | :--- |
-| Task | Industrial enclosure assembly |
-| Sequence | Empty workspace -> box placed -> lid closed -> four screws completed |
-| Current dataset | `session_17` frame sequence |
-| Current best method | HMM v2 with continuous evidence features |
-| Real-time target | AR guidance through Quest 3 / wearable display |
+| Object | Industrial enclosure box, lid, screws, and screwdriver |
+| Task | Place box, close lid, complete four screws in order |
+| Workspace | ArUco marker-based calibrated tabletop |
+| Main output | Estimated assembly state `S0` to `S6` |
+| AR goal | Show current step, next step, warnings, and session feedback |
 
-The project intentionally focuses on a controlled workcell instead of broad action recognition. This makes the system easier to evaluate, explain, and later deploy as a real-time AR guidance prototype.
+### Core Pipeline
+
+1. Record or stream camera frames.
+2. Detect ArUco markers and align the workspace.
+3. Warp frames into a stable top-view coordinate system.
+4. Extract visual evidence from fixed ROIs and detected tools.
+5. Estimate the current assembly step with FSM / HMM / state filter logic.
+6. Send the state to AR guidance UI or offline replay tools.
+
+### Why this approach
+
+Instead of training a broad action-recognition model, the system focuses on **state progression** in a known assembly process.
+That makes the pipeline easier to debug, explain, evaluate, and later deploy in a real-time AR setup.
 
 ---
 
-## 2. Current Focus: HMM v2 Session17
+## 2. Assembly Task Definition
 
-The current reproducible result is the offline **HMM v2 pipeline** for `session_17`.
-
-### 2.1 State Definition
+The current task is modeled as a fixed sequence.
 
 | State | Meaning |
 | :--- | :--- |
@@ -48,25 +50,70 @@ The current reproducible result is the offline **HMM v2 pipeline** for `session_
 | `S5` | Screw C done |
 | `S6` | Screw D done |
 
-### 2.2 Feature Sources
+The expected state progression is:
 
-| Source | Role |
-| :--- | :--- |
-| ArUco markers | Workspace calibration and top-view warp |
-| YOLO 3-class model | Detects `driver`, `handle`, and `screw` |
-| ROI templates | Measures state-specific visual evidence |
-| ROI delta | Measures local visual change around screw ROIs |
-| MediaPipe | Auxiliary hand/index signal, not the main decision source |
-| Continuous proximity scores | Replaces hard 0/1 tool/index evidence with smooth scores |
-| FSM / HMM | Applies temporal consistency and ordered step progression |
+```text
+S0 -> S1 -> S2 -> S3 -> S4 -> S5 -> S6
+```
 
-The offline pipeline still uses `labels/labels_segments.csv` for evaluation. In a later real-time version, this file will not be used at runtime; online state filtering will replace it.
+The state estimator is designed to prefer this ordered progression while still using visual evidence from the frame.
 
 ---
 
-## 3. Result Summary
+## 3. System Architecture
 
-Best verified `session_17` result:
+### Hardware Layer
+
+- **AR client / wearable display**
+  - camera input or streamed frames
+  - operator-facing guidance overlay
+  - session control and local feedback
+- **Python inference server**
+  - image processing
+  - YOLO / MediaPipe / ROI feature extraction
+  - state estimation
+  - replay and evaluation scripts
+- **Physical workcell**
+  - industrial enclosure parts
+  - screwdriver and screws
+  - ArUco markers
+  - fixed tabletop or mat
+
+### Software Layer
+
+- **Unity client prototype**
+- **Python server and offline replay tools**
+- **OpenCV ArUco detection and homography warp**
+- **YOLO 3-class detector**
+- **ROI template and ROI delta features**
+- **MediaPipe auxiliary hand signal**
+- **FSM / HMM step reasoning**
+
+---
+
+## 4. Current Vision and State Features
+
+The current `session_17` pipeline combines multiple evidence sources.
+
+| Feature Source | Purpose |
+| :--- | :--- |
+| ArUco markers | Calibrate and warp the workspace into a stable view |
+| ROI templates | Compare key regions such as box/lid/screw positions |
+| ROI delta | Detect visual change around screw ROIs |
+| YOLO `driver` | Locate screwdriver metal part |
+| YOLO `handle` | Stabilize tool detection when the handle is visible |
+| YOLO `screw` | Add direct evidence for screw locations |
+| MediaPipe | Optional auxiliary hand/index information |
+| Continuous scores | Replace hard 0/1 proximity features with smooth values |
+| HMM transition | Smooth the state sequence over time |
+
+MediaPipe is intentionally treated as a supporting signal because hand occlusion can make it unstable during screw tightening.
+
+---
+
+## 5. Current Benchmark
+
+The best verified offline result on `session_17` is:
 
 | Model | Accuracy | Macro-F1 |
 | :--- | ---: | ---: |
@@ -74,32 +121,36 @@ Best verified `session_17` result:
 | FSM v2 | 91.60% | 93.23% |
 | HMM v2 | **94.12%** | **94.85%** |
 
-Additional notes:
+Notes:
 
-- `S0` was correctly detected for all 7 frames.
-- The remaining HMM errors are short boundary delays between neighboring states.
-- Full plots and mismatch CSVs are stored in `docs/assets/session17_hmm_v2/`.
+- `S0` is correctly detected for all 7 frames.
+- Most remaining errors are short delays near state boundaries.
+- The current parameters are tuned for the recorded `session_17` frame rate.
 
-See:
+Result files:
 
-- `docs/session17_hmm_v2_status.md`
-- `docs/assets/session17_hmm_v2/timeline_best_role3.png`
-- `docs/assets/session17_hmm_v2/s0_zoom_best_role3.png`
+```text
+docs/session17_hmm_v2_status.md
+docs/assets/session17_hmm_v2/timeline_best_role3.png
+docs/assets/session17_hmm_v2/s0_zoom_best_role3.png
+docs/assets/session17_hmm_v2/metrics_best_role3.csv
+docs/assets/session17_hmm_v2/mismatches_best_role3.csv
+```
 
 ---
 
-## 4. Data and Model Setup
+## 6. Required Files Before Running
 
-Large runtime files are not stored in this repository.
+Large runtime files are not committed to this repository.
 
-Place the required session data and model weights at the following paths:
+Prepare the following files locally:
 
 ```text
 data/raw_sessions/session_17/
 models/yolo/driver_standard_model/best-3.pt
 ```
 
-Expected YOLO classes:
+Expected YOLO classes in `best-3.pt`:
 
 ```text
 driver
@@ -107,42 +158,53 @@ handle
 screw
 ```
 
-The current HMM pipeline assumes the `best-3.pt` 3-class detector trained by the team.
+The repository already includes the lightweight configuration, labels, scripts, and reference templates needed to run the current pipeline.
+
+Important included files:
+
+```text
+configs/
+labels/labels_segments.csv
+refs/roi_templates_v2/
+scripts/
+server/vision/
+server/state/
+```
 
 ---
 
-## 5. Repository Structure
+## 7. Repository Structure
 
 ```text
 .
 ├── client_unity/                  # Unity / AR client prototype
-├── configs/                       # Marker and ROI layout configs
-├── data/                          # Ignored local session data
-├── docs/                          # Project docs and session17 result reports
-│   └── assets/session17_hmm_v2/    # Best result plots and CSV summaries
+├── configs/                       # Marker layouts and ROI layouts
+├── data/                          # Local raw sessions, not tracked
+├── docs/                          # Project docs and result reports
+│   └── assets/session17_hmm_v2/    # HMM result plots and CSV summaries
 ├── labels/
 │   └── labels_segments.csv         # Offline GT segments for evaluation
-├── models/                        # Ignored local model weights
+├── models/                        # Local model weights, not tracked
 ├── refs/
-│   └── roi_templates_v2/           # Warped ROI templates used by v2 pipeline
-├── scripts/                       # PowerShell runners for setup and evaluation
+│   └── roi_templates_v2/           # Warped ROI templates
+├── scripts/                       # PowerShell setup and run scripts
 ├── server/
 │   ├── app/                        # Server entry points
-│   ├── state/                      # FSM / HMM / state reasoning code
+│   ├── state/                      # FSM / HMM / state reasoning
 │   ├── tools/                      # Utility tools, including ArUco marker generation
-│   └── vision/                     # Warp, YOLO, MediaPipe, ROI feature extraction
+│   └── vision/                     # Warp, YOLO, MediaPipe, ROI features
 └── tests/
 ```
 
-The existing ArUco marker generation utilities are preserved because they are still useful for the later AR pipeline.
+The ArUco marker generation tools are kept because marker-based workspace alignment is still part of the AR pipeline.
 
 ---
 
-## 6. Quick Start
+## 8. Quick Start
 
-### 6.1 Environment Setup
+### 8.1 Environment Setup
 
-Use Windows PowerShell:
+Use Windows PowerShell with Python 3.11:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
@@ -152,13 +214,19 @@ python -m pip install --upgrade pip
 python -m pip install -r .\server\requirements.txt
 ```
 
-You can also use the helper script:
+Or run the helper script:
 
 ```powershell
 .\scripts\setup_env_v2.ps1
 ```
 
-### 6.2 Run the Full Session17 Pipeline
+### 8.2 Check Required Package Layout
+
+```powershell
+.\scripts\check_package_v2.ps1
+```
+
+### 8.3 Run the Full Session17 Pipeline
 
 ```powershell
 .\scripts\run_session17_full_then_best_hmm.ps1 -Clean
@@ -173,7 +241,9 @@ outputs/hmm_v2/session_17_state_metrics_v2_best_role3.csv
 outputs/hmm_v2/session_17_state_timeline_v2_best_role3.png
 ```
 
-### 6.3 Run HMM Only After Features Already Exist
+### 8.4 Run HMM Only
+
+If the feature files already exist:
 
 ```powershell
 .\scripts\run_hmm_v2_only.ps1
@@ -181,9 +251,7 @@ outputs/hmm_v2/session_17_state_timeline_v2_best_role3.png
 
 ---
 
-## 7. HMM v2 Best Configuration
-
-The current best `session_17` configuration uses smooth continuous evidence and a relatively fast transition setting.
+## 9. Current Best HMM Configuration
 
 | Parameter | Value |
 | :--- | ---: |
@@ -201,51 +269,52 @@ The current best `session_17` configuration uses smooth continuous evidence and 
 | `next_prob` | `0.24` |
 | `smooth_window` | `2` |
 
-These values are tuned for the current low-FPS `session_17` sequence. They should be retuned if the capture rate or camera setup changes.
+These values should be retuned when the frame rate, camera setup, workspace layout, or object placement changes.
 
 ---
 
-## 8. Graduation Project Track
+## 10. Development Roadmap
 
-The long-term AR system is still part of the repository direction.
+### Phase 1: Recording and Replay
 
-Planned runtime flow:
+- collect assembly sessions
+- maintain offline replay scripts
+- keep labels and output timelines easy to inspect
 
-```text
-Camera / wearable input
--> ArUco calibration
--> top-view warp
--> visual evidence extraction
--> online state filter
--> AR guidance overlay
-```
+### Phase 2: Marker Alignment and ROI Features
 
-For real-time deployment, the following parts still need work:
+- detect ArUco markers
+- warp the workspace to a stable top view
+- maintain fixed ROI definitions and reference templates
 
-- collect higher-FPS sessions,
-- remove dependency on `labels_segments.csv` at runtime,
-- retune temporal transition parameters,
-- optimize latency,
-- connect the Python server with the AR client,
-- design the operator-facing guidance UI.
+### Phase 3: Object and Tool Evidence
 
----
+- use YOLO detections for driver, handle, and screw
+- use MediaPipe only as an auxiliary signal
+- combine ROI and detector evidence into continuous features
 
-## 9. Future Work
+### Phase 4: State Reasoning
 
-- Collect denser sessions, ideally around 5 FPS or higher.
-- Retune HMM transition probabilities for higher frame rates.
-- Evaluate generalization on new sessions and new operators.
-- Compare HMM, FSM, and the planned PEBF-style online filter.
-- Improve MediaPipe usage as a stable auxiliary signal instead of a primary signal.
-- Add a clean real-time inference path for the graduation project.
+- compare framewise, FSM, and HMM outputs
+- tune transition behavior and state boundary delay
+- prepare an online state filter for the AR runtime
+
+### Phase 5: AR Integration
+
+- connect server state output to the Unity client
+- display current step, next step, and warnings
+- log sessions and replay decisions for review
 
 ---
 
-## 10. Notes
+## 11. Notes for Reviewers
 
-This repository should currently be treated as:
+This repository is an AR assembly guidance project, with the current offline HMM pipeline serving as the most reproducible step-recognition baseline.
 
-- a strong offline HMM baseline for the machine-learning team project,
-- a documented starting point for later real-time AR assembly guidance,
-- and a workspace that keeps experimental HMM work separate from the graduation-project AR track.
+The design priorities are:
+
+- stable workspace alignment,
+- interpretable visual evidence,
+- ordered step reasoning,
+- easy replay and debugging,
+- and a clear path toward real-time AR feedback.
