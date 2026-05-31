@@ -14,7 +14,7 @@ IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Run YOLO driver detector on a session or image directory and save yolo_raw.csv"
+        description="Run YOLO assembly detector on a session or image directory and save yolo_raw.csv"
     )
 
     group = parser.add_mutually_exclusive_group(required=True)
@@ -26,10 +26,22 @@ def parse_args():
     parser.add_argument("--session-id", type=str, default=None)
     parser.add_argument("--conf", type=float, default=0.35)
     parser.add_argument("--imgsz", type=int, default=640)
+    parser.add_argument(
+        "--classes",
+        type=str,
+        default="driver,handle,screw",
+        help="Comma-separated class names to keep. Empty value keeps all classes.",
+    )
     parser.add_argument("--debug-dir", type=str, default=None)
     parser.add_argument("--debug-limit", type=int, default=30)
 
     return parser.parse_args()
+
+
+def parse_class_filter(value: str):
+    if value is None or not str(value).strip():
+        return None
+    return {x.strip().lower() for x in str(value).split(",") if x.strip()}
 
 
 def collect_images_from_dir(image_dir: Path) -> List[Dict[str, str]]:
@@ -81,7 +93,7 @@ def draw_debug(image_bgr, detections):
     if not detections:
         cv2.putText(
             out,
-            "no driver",
+            "no target",
             (20, 35),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.9,
@@ -94,15 +106,21 @@ def draw_debug(image_bgr, detections):
     for det in detections:
         x1, y1, x2, y2 = det["x1"], det["y1"], det["x2"], det["y2"]
         conf = det["confidence"]
+        cls = det["class"]
+        color = {
+            "driver": (255, 0, 0),
+            "handle": (255, 255, 0),
+            "screw": (255, 255, 255),
+        }.get(str(cls).lower(), (0, 255, 255))
 
-        cv2.rectangle(out, (x1, y1), (x2, y2), (0, 255, 255), 2)
+        cv2.rectangle(out, (x1, y1), (x2, y2), color, 2)
         cv2.putText(
             out,
-            f"driver {conf:.2f}",
+            f"{cls} {conf:.2f}",
             (x1, max(20, y1 - 7)),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.55,
-            (0, 255, 255),
+            color,
             2,
             cv2.LINE_AA,
         )
@@ -137,6 +155,7 @@ def main():
         debug_dir.mkdir(parents=True, exist_ok=True)
 
     model = YOLO(str(weights_path))
+    allowed_classes = parse_class_filter(args.classes)
 
     fieldnames = [
         "session_id",
@@ -182,9 +201,9 @@ def main():
             if result.boxes is not None and len(result.boxes) > 0:
                 for box in result.boxes:
                     class_id = int(box.cls[0].item())
-                    class_name = result.names.get(class_id, str(class_id))
+                    class_name = str(result.names.get(class_id, str(class_id))).lower()
 
-                    if class_name != "driver":
+                    if allowed_classes is not None and class_name not in allowed_classes:
                         continue
 
                     conf = float(box.conf[0].item())

@@ -4,6 +4,8 @@ An end-to-end graduation project for **AR-based assembly guidance**, focused on 
 
 The system uses a **Quest 3 client**, a **Python inference server**, and a **part-evidence belief filter (PEBF)** to estimate the current assembly step from visual evidence and provide real-time AR guidance.
 
+> Current implementation note: the repository now also contains a verified offline **HMM v2 session17 pipeline** used for the machine-learning team project. The AR real-time pipeline remains the graduation-project target, but the current best working result is the offline HMM v2 pipeline documented below.
+
 ---
 
 ## 1. Project Overview
@@ -293,21 +295,46 @@ PEBF is designed to be:
 
 ### 1) Create Python environment
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+py -3.11 -m venv .venv_mp
+.\.venv_mp\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r .\server\requirements.txt
 ```
 
-### 2) Run offline replay
+### 2) Run the current session17 HMM v2 pipeline
+
+The current reproducible offline pipeline expects:
+
+```text
+data/raw_sessions/session_17
+models/yolo/driver_standard_model/best-3.pt
+```
+
+Then run:
+
+```powershell
+.\scripts\run_session17_full_then_best_hmm.ps1 -Clean
+.\scripts\run_session17_best_role3_hmm.ps1
+```
+
+Expected verified session17 result:
+
+```text
+HMM accuracy : 0.9412
+HMM macro-F1 : 0.9485
+S0 correct   : 7 / 7
+```
+
+See [docs/session17_hmm_v2_status.md](docs/session17_hmm_v2_status.md) for the exact parameters, result plots, and next steps.
+
+### 3) Run offline replay / inference server
+
+The real-time AR server and Unity client are still graduation-project work. The current recommendation is to keep the real-time pipeline separate until higher-FPS data is collected and the temporal parameters are retuned.
 
 ```bash
 python server/pipelines/offline_replay.py
-```
-
-### 3) Run inference server
-
-```bash
 python server/app/main.py
 ```
 
@@ -321,13 +348,18 @@ python server/app/main.py
 
 ## 10. Current Status
 
-This repository is being reorganized from an earlier vision/classification codebase into a dedicated graduation project structure for AR-based industrial assembly monitoring.
+The repository now has two clearly separated tracks:
 
-Planned milestones include:
-- clean repo structure,
-- reproducible session logging,
-- ROI-based inference,
-- and a polished final demo package.
+1. **Machine-learning team project, current priority**
+   - Offline `session_17` HMM v2 evaluation.
+   - Uses ArUco warp, ROI templates, YOLO 3-class detections, MediaPipe auxiliary features, continuous proximity scores, ROI delta, FSM, and HMM.
+   - Best verified session17 result: **HMM accuracy 0.9412 / macro-F1 0.9485**.
+
+2. **Graduation project, later phase**
+   - Real-time AR guidance through Quest 3 or another wearable display.
+   - Requires higher-FPS capture, online state estimation without `labels_segments.csv`, latency work, and UI/AR integration.
+
+The current code should be treated as a strong offline baseline and a prototype base for the later AR pipeline, not as a fully generalized real-time model yet.
 
 ---
 

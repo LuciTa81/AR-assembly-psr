@@ -6,3 +6,10 @@ session_13,39,56,S3,screw A done
 session_13,57,76,S4,screw B done
 session_13,77,100,S5,screw C done
 session_13,101,119,S6,screw D done
+session_17,1,7,S0,initial
+session_17,8,14,S1,box placed
+session_17,15,28,S2,lid closed
+session_17,29,50,S3,screw A done
+session_17,51,71,S4,screw B done
+session_17,72,90,S5,screw C done
+session_17,91,119,S6,screw D done
