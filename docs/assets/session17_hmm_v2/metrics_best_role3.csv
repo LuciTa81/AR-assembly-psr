@@ -1,0 +1,7 @@
+﻿metric,model,value
+accuracy,Framewise_v2,0.8823529411764706
+macro_f1,Framewise_v2,0.895182139874542
+accuracy,FSM_v2,0.9159663865546218
+macro_f1,FSM_v2,0.9323325777536028
+accuracy,HMM_v2,0.9411764705882353
+macro_f1,HMM_v2,0.9485478775801356

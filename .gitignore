@@ -61,3 +61,12 @@ models/
 *.pt
 
 refs/roi_templates/
+
+# Tracked documentation/result assets
+!docs/assets/
+!docs/assets/**
+
+# Small ROI reference templates needed by the HMM v2 pipeline.
+!refs/
+!refs/roi_templates_v2/
+!refs/roi_templates_v2/*.jpg

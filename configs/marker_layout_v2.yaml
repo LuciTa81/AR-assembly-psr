@@ -1,0 +1,86 @@
+layout_version: marker_layout_v2
+dictionary: DICT_4X4_50
+
+image:
+  width: 800
+  height: 600
+
+description: >
+  Six ArUco marker layout for workspace homography.
+  Marker IDs are arranged as top-left, top-center, top-right,
+  bottom-left, bottom-center, bottom-right.
+  Corner order is top-left, top-right, bottom-right, bottom-left.
+
+markers:
+  0:
+    name: top_left
+    row: top
+    col: left
+    corners:
+      - [45, 45]
+      - [115, 45]
+      - [115, 115]
+      - [45, 115]
+
+  1:
+    name: top_center
+    row: top
+    col: center
+    corners:
+      - [365, 45]
+      - [435, 45]
+      - [435, 115]
+      - [365, 115]
+
+  2:
+    name: top_right
+    row: top
+    col: right
+    corners:
+      - [685, 45]
+      - [755, 45]
+      - [755, 115]
+      - [685, 115]
+
+  3:
+    name: bottom_left
+    row: bottom
+    col: left
+    corners:
+      - [45, 485]
+      - [115, 485]
+      - [115, 555]
+      - [45, 555]
+
+  4:
+    name: bottom_center
+    row: bottom
+    col: center
+    corners:
+      - [365, 485]
+      - [435, 485]
+      - [435, 555]
+      - [365, 555]
+
+  5:
+    name: bottom_right
+    row: bottom
+    col: right
+    corners:
+      - [685, 485]
+      - [755, 485]
+      - [755, 555]
+      - [685, 555]
+
+quality_rules:
+  min_markers: 3
+  min_points: 12
+  require_both_rows: true
+  min_column_span: 2
+  ransac_reproj_threshold: 5.0
+  min_inlier_ratio: 0.7
+  max_reprojection_error: 8.0
+
+fallback:
+  use_previous_h: true
+  max_fallback_gap: 5
