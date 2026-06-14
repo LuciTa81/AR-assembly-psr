@@ -1,12 +1,12 @@
 # Session 17 HMM v2 Status
 
-This document records the current HMM-focused progress before moving back to the graduation-project real-time AR pipeline.
+This document records the current offline benchmark status for the AR-assisted assembly procedure step recognition pipeline.
 
 ## Current Focus
 
-The immediate priority is the machine-learning team project: offline procedure step recognition for `session_17`.
+The current priority is a reproducible offline procedure step recognition benchmark for `session_17`.
 
-The real-time AR/VITURE pipeline is intentionally parked for now. It will be revisited after the final exam period, when new data can be collected at a higher frame rate.
+This benchmark is used as the validated state-recognition baseline before the same logic is moved into a real-time AR guidance runtime.
 
 ## What Changed
 
@@ -102,11 +102,11 @@ python -m pip install -r .\server\requirements.txt
 .\scripts\run_session17_best_role3_hmm.ps1
 ```
 
-## Notes For Graduation Project
+## Notes For Real-Time AR Extension
 
 This is not yet a generalized real-time model. It is a strong session17 offline HMM pipeline.
 
-For the graduation project, collect higher-frame-rate data, ideally around 5 FPS, then retune the temporal parameters:
+For the real-time AR extension, collect higher-frame-rate data, ideally around 5 FPS, then retune the temporal parameters:
 
 - `self_prob`
 - `next_prob`
