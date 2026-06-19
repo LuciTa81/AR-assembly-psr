@@ -4,7 +4,7 @@ This document defines the first realtime runtime for the AR-assisted procedure s
 
 ## Gate 1 MVP
 
-The first gate intentionally avoids YOLO, MediaPipe, and final HMM tuning.
+The first gate intentionally avoids MediaPipe and final HMM tuning. YOLO is now included as a non-blocking evidence cache for screw transitions, because ROI-only screw gates were too sensitive to hands or arms passing over a screw ROI.
 
 Required behavior:
 
@@ -20,6 +20,7 @@ Required behavior:
 FrameSource
 -> optional ArUcoRealtimeTracker
 -> optional RoiRealtimeAnalyzer
+-> optional RealtimeYoloAnalyzer
 -> OnlineStateFilter
 -> OverlayHttpServer
 -> RealtimeLogger
@@ -31,7 +32,14 @@ Implemented realtime gates:
 
 1. S0 -> S1: `box_present_score` crosses the configured threshold.
 2. S1 -> S2: `lid_closed_score` crosses the configured threshold.
-3. S2 -> S6: screw A/B/C/D ROI evidence is checked in order. Screw transitions require both a sufficient done score and a recent positive ROI-delta event by default, so already-visible screw-like texture does not immediately advance the whole sequence.
+3. S2 -> S6: screw A/B/C/D evidence is checked in order. Screw transitions use ROI done score and ROI-delta events, and the Viture ArUco configs additionally require YOLO driver-tip proximity evidence for the current target screw. This prevents hand or arm motion near screw ROIs from immediately advancing the sequence.
+
+YOLO details:
+
+- Model file: `models/yolo/driver_standard_model/best-3.pt`
+- Classes: `driver`, `handle`, `screw`
+- Runtime mode: asynchronous cache, evaluated every few frames
+- Overlay diagnostics: YOLO age, driver visibility, and current target tool score
 
 ## Run
 
@@ -78,8 +86,8 @@ outputs/realtime_sessions/<session_id>/
 
 ## Next Gates
 
-1. Tune screw ROI thresholds on the real workspace.
-2. Add YOLO as an asynchronous cache, not as a blocking call.
-3. Fuse YOLO driver/handle/screw evidence with the screw ROI gate.
-4. Display target highlights on the original camera frame.
-5. Add a replay tool that plots realtime state logs against manually labeled ground truth.
+1. Tune YOLO target score thresholds on the real workspace.
+2. Tune lid transition confidence after repeated Viture camera tests.
+3. Display target highlights on the original camera frame.
+4. Add a replay tool that plots realtime state logs against manually labeled ground truth.
+5. Revisit MediaPipe only as a secondary hand/tool association signal after YOLO is stable.

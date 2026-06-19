@@ -13,8 +13,18 @@ const screwAEl = document.getElementById("screwA");
 const screwBEl = document.getElementById("screwB");
 const screwCEl = document.getElementById("screwC");
 const screwDEl = document.getElementById("screwD");
+const yoloAgeEl = document.getElementById("yoloAge");
+const driverVisibleEl = document.getElementById("driverVisible");
+const targetToolEl = document.getElementById("targetTool");
 const confidenceEl = document.getElementById("confidence");
 const warningEl = document.getElementById("warning");
+
+const targetByState = {
+  S2: "a",
+  S3: "b",
+  S4: "c",
+  S5: "d",
+};
 
 async function refreshState() {
   const stamp = Date.now();
@@ -36,6 +46,11 @@ async function refreshState() {
     screwBEl.textContent = Number(data.extra?.screw_b_done_score_smooth ?? data.extra?.screw_b_done_score ?? 0).toFixed(2);
     screwCEl.textContent = Number(data.extra?.screw_c_done_score_smooth ?? data.extra?.screw_c_done_score ?? 0).toFixed(2);
     screwDEl.textContent = Number(data.extra?.screw_d_done_score_smooth ?? data.extra?.screw_d_done_score ?? 0).toFixed(2);
+    const yoloAge = data.extra?.yolo_age_frames ?? data.yolo_age_ms;
+    yoloAgeEl.textContent = Number(yoloAge ?? -1) >= 0 ? `${Number(yoloAge).toFixed(0)} fr` : "-";
+    driverVisibleEl.textContent = Number(data.extra?.driver_visible ?? 0).toFixed(0);
+    const target = targetByState[data.current_state ?? ""];
+    targetToolEl.textContent = target ? Number(data.extra?.[`tool_score_${target}`] ?? 0).toFixed(2) : "0.00";
     confidenceEl.textContent = Number(data.confidence ?? 0).toFixed(2);
     if (data.warning) {
       warningEl.textContent = data.warning.message ?? data.warning.code;

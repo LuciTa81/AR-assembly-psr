@@ -77,12 +77,23 @@ class OnlineStateFilter:
                 confirm_frames = int(features.get(f"screw_confirm_frames_{screw}", features.get("screw_confirm_frames", 1)))
                 min_dwell_frames = int(features.get(f"screw_min_dwell_frames_{screw}", features.get("screw_min_dwell_frames", self.min_dwell_frames)))
                 require_delta = bool(features.get("require_screw_delta", 1))
-                if delta >= delta_threshold and score >= event_min_score:
+                require_yolo = bool(features.get("require_yolo_for_screw", 0))
+                yolo_score = max(
+                    float(features.get(f"tool_score_{screw}", 0.0)),
+                    float(features.get(f"tip_screw_score_{screw}", 0.0)),
+                )
+                yolo_threshold = float(features.get(f"yolo_tool_score_threshold_{screw}", features.get("yolo_tool_score_threshold", 0.35)))
+                yolo_ok = yolo_score >= yolo_threshold
+                if require_yolo and not yolo_ok:
+                    self.candidate_counts[screw] = 0
+                    return None
+                if (delta >= delta_threshold and score >= event_min_score) or yolo_ok:
                     self.event_latches[screw] = max(1, hold_frames)
                 active_event = self.event_latches.get(screw, 0) > 0
                 if active_event:
                     self.event_latches[screw] = self.event_latches.get(screw, 0) - 1
-                if score >= threshold and (active_event or not require_delta):
+                score_ok = score >= threshold or (require_yolo and yolo_ok)
+                if score_ok and (active_event or not require_delta):
                     self.candidate_counts[screw] = self.candidate_counts.get(screw, 0) + 1
                     if self.frames_in_state >= min_dwell_frames and self.candidate_counts[screw] >= confirm_frames:
                         return next_index

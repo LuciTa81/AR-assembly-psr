@@ -41,11 +41,22 @@ roi:
   screw_confirm_frames_a: 8
   require_screw_delta: true
 
+yolo:
+  enabled: true
+  weights: models/yolo/driver_standard_model/best-3.pt
+  conf: 0.30
+  imgsz: 640
+  interval_frames: 3
+  workspace_width: 800
+  workspace_height: 600
+  tool_score_radius: 90
+  tool_score_softness: 45
+  tool_score_threshold: 0.35
+  require_for_screw: true
+
 state_filter:
   initial_state: S0
-  # ROI-only screw recognition is currently kept to S3 to prevent hand/arm
-  # occlusion from cascading through S4-S6 before YOLO evidence is added.
-  max_state: S3
+  max_state: S6
   min_confidence: 0.55
   box_min_confidence: 0.55
   lid_min_confidence: 0.54

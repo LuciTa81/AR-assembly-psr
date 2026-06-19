@@ -20,6 +20,7 @@ from server.realtime.overlay_http_server import OverlayHttpServer
 from server.realtime.realtime_logger import RealtimeLogger
 from server.realtime.roi_realtime import RoiRealtimeAnalyzer
 from server.realtime.schemas import OverlayMessage, WarningMessage
+from server.realtime.yolo_realtime import RealtimeYoloAnalyzer
 
 
 def parse_args():
@@ -110,6 +111,22 @@ def main() -> int:
         score_alpha=float(roi_cfg.get("score_alpha", 0.35)),
     )
 
+    yolo_cfg = config.get("yolo", {})
+    yolo = RealtimeYoloAnalyzer(
+        enabled=bool(yolo_cfg.get("enabled", False)),
+        weights=yolo_cfg.get("weights", ""),
+        layout_path=roi_cfg.get("layout", ""),
+        conf=float(yolo_cfg.get("conf", 0.30)),
+        imgsz=int(yolo_cfg.get("imgsz", 640)),
+        interval_frames=int(yolo_cfg.get("interval_frames", 3)),
+        workspace_width=int(yolo_cfg.get("workspace_width", 800)),
+        workspace_height=int(yolo_cfg.get("workspace_height", 600)),
+        tool_score_radius=float(yolo_cfg.get("tool_score_radius", 90.0)),
+        tool_score_softness=float(yolo_cfg.get("tool_score_softness", 45.0)),
+    )
+    if yolo_cfg.get("enabled", False):
+        print(f"[INFO] yolo={yolo.reason}")
+
     log_cfg = config.get("logging", {})
     session_id = make_session_id(str(log_cfg.get("session_prefix", "rt")))
     logger = RealtimeLogger(
@@ -143,6 +160,8 @@ def main() -> int:
             t1 = time.perf_counter()
             roi_result = roi_analyzer.process(packet.frame, marker.homography)
             t_roi = time.perf_counter()
+            yolo.submit(packet.frame_id, packet.frame, marker.homography)
+            yolo_result = yolo.get_result(packet.frame_id)
 
             warning = None
             if marker.warning_code:
@@ -150,6 +169,7 @@ def main() -> int:
 
             features = dict(roi_result.scores)
             features.update(roi_result.deltas)
+            features.update(yolo_result.features)
             features["box_threshold"] = float(roi_cfg.get("box_threshold", 0.50))
             features["lid_threshold"] = float(roi_cfg.get("lid_threshold", 0.52))
             features["box_min_confidence"] = float(filter_cfg.get("box_min_confidence", filter_cfg.get("min_confidence", 0.75)))
@@ -161,6 +181,8 @@ def main() -> int:
             features["screw_event_hold_frames"] = int(roi_cfg.get("screw_event_hold_frames", 12))
             features["screw_confirm_frames"] = int(roi_cfg.get("screw_confirm_frames", 1))
             features["screw_min_dwell_frames"] = int(roi_cfg.get("screw_min_dwell_frames", filter_cfg.get("min_dwell_frames", 3)))
+            features["require_yolo_for_screw"] = 1 if bool(yolo_cfg.get("require_for_screw", False)) else 0
+            features["yolo_tool_score_threshold"] = float(yolo_cfg.get("tool_score_threshold", 0.35))
             for screw in ["a", "b", "c", "d"]:
                 for name in [
                     "screw_done_threshold",
@@ -173,6 +195,9 @@ def main() -> int:
                     key = f"{name}_{screw}"
                     if key in roi_cfg:
                         features[key] = roi_cfg[key]
+                yolo_key = f"tool_score_threshold_{screw}"
+                if yolo_key in yolo_cfg:
+                    features[f"yolo_tool_score_threshold_{screw}"] = yolo_cfg[yolo_key]
             features["require_screw_delta"] = 1 if bool(roi_cfg.get("require_screw_delta", True)) else 0
             estimate = state_filter.update(packet.frame_id, marker.marker_ok, features=features)
             t2 = time.perf_counter()
@@ -196,14 +221,18 @@ def main() -> int:
                 fps=round(fps, 2),
                 latency_ms=int((time.perf_counter() - loop_start) * 1000),
                 queue_lag_ms=max(0, int(loop_start * 1000) - packet.timestamp_ms),
-                yolo_age_ms=-1,
+                yolo_age_ms=yolo_result.age_frames(packet.frame_id),
                 extra={
                     "transition_event": estimate.transition_event,
                     "homography_source": marker.homography_source,
                     "fallback_age": marker.fallback_age,
                     "roi_reason": roi_result.reason,
+                    "yolo_reason": yolo_result.reason,
+                    "yolo_frame_id": yolo_result.frame_id,
+                    "yolo_latency_ms": yolo_result.latency_ms,
                     **{k: round(v, 4) for k, v in roi_result.scores.items()},
                     **{k: round(v, 4) for k, v in roi_result.deltas.items()},
+                    **{k: round(v, 4) for k, v in yolo_result.features.items()},
                 },
             )
             msg_dict = msg.to_dict()
@@ -233,8 +262,12 @@ def main() -> int:
                     "homography_source": marker.homography_source,
                     "fallback_age": marker.fallback_age,
                     "roi_reason": roi_result.reason,
+                    "yolo_reason": yolo_result.reason,
+                    "yolo_frame_id": yolo_result.frame_id,
+                    "yolo_latency_ms": yolo_result.latency_ms,
                     **{k: round(v, 6) for k, v in roi_result.scores.items()},
                     **{k: round(v, 6) for k, v in roi_result.deltas.items()},
+                    **{k: round(v, 6) for k, v in yolo_result.features.items()},
                     "state": estimate.state,
                     "confidence": estimate.confidence,
                     "held_reason": estimate.held_reason,
@@ -269,6 +302,7 @@ def main() -> int:
         print("\n[INFO] stopping")
     finally:
         frame_source.close()
+        yolo.close()
         logger.close()
         overlay.stop()
         print(f"[DONE] saved realtime session: {logger.session_dir}")
