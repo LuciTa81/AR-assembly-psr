@@ -112,6 +112,15 @@ class OnlineStateFilter:
         delta = max(raw_delta, smooth_delta)
         return min(1.0, score + 2.0 * delta)
 
+    def _required_confidence(self, candidate: int, features: Dict[str, float]) -> float:
+        if candidate == 1:
+            return float(features.get("box_min_confidence", self.min_confidence))
+        if candidate == 2:
+            return float(features.get("lid_min_confidence", self.min_confidence))
+        if 3 <= candidate <= 6:
+            return float(features.get("screw_min_confidence", self.min_confidence))
+        return self.min_confidence
+
     def update(self, frame_id: int, marker_ok: bool, features: Optional[Dict[str, float]] = None) -> StateEstimate:
         features = features or {}
         self.frames_in_state += 1
@@ -125,16 +134,21 @@ class OnlineStateFilter:
         else:
             candidate = self._candidate_state(frame_id, features)
             if candidate == 1:
-                confidence = float(features.get("box_present_score", 0.80))
+                raw = float(features.get("box_present_score", 0.80))
+                smooth = float(features.get("box_present_score_smooth", raw))
+                confidence = max(raw, smooth)
             elif candidate == 2:
-                confidence = float(features.get("lid_closed_score", 0.80))
+                raw = float(features.get("lid_closed_score", 0.80))
+                smooth = float(features.get("lid_closed_score_smooth", raw))
+                confidence = max(raw, smooth)
             elif candidate is not None and 3 <= candidate <= 6:
                 screw = {3: "a", 4: "b", 5: "c", 6: "d"}[candidate]
                 confidence = self._screw_confidence(screw, features)
             else:
                 confidence = float(features.get("confidence", 0.80 if candidate is not None else 0.55))
             output_confidence = confidence
-            if candidate is not None and self.frames_in_state >= self.min_dwell_frames and confidence >= self.min_confidence:
+            required_confidence = self._required_confidence(candidate, features) if candidate is not None else self.min_confidence
+            if candidate is not None and self.frames_in_state >= self.min_dwell_frames and confidence >= required_confidence:
                 prev = STATES[self.state_index]
                 self.state_index = candidate
                 self.frames_in_state = 0

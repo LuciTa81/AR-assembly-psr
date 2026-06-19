@@ -47,6 +47,9 @@ state_filter:
   # occlusion from cascading through S4-S6 before YOLO evidence is added.
   max_state: S3
   min_confidence: 0.55
+  box_min_confidence: 0.55
+  lid_min_confidence: 0.54
+  screw_min_confidence: 0.55
   min_dwell_frames: 3
   dummy_auto_advance_frames: 0
 
