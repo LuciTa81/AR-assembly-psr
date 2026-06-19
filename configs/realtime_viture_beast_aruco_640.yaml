@@ -52,6 +52,7 @@ yolo:
   tool_score_radius: 110
   tool_score_softness: 50
   tool_score_threshold: 0.30
+  target_dominance_ratio: 0.75
   require_for_screw: true
 
 state_filter:

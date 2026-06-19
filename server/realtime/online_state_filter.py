@@ -83,7 +83,18 @@ class OnlineStateFilter:
                     float(features.get(f"tip_screw_score_{screw}", 0.0)),
                 )
                 yolo_threshold = float(features.get(f"yolo_tool_score_threshold_{screw}", features.get("yolo_tool_score_threshold", 0.35)))
-                yolo_ok = yolo_score >= yolo_threshold
+                other_yolo_scores = [
+                    max(
+                        float(features.get(f"tool_score_{other}", 0.0)),
+                        float(features.get(f"tip_screw_score_{other}", 0.0)),
+                    )
+                    for other in ["a", "b", "c", "d"]
+                    if other != screw
+                ]
+                max_other_yolo = max(other_yolo_scores, default=0.0)
+                dominance_ratio = float(features.get("yolo_target_dominance_ratio", 0.0))
+                dominance_ok = dominance_ratio <= 0.0 or yolo_score >= max_other_yolo * dominance_ratio
+                yolo_ok = yolo_score >= yolo_threshold and dominance_ok
                 if require_yolo and not yolo_ok:
                     self.candidate_counts[screw] = 0
                     return None

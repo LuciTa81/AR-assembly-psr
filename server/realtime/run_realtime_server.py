@@ -183,6 +183,7 @@ def main() -> int:
             features["screw_min_dwell_frames"] = int(roi_cfg.get("screw_min_dwell_frames", filter_cfg.get("min_dwell_frames", 3)))
             features["require_yolo_for_screw"] = 1 if bool(yolo_cfg.get("require_for_screw", False)) else 0
             features["yolo_tool_score_threshold"] = float(yolo_cfg.get("tool_score_threshold", 0.35))
+            features["yolo_target_dominance_ratio"] = float(yolo_cfg.get("target_dominance_ratio", 0.0))
             for screw in ["a", "b", "c", "d"]:
                 for name in [
                     "screw_done_threshold",
