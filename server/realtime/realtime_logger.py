@@ -1,0 +1,108 @@
+from __future__ import annotations
+
+import csv
+import json
+import time
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+import cv2
+import yaml
+
+
+class RealtimeLogger:
+    def __init__(self, output_root: str, session_id: str, config: Dict[str, Any], save_frames: bool = False, save_frame_every: int = 10):
+        self.output_root = Path(output_root)
+        self.session_id = session_id
+        self.session_dir = self.output_root / session_id
+        self.session_dir.mkdir(parents=True, exist_ok=True)
+        self.save_frames = bool(save_frames)
+        self.save_frame_every = max(1, int(save_frame_every))
+        self.frames_dir = self.session_dir / "frames"
+        if self.save_frames:
+            self.frames_dir.mkdir(exist_ok=True)
+
+        (self.session_dir / "config_used.yaml").write_text(
+            yaml.safe_dump(config, sort_keys=False, allow_unicode=True),
+            encoding="utf-8",
+        )
+        meta = {
+            "session_id": session_id,
+            "created_at_unix": time.time(),
+            "output_files": [
+                "frames.csv",
+                "latency.csv",
+                "events.csv",
+                "results.jsonl",
+                "overlay_messages.jsonl",
+            ],
+        }
+        (self.session_dir / "meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+
+        self.frames_file = (self.session_dir / "frames.csv").open("w", encoding="utf-8", newline="")
+        self.latency_file = (self.session_dir / "latency.csv").open("w", encoding="utf-8", newline="")
+        self.events_file = (self.session_dir / "events.csv").open("w", encoding="utf-8", newline="")
+        self.results_file = (self.session_dir / "results.jsonl").open("w", encoding="utf-8")
+        self.overlay_file = (self.session_dir / "overlay_messages.jsonl").open("w", encoding="utf-8")
+
+        self.frames_writer = csv.DictWriter(self.frames_file, fieldnames=["frame_id", "timestamp_ms", "source", "source_path", "saved_frame"])
+        self.latency_writer = csv.DictWriter(
+            self.latency_file,
+            fieldnames=[
+                "frame_id",
+                "fps",
+                "queue_lag_ms",
+                "latency_capture_ms",
+                "latency_aruco_ms",
+                "latency_roi_ms",
+                "latency_filter_ms",
+                "latency_overlay_ms",
+                "total_latency_ms",
+            ],
+        )
+        self.events_writer = csv.DictWriter(self.events_file, fieldnames=["timestamp_ms", "event", "from_state", "to_state", "reason", "confidence"])
+        self.frames_writer.writeheader()
+        self.latency_writer.writeheader()
+        self.events_writer.writeheader()
+
+    def log_frame(self, frame_packet, frame_bgr) -> str:
+        saved = ""
+        if self.save_frames and frame_packet.frame_id % self.save_frame_every == 0:
+            saved = f"frames/{frame_packet.frame_id:06d}.jpg"
+            cv2.imwrite(str(self.session_dir / saved), frame_bgr)
+        self.frames_writer.writerow(
+            {
+                "frame_id": frame_packet.frame_id,
+                "timestamp_ms": frame_packet.timestamp_ms,
+                "source": frame_packet.source,
+                "source_path": frame_packet.source_path,
+                "saved_frame": saved,
+            }
+        )
+        return saved
+
+    def log_latency(self, row: Dict[str, Any]) -> None:
+        self.latency_writer.writerow(row)
+
+    def log_result(self, row: Dict[str, Any]) -> None:
+        self.results_file.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+    def log_overlay(self, message: Dict[str, Any]) -> None:
+        self.overlay_file.write(json.dumps(message, ensure_ascii=False) + "\n")
+
+    def log_event(self, timestamp_ms: int, event: str, from_state: str = "", to_state: str = "", reason: str = "", confidence: float = 0.0) -> None:
+        self.events_writer.writerow(
+            {
+                "timestamp_ms": timestamp_ms,
+                "event": event,
+                "from_state": from_state,
+                "to_state": to_state,
+                "reason": reason,
+                "confidence": round(float(confidence), 6),
+            }
+        )
+
+    def close(self) -> None:
+        for f in [self.frames_file, self.latency_file, self.events_file, self.results_file, self.overlay_file]:
+            f.flush()
+            f.close()

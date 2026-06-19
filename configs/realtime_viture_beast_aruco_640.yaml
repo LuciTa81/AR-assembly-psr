@@ -1,0 +1,44 @@
+schema_version: realtime_v1
+
+source:
+  type: camera
+  camera_index: 1
+  camera_backend: dshow
+  # The current camera probe reports 640x480, so request the native size first.
+  width: 640
+  height: 480
+  replay_fps: 5.0
+  dummy_fps: 10.0
+
+overlay:
+  host: 127.0.0.1
+  port: 8765
+  web_root: web_overlay
+
+aruco:
+  enabled: true
+  layout: configs/marker_layout_v2_session_17.yaml
+  min_markers: 4
+  min_quality: 0.25
+  detect_scale: 1.0
+  use_previous_h: true
+  max_fallback_frames: 5
+
+roi:
+  enabled: true
+  layout: configs/roi_layout_v2.yaml
+  refs: refs/roi_templates_v2
+  box_threshold: 0.50
+  lid_threshold: 0.52
+
+state_filter:
+  initial_state: S0
+  min_confidence: 0.55
+  min_dwell_frames: 3
+  dummy_auto_advance_frames: 0
+
+logging:
+  output_root: outputs/realtime_sessions
+  session_prefix: viture_aruco640_rt
+  save_frames: false
+  save_frame_every: 10

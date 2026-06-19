@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AR PSR Realtime Harness</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <main class="stage">
+      <img id="camera" alt="camera frame" src="/frame.jpg">
+      <section class="hud top-left">
+        <div class="eyebrow">Current State</div>
+        <div id="state" class="state">S0</div>
+        <div id="label" class="label">Empty workspace</div>
+      </section>
+      <section class="hud bottom">
+        <div class="eyebrow">Next Action</div>
+        <div id="nextAction" class="next">Place the enclosure box</div>
+      </section>
+      <section class="hud top-right">
+        <div><span>FPS</span><strong id="fps">0.0</strong></div>
+        <div><span>Latency</span><strong id="latency">0 ms</strong></div>
+        <div><span>Marker</span><strong id="marker">DISABLED</strong></div>
+        <div><span>Marker Count</span><strong id="markerCount">0</strong></div>
+        <div><span>Warp Quality</span><strong id="warpQuality">0.00</strong></div>
+        <div><span>Box Score</span><strong id="boxScore">0.00</strong></div>
+        <div><span>Lid Score</span><strong id="lidScore">0.00</strong></div>
+        <div><span>Confidence</span><strong id="confidence">0.00</strong></div>
+      </section>
+      <section id="warning" class="warning hidden"></section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
