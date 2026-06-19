@@ -37,10 +37,15 @@ roi:
   screw_event_hold_frames: 8
   screw_confirm_frames: 8
   screw_min_dwell_frames: 20
+  screw_done_threshold_a: 0.51
+  screw_confirm_frames_a: 8
   require_screw_delta: true
 
 state_filter:
   initial_state: S0
+  # ROI-only screw recognition is currently kept to S3 to prevent hand/arm
+  # occlusion from cascading through S4-S6 before YOLO evidence is added.
+  max_state: S3
   min_confidence: 0.55
   min_dwell_frames: 3
   dummy_auto_advance_frames: 0

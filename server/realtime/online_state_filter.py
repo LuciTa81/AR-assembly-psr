@@ -32,10 +32,14 @@ class OnlineStateFilter:
         min_confidence: float = 0.75,
         min_dwell_frames: int = 3,
         dummy_auto_advance_frames: int = 0,
+        max_state: str = "S6",
     ):
         if initial_state not in STATES:
             raise ValueError(f"unknown initial state: {initial_state}")
+        if max_state not in STATES:
+            raise ValueError(f"unknown max state: {max_state}")
         self.state_index = STATES.index(initial_state)
+        self.max_state_index = STATES.index(max_state)
         self.min_confidence = float(min_confidence)
         self.min_dwell_frames = int(min_dwell_frames)
         self.dummy_auto_advance_frames = int(dummy_auto_advance_frames)
@@ -58,18 +62,20 @@ class OnlineStateFilter:
             }
             if self.state_index in screw_targets:
                 screw, next_index = screw_targets[self.state_index]
+                if next_index > self.max_state_index:
+                    return None
                 raw_score = float(features.get(f"screw_{screw}_done_score", 0.0))
                 smooth_score = float(features.get(f"screw_{screw}_done_score_smooth", raw_score))
                 score = max(raw_score, smooth_score)
                 raw_delta = float(features.get(f"screw_{screw}_done_score_delta", 0.0))
                 smooth_delta = float(features.get(f"screw_{screw}_done_score_delta_smooth", raw_delta))
                 delta = max(raw_delta, smooth_delta)
-                threshold = float(features.get("screw_done_threshold", 0.54))
-                delta_threshold = float(features.get("screw_delta_threshold", 0.012))
-                event_min_score = float(features.get("screw_event_min_score", 0.43))
-                hold_frames = int(features.get("screw_event_hold_frames", 12))
-                confirm_frames = int(features.get("screw_confirm_frames", 1))
-                min_dwell_frames = int(features.get("screw_min_dwell_frames", self.min_dwell_frames))
+                threshold = float(features.get(f"screw_done_threshold_{screw}", features.get("screw_done_threshold", 0.54)))
+                delta_threshold = float(features.get(f"screw_delta_threshold_{screw}", features.get("screw_delta_threshold", 0.012)))
+                event_min_score = float(features.get(f"screw_event_min_score_{screw}", features.get("screw_event_min_score", 0.43)))
+                hold_frames = int(features.get(f"screw_event_hold_frames_{screw}", features.get("screw_event_hold_frames", 12)))
+                confirm_frames = int(features.get(f"screw_confirm_frames_{screw}", features.get("screw_confirm_frames", 1)))
+                min_dwell_frames = int(features.get(f"screw_min_dwell_frames_{screw}", features.get("screw_min_dwell_frames", self.min_dwell_frames)))
                 require_delta = bool(features.get("require_screw_delta", 1))
                 if delta >= delta_threshold and score >= event_min_score:
                     self.event_latches[screw] = max(1, hold_frames)

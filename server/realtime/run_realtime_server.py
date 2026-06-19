@@ -97,6 +97,7 @@ def main() -> int:
         min_confidence=float(filter_cfg.get("min_confidence", 0.75)),
         min_dwell_frames=int(filter_cfg.get("min_dwell_frames", 3)),
         dummy_auto_advance_frames=int(dummy_auto),
+        max_state=filter_cfg.get("max_state", "S6"),
     )
 
     roi_cfg = config.get("roi", {})
@@ -157,6 +158,18 @@ def main() -> int:
             features["screw_event_hold_frames"] = int(roi_cfg.get("screw_event_hold_frames", 12))
             features["screw_confirm_frames"] = int(roi_cfg.get("screw_confirm_frames", 1))
             features["screw_min_dwell_frames"] = int(roi_cfg.get("screw_min_dwell_frames", filter_cfg.get("min_dwell_frames", 3)))
+            for screw in ["a", "b", "c", "d"]:
+                for name in [
+                    "screw_done_threshold",
+                    "screw_delta_threshold",
+                    "screw_event_min_score",
+                    "screw_event_hold_frames",
+                    "screw_confirm_frames",
+                    "screw_min_dwell_frames",
+                ]:
+                    key = f"{name}_{screw}"
+                    if key in roi_cfg:
+                        features[key] = roi_cfg[key]
             features["require_screw_delta"] = 1 if bool(roi_cfg.get("require_screw_delta", True)) else 0
             estimate = state_filter.update(packet.frame_id, marker.marker_ok, features=features)
             t2 = time.perf_counter()
