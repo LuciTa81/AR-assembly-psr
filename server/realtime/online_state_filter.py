@@ -57,21 +57,15 @@ class OnlineStateFilter:
             }
             if self.state_index in screw_targets:
                 screw, next_index = screw_targets[self.state_index]
-                score = float(
-                    features.get(
-                        f"screw_{screw}_done_score_smooth",
-                        features.get(f"screw_{screw}_done_score", 0.0),
-                    )
-                )
-                delta = float(
-                    features.get(
-                        f"screw_{screw}_done_score_delta_smooth",
-                        features.get(f"screw_{screw}_done_score_delta", 0.0),
-                    )
-                )
-                threshold = float(features.get("screw_done_threshold", 0.58))
-                delta_threshold = float(features.get("screw_delta_threshold", 0.015))
-                event_min_score = float(features.get("screw_event_min_score", 0.45))
+                raw_score = float(features.get(f"screw_{screw}_done_score", 0.0))
+                smooth_score = float(features.get(f"screw_{screw}_done_score_smooth", raw_score))
+                score = max(raw_score, smooth_score)
+                raw_delta = float(features.get(f"screw_{screw}_done_score_delta", 0.0))
+                smooth_delta = float(features.get(f"screw_{screw}_done_score_delta_smooth", raw_delta))
+                delta = max(raw_delta, smooth_delta)
+                threshold = float(features.get("screw_done_threshold", 0.54))
+                delta_threshold = float(features.get("screw_delta_threshold", 0.012))
+                event_min_score = float(features.get("screw_event_min_score", 0.43))
                 hold_frames = int(features.get("screw_event_hold_frames", 12))
                 require_delta = bool(features.get("require_screw_delta", 1))
                 if delta >= delta_threshold and score >= event_min_score:
@@ -87,6 +81,23 @@ class OnlineStateFilter:
         if self.frames_in_state >= self.dummy_auto_advance_frames:
             return self.state_index + 1
         return None
+
+    def _screw_confidence(self, screw: str, features: Dict[str, float]) -> float:
+        raw_score = float(features.get(f"screw_{screw}_done_score", 0.0))
+        smooth_score = float(features.get(f"screw_{screw}_done_score_smooth", raw_score))
+        score = max(raw_score, smooth_score)
+        raw_delta = max(0.0, float(features.get(f"screw_{screw}_done_score_delta", 0.0)))
+        smooth_delta = max(
+            0.0,
+            float(
+                features.get(
+                    f"screw_{screw}_done_score_delta_smooth",
+                    raw_delta,
+                )
+            ),
+        )
+        delta = max(raw_delta, smooth_delta)
+        return min(1.0, score + 2.0 * delta)
 
     def update(self, frame_id: int, marker_ok: bool, features: Optional[Dict[str, float]] = None) -> StateEstimate:
         features = features or {}
@@ -106,22 +117,7 @@ class OnlineStateFilter:
                 confidence = float(features.get("lid_closed_score", 0.80))
             elif candidate is not None and 3 <= candidate <= 6:
                 screw = {3: "a", 4: "b", 5: "c", 6: "d"}[candidate]
-                score = float(
-                    features.get(
-                        f"screw_{screw}_done_score_smooth",
-                        features.get(f"screw_{screw}_done_score", 0.80),
-                    )
-                )
-                delta = max(
-                    0.0,
-                    float(
-                        features.get(
-                            f"screw_{screw}_done_score_delta_smooth",
-                            features.get(f"screw_{screw}_done_score_delta", 0.0),
-                        )
-                    ),
-                )
-                confidence = min(1.0, score + 2.0 * delta)
+                confidence = self._screw_confidence(screw, features)
             else:
                 confidence = float(features.get("confidence", 0.80 if candidate is not None else 0.55))
             output_confidence = confidence
