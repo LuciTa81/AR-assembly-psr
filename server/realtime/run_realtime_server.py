@@ -123,6 +123,7 @@ def main() -> int:
         workspace_height=int(yolo_cfg.get("workspace_height", 600)),
         tool_score_radius=float(yolo_cfg.get("tool_score_radius", 90.0)),
         tool_score_softness=float(yolo_cfg.get("tool_score_softness", 45.0)),
+        max_age_frames=int(yolo_cfg.get("max_age_frames", 10)),
     )
     if yolo_cfg.get("enabled", False):
         print(f"[INFO] yolo={yolo.reason}")
@@ -147,6 +148,9 @@ def main() -> int:
     last_loop_ts = time.perf_counter()
     prev_state = "S0"
     processed = 0
+    transition_ack_until_frame = -1
+    transition_ack_text = ""
+    transition_ack_frames = int(overlay_cfg.get("transition_ack_frames", 10))
 
     try:
         for packet in frame_source:
@@ -202,6 +206,12 @@ def main() -> int:
             features["require_screw_delta"] = 1 if bool(roi_cfg.get("require_screw_delta", True)) else 0
             estimate = state_filter.update(packet.frame_id, marker.marker_ok, features=features)
             t2 = time.perf_counter()
+            display_next_action = estimate.next_action
+            if estimate.transition_event and transition_ack_frames > 0:
+                transition_ack_until_frame = packet.frame_id + transition_ack_frames
+                transition_ack_text = f"Detected: {estimate.label}"
+            if packet.frame_id <= transition_ack_until_frame and transition_ack_text:
+                display_next_action = transition_ack_text
 
             msg = OverlayMessage(
                 session_id=session_id,
@@ -214,7 +224,7 @@ def main() -> int:
                 warp_quality=round(marker.warp_quality, 4),
                 current_state=estimate.state,
                 current_label=estimate.label,
-                next_action=estimate.next_action,
+                next_action=display_next_action,
                 target=estimate.target,
                 confidence=round(estimate.confidence, 4),
                 held_reason=estimate.held_reason,
@@ -225,6 +235,7 @@ def main() -> int:
                 yolo_age_ms=yolo_result.age_frames(packet.frame_id),
                 extra={
                     "transition_event": estimate.transition_event,
+                    "raw_next_action": estimate.next_action,
                     "homography_source": marker.homography_source,
                     "fallback_age": marker.fallback_age,
                     "roi_reason": roi_result.reason,

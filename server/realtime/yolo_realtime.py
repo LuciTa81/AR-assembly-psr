@@ -14,6 +14,27 @@ import yaml
 SCREW_NAMES = ["a", "b", "c", "d"]
 
 
+def empty_yolo_features(age_frames: int = -1) -> Dict[str, float]:
+    features: Dict[str, float] = {
+        "yolo_available": 1.0,
+        "driver_visible": 0.0,
+        "handle_visible": 0.0,
+        "screw_visible": 0.0,
+        "driver_count": 0.0,
+        "handle_count": 0.0,
+        "screw_count": 0.0,
+        "tool_tip_x": -1.0,
+        "tool_tip_y": -1.0,
+        "yolo_age_frames": float(age_frames),
+    }
+    for screw in SCREW_NAMES:
+        features[f"tool_dist_{screw}"] = -1.0
+        features[f"tool_score_{screw}"] = 0.0
+        features[f"tool_near_{screw}"] = 0.0
+        features[f"tip_screw_score_{screw}"] = 0.0
+    return features
+
+
 @dataclass
 class YoloRealtimeResult:
     enabled: bool
@@ -109,6 +130,7 @@ class RealtimeYoloAnalyzer:
         workspace_height: int = 600,
         tool_score_radius: float = 90.0,
         tool_score_softness: float = 45.0,
+        max_age_frames: int = 10,
     ):
         self.enabled = bool(enabled)
         self.available = False
@@ -120,6 +142,7 @@ class RealtimeYoloAnalyzer:
         self.workspace_height = int(workspace_height)
         self.tool_score_radius = float(tool_score_radius)
         self.tool_score_softness = float(tool_score_softness)
+        self.max_age_frames = max(1, int(max_age_frames))
         self.model = None
         self.centers: Dict[str, Tuple[float, float]] = {}
         self._pending = None
@@ -168,7 +191,17 @@ class RealtimeYoloAnalyzer:
     def get_result(self, current_frame_id: int) -> YoloRealtimeResult:
         with self._result_lock:
             result = self._result
-        result.features["yolo_age_frames"] = float(result.age_frames(current_frame_id))
+        age = result.age_frames(current_frame_id)
+        if self.enabled and self.available and age > self.max_age_frames:
+            return YoloRealtimeResult(
+                enabled=True,
+                available=True,
+                frame_id=result.frame_id,
+                latency_ms=result.latency_ms,
+                reason="stale",
+                features=empty_yolo_features(age),
+            )
+        result.features["yolo_age_frames"] = float(age)
         return result
 
     def close(self) -> None:
@@ -224,19 +257,7 @@ class RealtimeYoloAnalyzer:
                     }
                 )
 
-        features: Dict[str, float] = {
-            "yolo_available": 1.0,
-            "driver_visible": 0.0,
-            "handle_visible": 0.0,
-            "screw_visible": 0.0,
-            "tool_tip_x": -1.0,
-            "tool_tip_y": -1.0,
-        }
-        for screw in SCREW_NAMES:
-            features[f"tool_dist_{screw}"] = -1.0
-            features[f"tool_score_{screw}"] = 0.0
-            features[f"tool_near_{screw}"] = 0.0
-            features[f"tip_screw_score_{screw}"] = 0.0
+        features = empty_yolo_features(0)
 
         drivers = [d for d in detections if d["class"] == "driver"]
         handles = [d for d in detections if d["class"] == "handle"]

@@ -14,6 +14,7 @@ overlay:
   host: 127.0.0.1
   port: 8765
   web_root: web_overlay
+  transition_ack_frames: 10
 
 aruco:
   enabled: true
@@ -53,6 +54,7 @@ yolo:
   tool_score_softness: 50
   tool_score_threshold: 0.30
   target_dominance_ratio: 0.75
+  max_age_frames: 8
   require_for_screw: true
 
 state_filter:
