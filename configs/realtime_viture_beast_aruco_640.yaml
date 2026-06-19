@@ -14,7 +14,7 @@ overlay:
   host: 127.0.0.1
   port: 8765
   web_root: web_overlay
-  transition_ack_frames: 10
+  transition_ack_frames: 18
 
 aruco:
   enabled: true
