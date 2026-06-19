@@ -30,6 +30,12 @@ roi:
   refs: refs/roi_templates_v2
   box_threshold: 0.50
   lid_threshold: 0.52
+  score_alpha: 0.35
+  screw_done_threshold: 0.58
+  screw_delta_threshold: 0.015
+  screw_event_min_score: 0.45
+  screw_event_hold_frames: 12
+  require_screw_delta: true
 
 state_filter:
   initial_state: S0

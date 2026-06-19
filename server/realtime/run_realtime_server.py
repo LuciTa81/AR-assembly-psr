@@ -106,6 +106,7 @@ def main() -> int:
         refs_dir=roi_cfg.get("refs", ""),
         box_threshold=float(roi_cfg.get("box_threshold", 0.50)),
         lid_threshold=float(roi_cfg.get("lid_threshold", 0.52)),
+        score_alpha=float(roi_cfg.get("score_alpha", 0.35)),
     )
 
     log_cfg = config.get("logging", {})
@@ -150,6 +151,11 @@ def main() -> int:
             features.update(roi_result.deltas)
             features["box_threshold"] = float(roi_cfg.get("box_threshold", 0.50))
             features["lid_threshold"] = float(roi_cfg.get("lid_threshold", 0.52))
+            features["screw_done_threshold"] = float(roi_cfg.get("screw_done_threshold", 0.58))
+            features["screw_delta_threshold"] = float(roi_cfg.get("screw_delta_threshold", 0.015))
+            features["screw_event_min_score"] = float(roi_cfg.get("screw_event_min_score", 0.45))
+            features["screw_event_hold_frames"] = int(roi_cfg.get("screw_event_hold_frames", 12))
+            features["require_screw_delta"] = 1 if bool(roi_cfg.get("require_screw_delta", True)) else 0
             estimate = state_filter.update(packet.frame_id, marker.marker_ok, features=features)
             t2 = time.perf_counter()
 

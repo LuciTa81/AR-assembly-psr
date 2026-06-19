@@ -9,6 +9,10 @@ const markerCountEl = document.getElementById("markerCount");
 const warpQualityEl = document.getElementById("warpQuality");
 const boxScoreEl = document.getElementById("boxScore");
 const lidScoreEl = document.getElementById("lidScore");
+const screwAEl = document.getElementById("screwA");
+const screwBEl = document.getElementById("screwB");
+const screwCEl = document.getElementById("screwC");
+const screwDEl = document.getElementById("screwD");
 const confidenceEl = document.getElementById("confidence");
 const warningEl = document.getElementById("warning");
 
@@ -28,6 +32,10 @@ async function refreshState() {
     warpQualityEl.textContent = Number(data.warp_quality ?? 0).toFixed(2);
     boxScoreEl.textContent = Number(data.extra?.box_present_score ?? 0).toFixed(2);
     lidScoreEl.textContent = Number(data.extra?.lid_closed_score ?? 0).toFixed(2);
+    screwAEl.textContent = Number(data.extra?.screw_a_done_score_smooth ?? data.extra?.screw_a_done_score ?? 0).toFixed(2);
+    screwBEl.textContent = Number(data.extra?.screw_b_done_score_smooth ?? data.extra?.screw_b_done_score ?? 0).toFixed(2);
+    screwCEl.textContent = Number(data.extra?.screw_c_done_score_smooth ?? data.extra?.screw_c_done_score ?? 0).toFixed(2);
+    screwDEl.textContent = Number(data.extra?.screw_d_done_score_smooth ?? data.extra?.screw_d_done_score ?? 0).toFixed(2);
     confidenceEl.textContent = Number(data.confidence ?? 0).toFixed(2);
     if (data.warning) {
       warningEl.textContent = data.warning.message ?? data.warning.code;

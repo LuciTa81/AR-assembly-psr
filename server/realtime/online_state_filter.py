@@ -41,6 +41,7 @@ class OnlineStateFilter:
         self.dummy_auto_advance_frames = int(dummy_auto_advance_frames)
         self.frames_in_state = 0
         self.last_transition_frame = 0
+        self.event_latches: Dict[str, int] = {}
 
     def _candidate_state(self, frame_id: int, features: Dict[str, float]) -> Optional[int]:
         if self.dummy_auto_advance_frames <= 0:
@@ -48,6 +49,38 @@ class OnlineStateFilter:
                 return 1
             if self.state_index == 1 and float(features.get("lid_closed_score", 0.0)) >= float(features.get("lid_threshold", 0.52)):
                 return 2
+            screw_targets = {
+                2: ("a", 3),
+                3: ("b", 4),
+                4: ("c", 5),
+                5: ("d", 6),
+            }
+            if self.state_index in screw_targets:
+                screw, next_index = screw_targets[self.state_index]
+                score = float(
+                    features.get(
+                        f"screw_{screw}_done_score_smooth",
+                        features.get(f"screw_{screw}_done_score", 0.0),
+                    )
+                )
+                delta = float(
+                    features.get(
+                        f"screw_{screw}_done_score_delta_smooth",
+                        features.get(f"screw_{screw}_done_score_delta", 0.0),
+                    )
+                )
+                threshold = float(features.get("screw_done_threshold", 0.58))
+                delta_threshold = float(features.get("screw_delta_threshold", 0.015))
+                event_min_score = float(features.get("screw_event_min_score", 0.45))
+                hold_frames = int(features.get("screw_event_hold_frames", 12))
+                require_delta = bool(features.get("require_screw_delta", 1))
+                if delta >= delta_threshold and score >= event_min_score:
+                    self.event_latches[screw] = max(1, hold_frames)
+                active_event = self.event_latches.get(screw, 0) > 0
+                if active_event:
+                    self.event_latches[screw] = self.event_latches.get(screw, 0) - 1
+                if score >= threshold and (active_event or not require_delta):
+                    return next_index
             return None
         if self.state_index >= len(STATES) - 1:
             return None
@@ -71,6 +104,24 @@ class OnlineStateFilter:
                 confidence = float(features.get("box_present_score", 0.80))
             elif candidate == 2:
                 confidence = float(features.get("lid_closed_score", 0.80))
+            elif candidate is not None and 3 <= candidate <= 6:
+                screw = {3: "a", 4: "b", 5: "c", 6: "d"}[candidate]
+                score = float(
+                    features.get(
+                        f"screw_{screw}_done_score_smooth",
+                        features.get(f"screw_{screw}_done_score", 0.80),
+                    )
+                )
+                delta = max(
+                    0.0,
+                    float(
+                        features.get(
+                            f"screw_{screw}_done_score_delta_smooth",
+                            features.get(f"screw_{screw}_done_score_delta", 0.0),
+                        )
+                    ),
+                )
+                confidence = min(1.0, score + 2.0 * delta)
             else:
                 confidence = float(features.get("confidence", 0.80 if candidate is not None else 0.55))
             output_confidence = confidence

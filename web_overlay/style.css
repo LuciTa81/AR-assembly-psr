@@ -46,9 +46,9 @@ body {
 .top-right {
   top: 18px;
   right: 18px;
-  min-width: 220px;
+  min-width: 240px;
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .top-right div {
@@ -106,4 +106,3 @@ body {
 .hidden {
   display: none;
 }
-

@@ -19,10 +19,19 @@ Required behavior:
 ```text
 FrameSource
 -> optional ArUcoRealtimeTracker
+-> optional RoiRealtimeAnalyzer
 -> OnlineStateFilter
 -> OverlayHttpServer
 -> RealtimeLogger
 ```
+
+## Current Gate Status
+
+Implemented realtime gates:
+
+1. S0 -> S1: `box_present_score` crosses the configured threshold.
+2. S1 -> S2: `lid_closed_score` crosses the configured threshold.
+3. S2 -> S6: screw A/B/C/D ROI evidence is checked in order. Screw transitions require both a sufficient done score and a recent positive ROI-delta event by default, so already-visible screw-like texture does not immediately advance the whole sequence.
 
 ## Run
 
@@ -69,8 +78,8 @@ outputs/realtime_sessions/<session_id>/
 
 ## Next Gates
 
-1. Enable ArUco and verify marker loss does not crash the runtime.
-2. Add realtime ROI scores and ROI delta.
-3. Replace dummy state movement with causal online belief updates.
-4. Add YOLO as an asynchronous cache, not as a blocking call.
-5. Display target highlights on the original camera frame.
+1. Tune screw ROI thresholds on the real workspace.
+2. Add YOLO as an asynchronous cache, not as a blocking call.
+3. Fuse YOLO driver/handle/screw evidence with the screw ROI gate.
+4. Display target highlights on the original camera frame.
+5. Add a replay tool that plots realtime state logs against manually labeled ground truth.

@@ -79,13 +79,16 @@ class RoiRealtimeAnalyzer:
         refs_dir: str,
         box_threshold: float = 0.50,
         lid_threshold: float = 0.52,
+        score_alpha: float = 0.35,
     ):
         self.enabled = bool(enabled)
         self.layout_path = Path(layout_path) if layout_path else None
         self.refs_dir = Path(refs_dir) if refs_dir else None
         self.box_threshold = float(box_threshold)
         self.lid_threshold = float(lid_threshold)
+        self.score_alpha = max(0.01, min(1.0, float(score_alpha)))
         self.prev_scores: Dict[str, float] = {}
+        self.smooth_scores: Dict[str, float] = {}
         self.layout: Dict[str, Any] = {}
         self.refs: Dict[str, Any] = {}
         self.image_width = 800
@@ -108,6 +111,9 @@ class RoiRealtimeAnalyzer:
             "lid_open": load_image(self.refs_dir / "lid_open.jpg"),
             "lid_closed": load_image(self.refs_dir / "lid_closed.jpg"),
         }
+        for screw in ["a", "b", "c", "d"]:
+            self.refs[f"screw_{screw}_empty"] = load_image(self.refs_dir / f"screw_{screw}_empty.jpg")
+            self.refs[f"screw_{screw}_done"] = load_image(self.refs_dir / f"screw_{screw}_done.jpg")
 
     def _crop(self, warped_frame, roi_name: str):
         raw = self.layout.get("rois", {}).get(roi_name)
@@ -123,18 +129,31 @@ class RoiRealtimeAnalyzer:
             return RoiRealtimeResult(enabled=True, reason="missing_homography")
 
         warped = cv2.warpPerspective(frame_bgr, homography, (self.image_width, self.image_height))
+        raw_scores: Dict[str, float] = {}
         scores: Dict[str, float] = {}
         deltas: Dict[str, float] = {}
 
         enclosure = self._crop(warped, "enclosure")
         lid = self._crop(warped, "lid")
-        scores["box_present_score"] = positive_score(enclosure, self.refs["box_absent"], self.refs["box_present"])
-        scores["lid_closed_score"] = positive_score(lid, self.refs["lid_open"], self.refs["lid_closed"])
+        raw_scores["box_present_score"] = positive_score(enclosure, self.refs["box_absent"], self.refs["box_present"])
+        raw_scores["lid_closed_score"] = positive_score(lid, self.refs["lid_open"], self.refs["lid_closed"])
+        for screw in ["a", "b", "c", "d"]:
+            crop = self._crop(warped, f"screw_{screw}")
+            raw_scores[f"screw_{screw}_done_score"] = positive_score(
+                crop,
+                self.refs[f"screw_{screw}_empty"],
+                self.refs[f"screw_{screw}_done"],
+            )
 
-        for key, value in scores.items():
+        for key, value in raw_scores.items():
             prev = self.prev_scores.get(key, value)
+            prev_smooth = self.smooth_scores.get(key, value)
+            smooth = self.score_alpha * value + (1.0 - self.score_alpha) * prev_smooth
+            scores[key] = value
+            scores[f"{key}_smooth"] = smooth
             deltas[f"{key}_delta"] = float(value - prev)
+            deltas[f"{key}_delta_smooth"] = float(smooth - prev_smooth)
             self.prev_scores[key] = value
+            self.smooth_scores[key] = smooth
 
         return RoiRealtimeResult(enabled=True, scores=scores, deltas=deltas, warped_frame=warped, reason="ok")
-
