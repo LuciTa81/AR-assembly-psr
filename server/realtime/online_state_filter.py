@@ -42,6 +42,7 @@ class OnlineStateFilter:
         self.frames_in_state = 0
         self.last_transition_frame = 0
         self.event_latches: Dict[str, int] = {}
+        self.candidate_counts: Dict[str, int] = {}
 
     def _candidate_state(self, frame_id: int, features: Dict[str, float]) -> Optional[int]:
         if self.dummy_auto_advance_frames <= 0:
@@ -67,6 +68,8 @@ class OnlineStateFilter:
                 delta_threshold = float(features.get("screw_delta_threshold", 0.012))
                 event_min_score = float(features.get("screw_event_min_score", 0.43))
                 hold_frames = int(features.get("screw_event_hold_frames", 12))
+                confirm_frames = int(features.get("screw_confirm_frames", 1))
+                min_dwell_frames = int(features.get("screw_min_dwell_frames", self.min_dwell_frames))
                 require_delta = bool(features.get("require_screw_delta", 1))
                 if delta >= delta_threshold and score >= event_min_score:
                     self.event_latches[screw] = max(1, hold_frames)
@@ -74,7 +77,11 @@ class OnlineStateFilter:
                 if active_event:
                     self.event_latches[screw] = self.event_latches.get(screw, 0) - 1
                 if score >= threshold and (active_event or not require_delta):
-                    return next_index
+                    self.candidate_counts[screw] = self.candidate_counts.get(screw, 0) + 1
+                    if self.frames_in_state >= min_dwell_frames and self.candidate_counts[screw] >= confirm_frames:
+                        return next_index
+                else:
+                    self.candidate_counts[screw] = 0
             return None
         if self.state_index >= len(STATES) - 1:
             return None
@@ -126,6 +133,8 @@ class OnlineStateFilter:
                 self.state_index = candidate
                 self.frames_in_state = 0
                 self.last_transition_frame = frame_id
+                self.event_latches.clear()
+                self.candidate_counts.clear()
                 transition_event = f"{prev}->{STATES[self.state_index]}"
             elif candidate is not None:
                 held_reason = "low_confidence_or_dwell"

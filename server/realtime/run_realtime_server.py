@@ -155,6 +155,8 @@ def main() -> int:
             features["screw_delta_threshold"] = float(roi_cfg.get("screw_delta_threshold", 0.015))
             features["screw_event_min_score"] = float(roi_cfg.get("screw_event_min_score", 0.45))
             features["screw_event_hold_frames"] = int(roi_cfg.get("screw_event_hold_frames", 12))
+            features["screw_confirm_frames"] = int(roi_cfg.get("screw_confirm_frames", 1))
+            features["screw_min_dwell_frames"] = int(roi_cfg.get("screw_min_dwell_frames", filter_cfg.get("min_dwell_frames", 3)))
             features["require_screw_delta"] = 1 if bool(roi_cfg.get("require_screw_delta", True)) else 0
             estimate = state_filter.update(packet.frame_id, marker.marker_ok, features=features)
             t2 = time.perf_counter()
