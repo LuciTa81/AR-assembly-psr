@@ -16,6 +16,7 @@ const screwDEl = document.getElementById("screwD");
 const yoloAgeEl = document.getElementById("yoloAge");
 const driverVisibleEl = document.getElementById("driverVisible");
 const targetToolEl = document.getElementById("targetTool");
+const targetDistEl = document.getElementById("targetDist");
 const confidenceEl = document.getElementById("confidence");
 const warningEl = document.getElementById("warning");
 
@@ -51,6 +52,8 @@ async function refreshState() {
     driverVisibleEl.textContent = Number(data.extra?.driver_visible ?? 0).toFixed(0);
     const target = targetByState[data.current_state ?? ""];
     targetToolEl.textContent = target ? Number(data.extra?.[`tool_score_${target}`] ?? 0).toFixed(2) : "0.00";
+    const targetDist = target ? Number(data.extra?.[`tool_dist_${target}`] ?? -1) : -1;
+    targetDistEl.textContent = targetDist >= 0 ? `${targetDist.toFixed(0)} px` : "-";
     confidenceEl.textContent = Number(data.confidence ?? 0).toFixed(2);
     if (data.warning) {
       warningEl.textContent = data.warning.message ?? data.warning.code;

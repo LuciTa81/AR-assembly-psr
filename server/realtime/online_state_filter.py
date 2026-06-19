@@ -121,7 +121,15 @@ class OnlineStateFilter:
             ),
         )
         delta = max(raw_delta, smooth_delta)
-        return min(1.0, score + 2.0 * delta)
+        roi_confidence = min(1.0, score + 2.0 * delta)
+        yolo_score = max(
+            float(features.get(f"tool_score_{screw}", 0.0)),
+            float(features.get(f"tip_screw_score_{screw}", 0.0)),
+        )
+        if bool(features.get("require_yolo_for_screw", 0)) and yolo_score > 0.0:
+            yolo_confidence = min(1.0, 0.55 + 0.45 * yolo_score)
+            return max(roi_confidence, yolo_confidence)
+        return roi_confidence
 
     def _required_confidence(self, candidate: int, features: Dict[str, float]) -> float:
         if candidate == 1:
