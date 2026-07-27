@@ -55,12 +55,15 @@ a new second-semester component rather than an extension of existing Unity code.
 The selected architecture is:
 
 > Python realtime recognition server + Unity Windows guidance client +
-> ArUco/PnP workspace alignment + per-user display calibration.
+> multi-marker ArUco/PnP workspace alignment + per-user display calibration.
 
 Python remains responsible for vision and state reasoning. Unity is responsible
 only for rendering user guidance on the Beast display. This boundary avoids
 rewriting the verified Python pipeline and keeps UI failure independent from
 inference failure.
+
+The Python runtime separates fast workspace-pose updates from slower recognition
+updates. A slow YOLO inference must never delay the latest ArUco/PnP pose.
 
 ### 3.2 Why Unity is selected
 
@@ -99,7 +102,7 @@ The required release supports:
 - one Windows laptop;
 - one known assembly kit and marker layout;
 - one calibrated primary user;
-- a monoscopic 2D overlay;
+- a monoscopic or dominant-eye 2D overlay;
 - S0-S6 procedure guidance;
 - target highlighting for screws A-D;
 - marker-loss and low-confidence handling;
@@ -117,6 +120,8 @@ The first release does not require:
 - full spatial mapping without markers;
 - production certification or industrial deployment;
 - replacing the Python inference pipeline with Unity inference.
+- independently calibrated stereo rendering unless the Windows display mode is
+  first verified to expose controllable left-eye and right-eye images.
 
 ## 5. System Architecture
 
@@ -124,15 +129,24 @@ The first release does not require:
 VITURE Beast RGB Camera
         |
         v
-Python Realtime Server
-  - frame capture
-  - camera undistortion
-  - ArUco detection
-  - board pose estimation
-  - ROI and YOLO evidence
-  - online S0-S6 state filter
-  - target projection
-  - tracking and confidence policy
+Latest-Frame Capture Buffer
+        |
+        +------------------------------+
+        |                              |
+        v                              v
+Fast Pose Worker                 Recognition Worker
+  - camera undistortion            - ROI evidence
+  - multi-marker ArUco              - asynchronous YOLO
+  - board pose and quality          - online S0-S6 filter
+  - target projection               - target_id selection
+  - target visibility policy
+        |                              |
+        +---------------+--------------+
+                        v
+Python Realtime Message Publisher
+  - synchronized pose and state snapshots
+  - calibration profile
+  - logging and quality metrics
         |
         | localhost WebSocket
         v
@@ -150,6 +164,16 @@ VITURE Beast Display
 The Python server is the source of truth. Unity does not infer procedure states
 or decide whether a screw is complete.
 
+The capture buffer has capacity one: a new camera frame replaces an unprocessed
+frame instead of extending a queue. The pose worker runs at the highest stable
+rate supported by the selected camera mode. Recognition may run at a lower rate
+and publishes its latest valid result with its own timestamp. The publisher
+combines only timestamped snapshots and reports their ages explicitly.
+
+The MVP uses a fixed direct 2D or 0DoF display mode. SpaceWalker, Anchor, and
+other device-side motion modes remain disabled so that they cannot apply a
+second transformation to an already registered target.
+
 ## 6. Coordinate Systems and Registration
 
 ### 6.1 Coordinate systems
@@ -165,6 +189,11 @@ The system maintains explicit coordinate systems:
 
 No component may silently mix these coordinates. Every projected target carries
 its source coordinate type and timestamp.
+
+Workspace geometry is stored in millimetres. The metric marker-layout artifact
+defines its axis convention, marker corner order, and screw A-D positions.
+Transformation matrices are named by direction, such as
+`camera_from_workspace`, and serialized as row-major 4x4 arrays.
 
 ### 6.2 Existing homography role
 
@@ -182,38 +211,57 @@ The warp is an internal analysis image and is never shown to the worker.
 The AR overlay uses a pose-based projection:
 
 1. camera intrinsics and distortion are calibrated once;
-2. marker dimensions and positions are stored in metric workspace coordinates;
-3. detected marker corners are matched to known workspace points;
-4. `solvePnP` estimates the camera pose relative to the workspace;
-5. the known 3D position of the next target screw is projected into the camera;
-6. the camera projection is transformed into Beast display coordinates;
-7. the per-user eye/display correction is applied;
-8. Unity renders the target ring at the final display coordinate.
+2. the existing asymmetric six-marker layout is represented as one metric
+   `cv2.aruco.Board`;
+3. marker dimensions and positions are stored in metric workspace coordinates;
+4. detected marker corners are matched to known workspace points;
+5. robust PnP estimates `camera_from_workspace`;
+6. marker inliers, reprojection error, pose age, and pose jumps determine whether
+   the pose is usable;
+7. the known 3D position of the next target screw is projected into the camera;
+8. the per-user display correction transforms it into Beast display coordinates;
+9. Unity renders the target ring at the final display coordinate.
 
-Although the Beast provides native 3DoF, the marker board supplies full
-workspace-relative pose evidence for the current camera view. Beast 3DoF is
-optional supporting evidence, not the primary registration method.
+A ChArUco board is used for camera intrinsic calibration when practical. It does
+not automatically replace the runtime marker layout, because the existing
+distributed markers provide better visibility around the physical assembly
+workspace.
+
+Although the Beast provides native 3DoF, the marker board supplies
+workspace-relative camera pose evidence. Device IMU fusion is not part of the
+MVP because it adds clock synchronization and sensor-fusion risk before the
+camera-only registration baseline is measured.
 
 ### 6.4 User calibration
 
-The first calibration method uses four reference points:
+The primary MVP calibration uses nine reference points distributed across the
+safe display and workspace overlap:
 
 1. the user wears the Beast in the normal working position;
 2. the system projects a crosshair for each known workspace reference point;
 3. the user adjusts the crosshair until it visually overlaps the real point;
-4. the resulting display correction is saved as a named user profile.
+4. the system fits the monoscopic or dominant-eye display correction using all
+   accepted points;
+5. the resulting correction and residual errors are saved as a named user
+   profile.
 
-If four-point calibration does not meet the error target, the workflow expands
-to nine points. Calibration must be repeatable in under 60 seconds after the
-initial camera calibration.
+Four points are retained only as a quick recenter workflow after a valid
+nine-point profile already exists. Nine points improve robustness but do not by
+themselves remove camera-eye parallax. The MVP therefore restricts the user,
+glasses fit, work plane, and normal working distance. Calibration must be
+repeatable in under 60 seconds after the initial profile is created.
 
 The profile is invalidated when:
 
 - display resolution or scaling changes;
-- glasses size or eye-side mode changes;
+- direct/0DoF display mode or eye-side mode changes;
 - the user changes;
 - the glasses fit or nose pad changes enough to create visible error;
 - the marker board geometry changes.
+
+Each profile records the user identifier, dominant-eye mode, display resolution,
+Windows scaling, device display mode, camera mode, marker-layout version, and
+creation timestamp.
 
 ### 6.5 Distance and target size
 
@@ -224,6 +272,22 @@ farther away.
 
 The first release remains monoscopic. It aligns a 2D graphic with a point on the
 known assembly plane but does not claim true optical depth placement.
+
+The target is drawn as a comparatively large hollow ring with a contrasting
+outline. The real screw remains visible through the centre.
+
+### 6.6 Deferred per-eye projection
+
+Independent left-eye and right-eye projection is a second-stage experiment, not
+an MVP dependency. It begins only after a hardware spike verifies that the Beast
+Windows mode exposes independently controllable eye images with repeatable
+geometry.
+
+If supported, the experiment may estimate per-eye projection parameters and
+compare binocular, dominant-eye, and stereo target rendering. A nine-point
+single-pose calibration is not treated as proof of full head-motion or
+multi-depth accuracy; the experiment must include multiple normal head poses and
+an explicit camera-eye model.
 
 ## 7. Procedure State and UI State
 
@@ -313,9 +377,12 @@ Target animation is subtle and stops during degraded tracking.
 
 - If the target is outside the display-safe region, show an edge arrow.
 - If the target is behind the user or projection is invalid, hide the target.
-- If marker pose becomes stale, hide target graphics within 300 ms.
+- If marker pose becomes stale, hide positional target graphics within 150 ms.
 - If state confidence is low, hold the current instruction.
 - If the procedure is out of order, do not advance the target.
+
+Non-positional text may remain briefly after target graphics are hidden so that
+the worker understands why guidance paused.
 
 ### 8.4 Laptop debug display
 
@@ -342,16 +409,30 @@ Required fields:
 {
   "schema_version": "realtime_overlay_v2",
   "frame_id": 1234,
-  "timestamp_ms": 123456789,
+  "capture_timestamp_ms": 123456700,
+  "pose_timestamp_ms": 123456730,
+  "state_timestamp_ms": 123456650,
+  "pose_age_ms": 20,
+  "state_age_ms": 100,
+  "calibration_profile_id": "user01_beast_1920x1200_direct",
   "ui_state": "GUIDING",
   "procedure_state": "S3",
   "target_id": "screw_b",
+  "target_workspace_xyz_mm": [125.0, 80.0, 0.0],
+  "camera_from_workspace": [
+    [1.0, 0.0, 0.0, 12.0],
+    [0.0, 1.0, 0.0, -35.0],
+    [0.0, 0.0, 1.0, 540.0],
+    [0.0, 0.0, 0.0, 1.0]
+  ],
   "target_display_x": 1240.0,
   "target_display_y": 670.0,
   "target_radius_px": 34.0,
   "target_visible": true,
   "target_offscreen": false,
   "tracking_quality": 0.91,
+  "reprojection_error_px": 1.8,
+  "marker_inlier_count": 16,
   "state_confidence": 0.78,
   "instruction": "Fasten screw B",
   "event": ""
@@ -361,12 +442,17 @@ Required fields:
 Unity rejects:
 
 - unknown schema versions;
-- messages older than the configured stale threshold;
+- pose snapshots older than the positional stale threshold;
 - non-finite coordinates;
 - target coordinates without a valid tracking status.
 
 Unity renders at display refresh rate and interpolates only visual movement.
 It never extrapolates procedure state transitions.
+
+For the MVP, Python remains the reference implementation of
+workspace-to-display projection and `target_display_x/y` are authoritative.
+Workspace targets and pose matrices are also transmitted for diagnostics,
+recording, and the deferred per-eye experiment.
 
 ## 10. Error Handling
 
@@ -377,9 +463,16 @@ Before feature development, the system must verify:
 1. Windows identifies the Beast as a display;
 2. a fullscreen test crosshair appears on the Beast;
 3. Windows identifies the Beast forward camera;
-4. OpenCV or the Glasses SDK captures frames from that camera;
-5. camera capture and display output work simultaneously;
-6. direct 2D/follow display mode produces repeatable calibration.
+4. the camera is identified by a stable device descriptor rather than an
+   assumed camera index alone;
+5. supported resolution and FPS combinations are enumerated;
+6. OpenCV or the Glasses SDK captures frames from that camera;
+7. camera capture and display output work simultaneously for at least 30 minutes;
+8. camera FOV and display-safe FOV overlap across the screw A-D work area;
+9. head movement, motion blur, exposure, direct USB-C, and adapter behaviour are
+   recorded;
+10. direct 2D/0DoF mode, fixed Windows scaling, brightness, and tint produce
+    repeatable calibration.
 
 Failure at this gate triggers a hardware-specific investigation before Unity
 feature work continues.
@@ -387,9 +480,12 @@ feature work continues.
 ### 10.2 Marker loss
 
 - short loss: retain pose for smoothing but stop updating the target;
-- loss beyond 300 ms: hide physical target graphics;
+- pose age beyond 150 ms: hide physical target graphics;
 - recovery: require several stable frames before restoring the target;
 - prolonged loss: show a fixed request to bring workspace markers into view.
+
+A pose is also rejected when reprojection error, inlier count, or frame-to-frame
+pose jump exceeds its configured limit. Marker count alone is insufficient.
 
 ### 10.3 Communication loss
 
@@ -410,13 +506,16 @@ Initial project targets:
 
 | Metric | Target |
 | --- | --- |
-| Median registration error on workspace | <= 15 mm |
-| P95 registration error on workspace | <= 25 mm |
-| P95 end-to-end guidance latency | <= 150 ms |
-| Vision/state processing rate | 10-15 FPS |
+| Correct target identification | P95 error <= one third of minimum adjacent-screw spacing |
+| Wrong-screw guidance | zero in final evaluated runs |
+| Precision-ring registration, stretch goal | median <= 8 mm and P95 <= 15 mm |
+| Fast pose update rate | >= 25 FPS, with 30 FPS as the preferred target |
+| P95 pose capture-to-message latency | <= 75 ms, with <= 50 ms as the preferred target |
+| Recognition/state processing rate | 10-15 FPS |
+| P95 state-guidance latency | <= 250 ms |
 | Unity rendering rate | 60 FPS |
 | Marker availability in normal posture | >= 95% |
-| Stale target removal after tracking loss | <= 300 ms |
+| Stale positional target removal | <= 150 ms |
 | Repeat calibration time | <= 60 s |
 | Full-sequence completion | 10 successful evaluated runs |
 | Unsafe premature guidance | zero in final evaluated runs |
@@ -434,6 +533,9 @@ relaxed silently; changes require a documented reason and before/after result.
 - stale-message handling;
 - state-to-target mapping;
 - replay determinism for recorded sessions.
+- latest-frame replacement without queue growth;
+- pose and state snapshot age calculation;
+- pose rejection using reprojection error, inliers, and jump limits.
 
 ### 12.2 Calibration tests
 
@@ -441,7 +543,8 @@ relaxed silently; changes require a documented reason and before/after result.
 - target alignment at center and corners;
 - alignment at three normal head positions;
 - repeated fit/remove/wear test;
-- direct display mode versus optional 3DoF mode comparison.
+- direct display mode repeatability;
+- camera/display FOV overlap and safe-region clipping.
 
 ### 12.3 End-to-end tests
 
@@ -452,6 +555,12 @@ relaxed silently; changes require a documented reason and before/after result.
 - communication interruption and resynchronization;
 - user pause and restart;
 - target leaving and returning to the field of view.
+- camera-display simultaneous operation for 30 minutes;
+- five to ten distinct Beast-camera sessions with manual transition ground truth.
+
+Repeated playback of the same recording verifies determinism, not recognition
+generalization. Accuracy and premature-transition claims use distinct physical
+sessions.
 
 ### 12.4 User evaluation
 
@@ -469,10 +578,10 @@ Record:
 
 | Week | Scope | Exit criterion |
 | --- | --- | --- |
-| 1 | Beast display/camera gate and camera calibration | Beast display and forward camera operate simultaneously; calibration file saved |
-| 2 | Marker-board PnP and target projection | Python test view projects screws A-D and follows normal head movement |
+| 1 | Beast hardware, FOV, direct-display, and camera-intrinsic gate | Stable camera mode, simultaneous display/capture, FOV report, and calibration file saved |
+| 2 | Fast multi-marker pose path and target projection | Latest-frame PnP projects screws A-D with timestamped pose quality and no recognition-induced delay |
 | 3 | Unity Windows client and WebSocket | Beast displays target ring, arrow, instruction, and tracking warning |
-| 4 | S0-S6 integration and error handling | One complete assembly demonstration with synchronized logs |
+| 4 | Nine-point display calibration, S0-S6 integration, and error handling | One complete assembly demonstration with synchronized logs and measured registration error |
 
 The one-month MVP is limited to one user, one assembly kit, one marker layout,
 monoscopic 2D guidance, and a tethered Windows laptop.
@@ -483,9 +592,9 @@ monoscopic 2D guidance, and a tethered Windows laptop.
 | --- | --- | --- | --- |
 | 1 | Late July | Preserve realtime baseline | Dedicated development history, reproducible command, baseline log |
 | 2 | August week 1 | Beast device integration | Display, UVC camera, resolution, and latency report |
-| 3 | August week 2 | Camera and workspace calibration | Intrinsics, marker layout, metric screw coordinates |
-| 4 | August week 3 | PnP registration | Stable projected coordinates for screws A-D |
-| 5 | August week 4 | User display calibration | Four-point workflow and persisted user profile |
+| 3 | August week 2 | Camera and workspace calibration | Intrinsics, metric multi-marker board, metric screw coordinates |
+| 4 | August week 3 | Fast PnP registration | Latest-frame pose worker, quality gate, stable projected coordinates for screws A-D |
+| 5 | August week 4 | User display calibration | Nine-point monoscopic/dominant-eye workflow, four-point recenter, persisted profile |
 | 6 | September weeks 1-2 | Unity client foundation | Display selection, fullscreen mode, WebSocket connection |
 | 7 | September weeks 3-4 | Guidance UI | Ring, arrow, instruction, warning, confirmation, completion |
 | 8 | October weeks 1-2 | S0-S6 integration | Online state and target mapping connected end to end |
@@ -507,8 +616,10 @@ from zero; it is integrated and retuned for the Beast camera frame rate.
 | Beast camera is not exposed as expected | Blocks head-view input | Verify official Glasses SDK and UVC path in the first hardware gate |
 | Camera and display cannot run together | Blocks integrated setup | Test USB mode, firmware, direct connection, and supported adapters early |
 | Camera-eye parallax causes large error | Misaligned target | Per-user calibration, metric PnP, restricted working depth |
-| Native 3DoF conflicts with marker overlay | Drifting or doubled motion | Begin in direct 2D/follow mode; compare modes after baseline |
+| Native 3DoF conflicts with marker overlay | Drifting or doubled motion | Disable SpaceWalker/Anchor and use fixed direct 2D/0DoF mode for the MVP |
 | Marker occlusion by hands | Missing target | Multiple markers, pose quality gate, short fallback, quick hide |
+| Slow recognition delays target motion | Ring lags during head movement | Latest-frame buffer and independent fast pose worker |
+| Camera and display FOV do not overlap | Target cannot be shown where the user works | Measure overlap before Unity work and restrict the safe work region |
 | UI appears correct but state advances early | Unsafe instruction | Keep state authority in Python and require ordered evidence |
 | Unity schedule expands | Delays core demonstration | Maintain browser overlay as a working fallback |
 | Single-session overfitting | Weak evidence | Collect repeated realtime sessions and manual transition ground truth |
@@ -519,7 +630,7 @@ The implementation plan must preserve these ownership boundaries:
 
 - Python vision modules produce observations and workspace pose.
 - Python state modules own S0-S6 transitions.
-- A projection module owns workspace-to-display target conversion.
+- A Python projection module owns the MVP workspace-to-display target conversion.
 - A protocol module owns message validation and versioning.
 - Unity owns presentation and local UI animation only.
 - Logging records raw evidence, projected target, UI message, and transition event
@@ -536,12 +647,14 @@ The second-semester AR guidance system is complete when:
 2. the application validates camera and display availability;
 3. the user loads or completes calibration;
 4. the system detects the marker-defined workspace;
-5. S0-S6 guidance is shown on the Beast;
-6. screw targets A-D are visually aligned with the real screw positions;
-7. lost tracking removes stale physical guidance safely;
-8. the full assembly completes repeatedly;
-9. results are logged and reproduced through replay;
-10. registration, latency, transition, and usability results are documented.
+5. fast pose updates continue independently of slower recognition;
+6. S0-S6 guidance is shown on the Beast;
+7. screw targets A-D are visually aligned with the real screw positions;
+8. wrong-screw guidance is absent from the final evaluated runs;
+9. lost tracking removes stale physical guidance within 150 ms;
+10. the full assembly completes repeatedly in distinct Beast-camera sessions;
+11. results are logged and reproduced through replay;
+12. registration, latency, transition, and usability results are documented.
 
 ## 18. References
 
