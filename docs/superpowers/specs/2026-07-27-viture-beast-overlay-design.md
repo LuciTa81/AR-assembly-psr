@@ -170,6 +170,11 @@ rate supported by the selected camera mode. Recognition may run at a lower rate
 and publishes its latest valid result with its own timestamp. The publisher
 combines only timestamped snapshots and reports their ages explicitly.
 
+The pose worker also publishes a capacity-one `TrackedFrame` containing the
+source frame and the pose/homography calculated from that exact `frame_id`.
+Recognition consumes this matched object rather than applying a pose from one
+frame to pixels from another frame.
+
 The MVP uses a fixed direct 2D or 0DoF display mode. SpaceWalker, Anchor, and
 other device-side motion modes remain disabled so that they cannot apply a
 second transformation to an already registered target.
@@ -408,12 +413,15 @@ Required fields:
 ```json
 {
   "schema_version": "realtime_overlay_v2",
-  "frame_id": 1234,
-  "capture_timestamp_ms": 123456700,
-  "pose_timestamp_ms": 123456730,
-  "state_timestamp_ms": 123456650,
-  "pose_age_ms": 20,
-  "state_age_ms": 100,
+  "pose_frame_id": 1234,
+  "pose_capture_timestamp_ms": 123456700,
+  "pose_computed_timestamp_ms": 123456730,
+  "state_frame_id": 1228,
+  "state_capture_timestamp_ms": 123456620,
+  "state_computed_timestamp_ms": 123456650,
+  "published_timestamp_ms": 123456750,
+  "pose_age_ms": 50,
+  "state_age_ms": 130,
   "calibration_profile_id": "user01_beast_1920x1200_direct",
   "ui_state": "GUIDING",
   "procedure_state": "S3",
@@ -453,6 +461,10 @@ For the MVP, Python remains the reference implementation of
 workspace-to-display projection and `target_display_x/y` are authoritative.
 Workspace targets and pose matrices are also transmitted for diagnostics,
 recording, and the deferred per-eye experiment.
+
+Pose and state ages are calculated from their source-frame capture timestamps,
+not from inference-completion timestamps. This exposes sensor-to-message delay
+instead of hiding processing time.
 
 ## 10. Error Handling
 
