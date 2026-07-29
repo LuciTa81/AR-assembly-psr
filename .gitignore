@@ -53,6 +53,7 @@ models/**/*.pt
 .venv_rt/
 __pycache__/
 *.pyc
+.worktrees/
 
 data/raw_sessions/
 datasets/
