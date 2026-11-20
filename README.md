@@ -1,320 +1,151 @@
-# AR-Assisted Procedure Step Recognition for Industrial Enclosure Assembly
+# AI Assembly Guide
 
-This repository contains an end-to-end pipeline for **AR-based assembly guidance** and **procedure step recognition (PSR)** in a fixed-sequence industrial enclosure assembly task.
+**작업 단계 인식 기반 AR 조립 안내**
 
-The goal is to recognize the current assembly step from camera frames, keep the estimate stable over time, and use that state estimate for AR guidance, warning, replay, and session logging.
+VITURE Beast로 작업대를 보면서 상자 배치, 뚜껑 닫기, 나사 A~D 작업과 최종 확인을 순서대로 안내하는 졸업프로젝트입니다. Windows 노트북이 카메라 입력과 단계 판단을 처리하고, Unity는 안경에 양안 오버레이를, 웹 관제는 작업 영상과 진행 상태를 제공합니다.
 
-The current repository includes a verified offline **HMM v2 evaluation pipeline** for `session_17`. This offline pipeline is used as the current working baseline before moving the same step-recognition logic into a real-time AR runtime.
+현재 대표 사용 경로는 **Windows 노트북 + Beast + 로컬 웹 관제**입니다. Android 단독 실행은 아직 구현하지 않았습니다.
 
----
+[관제 실행 안내](docs/beast_self_service_console.md) · [실행 버전 구분](docs/current_runtime.md) · [오프라인 HMM 실험](docs/offline_pipeline.md) · [모바일 이전 전 백업](checkpoints/2026-11-20/README.md)
 
-## 1. Project Overview
+## 사용자 화면
 
-This project targets a controlled workcell with one assembly object and a fixed order of operations.
+| 화면 | 제공하는 기능 |
+| --- | --- |
+| 안경의 AR 안내 | 현재 작업에 맞는 몸체·뚜껑 윤곽, 나사 원과 현재 대상 강조, 한글 행동 안내 |
+| 실시간 관제 | 작업대 카메라 영상, 현재 단계, 다음 행동, 상자·뚜껑·최종 확인 |
+| 작업 기록 | 기본으로 단계 전환만 표시. 전체 변화 또는 보류·재확인으로 필터링하고 JSON 내려받기 |
+| 연결·진단 | 마커 추적, 도구 관측, 처리 속도, 수신 상태와 공간 안내 상태 |
+| 실행 관리·설정 | 연결 확인, 작업 시작·종료, 영상 표시, 테마·전체 화면 등 |
 
-| Item | Description |
-| :--- | :--- |
-| Object | Industrial enclosure box, lid, screws, and screwdriver |
-| Task | Place box, close lid, complete four screws in order |
-| Workspace | ArUco marker-based calibrated tabletop |
-| Main output | Estimated assembly state `S0` to `S6` |
-| AR goal | Show current step, next step, warnings, and session feedback |
+관제 카메라 영상은 **카메라 시점**이며 안경에서 눈으로 보는 AR 화면과 같지 않습니다. 관제의 영상 표시는 기본적으로 꺼져 있고, 켜도 사진·영상 파일을 자동 저장하지 않습니다.
 
-### Core Pipeline
+작업 기록은 현재 브라우저에서 수신한 변화를 보여주는 기능이며, 서버의 전체 원본 로그를 조회하는 기능은 아닙니다.
 
-1. Record or stream camera frames.
-2. Detect ArUco markers and align the workspace.
-3. Warp frames into a stable top-view coordinate system.
-4. Extract visual evidence from fixed ROIs and detected tools.
-5. Estimate the current assembly step with FSM / HMM / state filter logic.
-6. Send the state to AR guidance UI or offline replay tools.
-
-### Why this approach
-
-Instead of training a broad action-recognition model, the system focuses on **state progression** in a known assembly process.
-That makes the pipeline easier to debug, explain, evaluate, and later deploy in a real-time AR setup.
-
----
-
-## 2. Assembly Task Definition
-
-The current task is modeled as a fixed sequence.
-
-| State | Meaning |
-| :--- | :--- |
-| `S0` | Empty workspace / no box |
-| `S1` | Box placed |
-| `S2` | Lid closed |
-| `S3` | Screw A done |
-| `S4` | Screw B done |
-| `S5` | Screw C done |
-| `S6` | Screw D done |
-
-The expected state progression is:
+## 시스템 구성
 
 ```text
-S0 -> S1 -> S2 -> S3 -> S4 -> S5 -> S6
+Beast 카메라
+    |
+    v
+Windows / Python
+    |-- OpenCV ArUco + PnP: 작업대 자세와 나사 A~D 위치 계산
+    |-- YOLO: 드라이버 관측과 목표 나사에 대한 근접 증거
+    |-- 시간 연속성 + 상태 필터: 접근·유지·이탈과 단계 진행
+    |
+    |-- 상태 JSON / 관측 좌표 --> Unity --> 좌·우 눈별 투영 --> Beast Full SBS
+    |
+    +-- 상태 JSON / 카메라 JPEG --> 로컬 웹 관제
+                                      |
+                                      +--> 상자·뚜껑·최종 확인 입력
 ```
 
-The state estimator is designed to prefer this ordered progression while still using visual evidence from the frame.
+노트북 관제 컨트롤러는 기본 `127.0.0.1:8764`에서 열립니다. 실행 중인 인식 서버의 `state.json`, `frame.jpg`, 확인 입력을 중계하고 자신이 시작한 프로세스의 종료를 관리합니다. 직접 실행하는 인식 서버의 기본 포트 `8765`와 역할이 다릅니다.
 
----
+현재 관리 실행은 `AssemblySession`과 시간 기반 상태 필터를 사용하는 hybrid 흐름입니다. **오프라인 HMM/Viterbi 평가와 현재 실시간 단계 판단은 구분**합니다.
 
-## 3. System Architecture
+## 작업 흐름
 
-### Hardware Layer
+아래 상태는 현재 실시간 hybrid 안내의 **작업 단계**입니다. 오프라인 데이터셋의 상태 정의와 혼동하지 않아야 합니다.
 
-- **AR client / wearable display**
-  - camera input or streamed frames
-  - operator-facing guidance overlay
-  - session control and local feedback
-- **Python inference server**
-  - image processing
-  - YOLO / MediaPipe / ROI feature extraction
-  - state estimation
-  - replay and evaluation scripts
-- **Physical workcell**
-  - industrial enclosure parts
-  - screwdriver and screws
-  - ArUco markers
-  - fixed tabletop or mat
+| 상태 | 안내할 작업 | 다음 단계로 진행 |
+| --- | --- | --- |
+| S0 | 상자 배치 | 관제에서 상자 확인 |
+| S1 | 뚜껑 닫기 | 관제에서 뚜껑 확인 |
+| S2 | 나사 A | 드라이버 접근·유지·이탈 증거 |
+| S3 | 나사 B | 동일 |
+| S4 | 나사 C | 동일 |
+| S5 | 나사 D | 동일 |
+| S6 | 최종 검사 | 사용자가 전체 조립 상태 확인 |
 
-### Software Layer
+한글 안내는 주황색의 위치 맞추기, 파란색의 조이기, 초록색의 드라이버 이탈 안내로 구성됩니다. 짧은 추적 단절에 대한 표시·진행 보존은 각각의 유효성 조건을 따릅니다. 무효 좌표를 계속 표시하거나 보지 못한 작업을 완료로 간주하지 않습니다.
 
-- **Unity client prototype**
-- **Python server and offline replay tools**
-- **OpenCV ArUco detection and homography warp**
-- **YOLO 3-class detector**
-- **ROI template and ROI delta features**
-- **MediaPipe auxiliary hand signal**
-- **FSM / HMM step reasoning**
+별도 **촬영 전용 후보**는 초록 안내 후 2초 자동 전환을 사용합니다. 기본 관제의 이탈 판정과 다르며, 체결 토크나 조립 품질을 직접 측정하는 기능은 아닙니다. [버전과 시간 설정 구분](docs/current_runtime.md)
 
----
+## 실행하기
 
-## 4. Current Vision and State Features
+### 기존 시연 PC
 
-The current `session_17` pipeline combines multiple evidence sources.
+1. Beast를 연결하고 **Full SBS, 0DoF, Extra Large, 4.5m, Windows 확장 모드**를 확인합니다.
+2. 기존 **AI Assembly Guide** 바로가기로 관제를 엽니다.
+3. **연결 확인** 후 착용 위치와 상자·마커 배치를 확인합니다.
+4. **작업 시작**을 누르고, 필요하면 **영상 표시**를 켭니다.
+5. 상자·뚜껑을 확인하고 A~D 안내를 따라 진행합니다. 최종 확인 후 **실행 종료**를 누릅니다.
 
-| Feature Source | Purpose |
-| :--- | :--- |
-| ArUco markers | Calibrate and warp the workspace into a stable view |
-| ROI templates | Compare key regions such as box/lid/screw positions |
-| ROI delta | Detect visual change around screw ROIs |
-| YOLO `driver` | Locate screwdriver metal part |
-| YOLO `handle` | Stabilize tool detection when the handle is visible |
-| YOLO `screw` | Add direct evidence for screw locations |
-| MediaPipe | Optional auxiliary hand/index information |
-| Continuous scores | Replace hard 0/1 proximity features with smooth values |
-| HMM transition | Smooth the state sequence over time |
+관제 페이지 열기와 연결 확인만으로 카메라 캡처가 시작되지는 않습니다. 페이지 새로고침이나 탭 닫기는 작업 종료가 아닙니다.
 
-MediaPipe is intentionally treated as a supporting signal because hand occlusion can make it unstable during screw tightening.
+### 소스에서 실행
 
----
+**새 clone만으로 시연 환경이 완성되지는 않습니다.** 모델 가중치, 검증된 Player, 카메라·작업대·눈별 보정과 외부 실행 폴더가 추가로 필요합니다. 기존 런처에는 절대 경로와 보호 파일 해시 검사가 남아 있습니다.
 
-## 5. Current Benchmark
+- Python: 현재 검증 환경 3.12.14. 패키지는 [실시간 의존성](server/realtime/requirements-realtime.txt), [개발 의존성](server/realtime/requirements-dev.txt) 참고.
+- Unity: `6000.3.25f1`; 소스는 [client_unity](client_unity/README.md).
+- 모델: `models/yolo/driver_standard_model/best-3.pt`를 로컬에서 준비합니다.
+- 관제 프로필: [예제](configs/beast_console.example.json)의 경로를 실제 설치 경로에 맞춥니다. 예제 자체는 실행 가능한 설치본이 아닙니다.
 
-The best verified offline result on `session_17` is:
+아래 명령은 **실제 로컬 프로필과 외부 실행 파일을 준비한 후**, 저장소 루트의 PowerShell에서 실행합니다.
 
-| Model | Accuracy | Macro-F1 |
-| :--- | ---: | ---: |
+```powershell
+.\scripts\open_beast_console.ps1 -Profile C:\ARAssembly\console\profile.json
+```
+
+이 명령은 관제를 여는 명령이며, 실제 카메라·Unity 실행은 웹의 작업 시작 버튼이 담당합니다. 새 PC로 옮길 때의 필수 파일과 주의사항은 [관제 실행 안내](docs/beast_self_service_console.md)에 있습니다.
+
+## 구현 범위
+
+| 구분 | 상태 |
+| --- | --- |
+| Windows의 인식·Unity 양안 안내·웹 관제 | 구현 및 기존 사용자 시연 진행 |
+| 한글 안내·윤곽·현재 나사 강조·작업 기록 | 구현 |
+| 오프라인 HMM/Viterbi 평가 | 별도 평가 파이프라인 유지 |
+| 촬영용 2초 자동 전환 | 별도 후보, 기본 관제와 분리 |
+| 3초 자동 전환·상자/뚜껑 자동 확인 | 다음 작업, 이번 통합에는 미반영 |
+| 시야 고정 3D 부품 미리보기 | 미구현 |
+| Z Fold7 / Android 16 단독 실행 | 연결·성능 검증 전 |
+| 휴대폰에서 노트북으로 관제 전송·영상 저장 | 미구현 |
+
+마커 가림, 촬영 조건, 착용 위치와 출력 설정 변화는 추적·정합에 영향을 줍니다. 현재 보정은 기존 작업대와 착용 조건에서 확인한 값이며, 다른 환경에서의 정확도를 보장하지 않습니다.
+
+## 오프라인 평가
+
+`session_17`에서 보고한 결과입니다. 현재 실시간 AR 안내의 체결 검증 정확도나 여러 사용자에 대한 일반화 성능을 뜻하지 않습니다.
+
+| 방법 | Accuracy | Macro-F1 |
+| --- | ---: | ---: |
 | Framewise v2 | 88.24% | 89.52% |
 | FSM v2 | 91.60% | 93.23% |
-| HMM v2 | **94.12%** | **94.85%** |
+| HMM v2 | 94.12% | 94.85% |
 
-Notes:
+[평가 결과와 조건](docs/session17_hmm_v2_status.md) · [실행 방법·상태 정의·파라미터](docs/offline_pipeline.md)
 
-- `S0` is correctly detected for all 7 frames.
-- Most remaining errors are short delays near state boundaries.
-- The current parameters are tuned for the recorded `session_17` frame rate.
+## 코드 위치
 
-Result files:
+| 위치 | 역할 |
+| --- | --- |
+| `server/realtime/` | 실시간 인식, 단계 판단, HTTP 관제·실행 관리 |
+| `client_unity/` | 눈별 투영, 공간 오버레이, 한글 안내 |
+| `web_overlay/` | 관제 화면과 상태·영상·작업 기록 UI |
+| `configs/` | 작업대·인식 설정과 로컬 프로필 예제 |
+| `scripts/` | 실행·빌드·검사 진입점 |
+| `server/vision/`, `server/state/` | 오프라인 특징 추출·상태 추정 |
+| `tests/` | Python, 웹, C# 회귀 테스트 |
+| `checkpoints/2026-11-20/` | 과거 후보·보정·제작 소스의 읽기 전용 참조용 스냅샷 |
 
-```text
-docs/session17_hmm_v2_status.md
-docs/assets/session17_hmm_v2/timeline_best_role3.png
-docs/assets/session17_hmm_v2/s0_zoom_best_role3.png
-docs/assets/session17_hmm_v2/metrics_best_role3.csv
-docs/assets/session17_hmm_v2/mismatches_best_role3.csv
-```
+`checkpoints`는 기본 실행 경로가 아닙니다. 날짜가 최신이라는 이유만으로 후보 폴더를 기본 실행에 연결하지 않습니다.
 
----
+## 검증
 
-## 6. Required Files Before Running
+이번 통합의 [검증 결과와 제외 범위](docs/windows_integration_validation.md)를 별도로 기록했습니다.
 
-Large runtime files are not committed to this repository.
-
-Prepare the following files locally:
-
-```text
-data/raw_sessions/session_17/
-models/yolo/driver_standard_model/best-3.pt
-```
-
-Expected YOLO classes in `best-3.pt`:
-
-```text
-driver
-handle
-screw
-```
-
-The repository already includes the lightweight configuration, labels, scripts, and reference templates needed to run the current pipeline.
-
-Important included files:
-
-```text
-configs/
-labels/labels_segments.csv
-refs/roi_templates_v2/
-scripts/
-server/vision/
-server/state/
-```
-
----
-
-## 7. Repository Structure
-
-```text
-.
-├── client_unity/                  # Unity / AR client prototype
-├── configs/                       # Marker layouts and ROI layouts
-├── data/                          # Local raw sessions, not tracked
-├── docs/                          # Project docs and result reports
-│   └── assets/session17_hmm_v2/    # HMM result plots and CSV summaries
-├── labels/
-│   └── labels_segments.csv         # Offline GT segments for evaluation
-├── models/                        # Local model weights, not tracked
-├── refs/
-│   └── roi_templates_v2/           # Warped ROI templates
-├── scripts/                       # PowerShell setup and run scripts
-├── server/
-│   ├── app/                        # Server entry points
-│   ├── state/                      # FSM / HMM / state reasoning
-│   ├── tools/                      # Utility tools, including ArUco marker generation
-│   └── vision/                     # Warp, YOLO, MediaPipe, ROI features
-└── tests/
-```
-
-The ArUco marker generation tools are kept because marker-based workspace alignment is still part of the AR pipeline.
-
----
-
-## 8. Quick Start
-
-### 8.1 Environment Setup
-
-Use Windows PowerShell with Python 3.11:
+저장소 루트에서 실행합니다. Python 의존성과 .NET 10 SDK/NUnit 복원이 필요합니다.
 
 ```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-py -3.11 -m venv .venv_mp
-.\.venv_mp\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r .\server\requirements.txt
+python -m pytest tests -q
+$webTests = Get-ChildItem tests/web -Filter '*.test.cjs'
+node --test $webTests.FullName
+dotnet run --project tests/unity/GuidanceTests.csproj -- --noheader
 ```
 
-Or run the helper script:
+Python은 `tests/`만 대상으로 실행합니다. `outputs/`와 `checkpoints/` 안의 과거 테스트 복사본까지 자동 수집하지 않습니다. C# 검사는 표시·투영 로직 검사이며 실제 Unity 렌더링과 안경 착용 검사를 대신하지 않습니다.
 
-```powershell
-.\scripts\setup_env_v2.ps1
-```
-
-### 8.2 Check Required Package Layout
-
-```powershell
-.\scripts\check_package_v2.ps1
-```
-
-### 8.3 Run the Full Session17 Pipeline
-
-```powershell
-.\scripts\run_session17_full_then_best_hmm.ps1 -Clean
-.\scripts\run_session17_best_role3_hmm.ps1
-```
-
-Main outputs:
-
-```text
-outputs/hmm_v2/session_17_state_predictions_v2_best_role3.csv
-outputs/hmm_v2/session_17_state_metrics_v2_best_role3.csv
-outputs/hmm_v2/session_17_state_timeline_v2_best_role3.png
-```
-
-### 8.4 Run HMM Only
-
-If the feature files already exist:
-
-```powershell
-.\scripts\run_hmm_v2_only.ps1
-```
-
----
-
-## 9. Current Best HMM Configuration
-
-| Parameter | Value |
-| :--- | ---: |
-| `tool_score_radius` | `90` |
-| `tool_score_softness` | `45` |
-| `index_score_radius` | `100` |
-| `index_score_softness` | `30` |
-| `index_weight` | `0.0` |
-| `roi_weight` | `0.10` |
-| `roi_delta_weight` | `0.12` |
-| `roi_delta_scale` | `0.20` |
-| `roi_delta_window` | `3` |
-| `screw_detect_weight` | `0.55` |
-| `self_prob` | `0.76` |
-| `next_prob` | `0.24` |
-| `smooth_window` | `2` |
-
-These values should be retuned when the frame rate, camera setup, workspace layout, or object placement changes.
-
----
-
-## 10. Development Roadmap
-
-### Phase 1: Recording and Replay
-
-- collect assembly sessions
-- maintain offline replay scripts
-- keep labels and output timelines easy to inspect
-
-### Phase 2: Marker Alignment and ROI Features
-
-- detect ArUco markers
-- warp the workspace to a stable top view
-- maintain fixed ROI definitions and reference templates
-
-### Phase 3: Object and Tool Evidence
-
-- use YOLO detections for driver, handle, and screw
-- use MediaPipe only as an auxiliary signal
-- combine ROI and detector evidence into continuous features
-
-### Phase 4: State Reasoning
-
-- compare framewise, FSM, and HMM outputs
-- tune transition behavior and state boundary delay
-- prepare an online state filter for the AR runtime
-
-### Phase 5: AR Integration
-
-- connect server state output to the Unity client
-- display current step, next step, and warnings
-- log sessions and replay decisions for review
-
----
-
-## 11. Notes for Reviewers
-
-This repository is an AR assembly guidance project, with the current offline HMM pipeline serving as the most reproducible step-recognition baseline.
-
-The design priorities are:
-
-- stable workspace alignment,
-- interpretable visual evidence,
-- ordered step reasoning,
-- easy replay and debugging,
-- and a clear path toward real-time AR feedback.
+영상·사진·PPT·원본 로그·모델·성공 실행 파일은 별도 로컬 백업에 보관하며, 공개 저장소에는 인증 정보와 외부 SDK 배포본을 포함하지 않습니다.
