@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+body{background:#05090A}
+#bg{position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover;transform-origin:65% 50%}
+.tx{color:#fff;white-space:nowrap}
+#t1{left:128px;top:250px;font-size:80px;font-weight:800;line-height:1.22}
+#t1 .g{background:linear-gradient(90deg,#86EFAC,#38D6F0);-webkit-background-clip:text;background-clip:text;color:transparent}
+#rule{left:131px;top:520px;height:3px;background:#5EE6A0;box-shadow:0 0 10px rgba(34,197,94,.6)}
+#t2{left:128px;top:548px;font-size:34px;font-weight:500;color:#D9E2F0;line-height:1.45}
+#t3{left:128px;top:790px;font-size:38px;font-weight:800}
+#t4{left:128px;top:842px;font-size:26px;color:#D9E2F0}
+#t5{left:128px;top:884px;font-size:25px;font-weight:500;color:#D9E2F0}
+#t6{right:128px;left:auto;top:1004px;font-size:18px;font-weight:500;color:rgba(217,226,240,.62)}
+</style></head>
+<body><div id="stage">
+<img id="bg" src="../assets/close_bg.jpg">
+<div class="a tx" id="t1"><span class="g">눈앞에는</span> 다음 작업을,<br>관제에는 전체 흐름을.</div>
+<div class="a" id="rule"></div>
+<div class="a tx" id="t2">AI Assembly Guide는 조립 순서를 따라<br>작업을 이어가도록 돕습니다.</div>
+<div class="a tx" id="t3">AI Assembly Guide</div>
+<div class="a tx" id="t4">작업 단계 인식 기반 AR 조립 안내</div>
+<div class="a tx" id="t6">내레이션 음성 · ElevenLabs</div>
+<div class="a tx" id="t5">개발 최민준 C011207 &nbsp;&nbsp;|&nbsp;&nbsp; 지도교수 윤영 교수님</div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.bgOn=false; KIT.fadeOut='#000'; KIT.build();
+const T = KIT.timeline([
+  {k:'a', t:'눈앞에는 다음 작업을, 관제에는 전체 흐름을.', at:2.3},
+  {k:'b', t:'AI Assembly Guide는 조립 순서를 따라 작업을 이어가도록 돕습니다.'},
+  {k:'c', t:'들어 주셔서 감사합니다.', pre:1.0},
+],{tail:5.1});
+window.SCENE = t=>{
+  $('bg').style.transform=`scale(${1.08-0.06*ss(t/KIT.dur)})`;
+  show('t1',t,0.8,0.9,24); $('rule').style.width=(60*ramp(t,T.b[0]-0.4,0.6))+'px';
+  show('t2',t,T.b[0]-0.2,0.7,14); show('t3',t,T.c[0]-0.6,0.6,10); show('t4',t,T.c[0]-0.4,0.6,8); show('t5',t,T.c[0]-0.2,0.6,6); show('t6',t,T.c[0]+0.2,0.6,0);
+};
+</script></body></html>

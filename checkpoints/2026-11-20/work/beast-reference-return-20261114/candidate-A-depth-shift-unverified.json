@@ -1,0 +1,94 @@
+{
+  "schema_version": "beast_candidate_projection_probe_v1",
+  "candidate_only": true,
+  "calibration_valid": false,
+  "display_alignment_verified": false,
+  "coordinate_convention": "eye_local_pixels_top_left",
+  "display_mode": "full_sbs",
+  "channel_order": "left_half_left_eye_right_half_right_eye",
+  "eye_width": 1920,
+  "eye_height": 1080,
+  "camera_profile_id": "beast-combined-20260927T065914Z-89414bbe",
+  "workspace_profile_id": "beast-workspace-comfort-layout-20261006-v1-A-trial-20261031",
+  "camera_profile_sha256": "25f025bc5c2f71e4c83e6645e5cdc742bda81cd75d30c55ff7e5aca99924872e",
+  "workspace_profile_sha256": "5d4f4c6610af3264e0583eb64b038b3d66b12a9fc4844849d21d4f770d5c7acc",
+  "left_projection": [
+    1463.6371090096256,
+    68.18023814379379,
+    878.9266347311474,
+    -66669.29137363158,
+    83.8229913465998,
+    1303.1768667455226,
+    299.8574709880873,
+    -75952.55551488796,
+    0.17344945383454846,
+    0.07792438108171088,
+    0.9817551007239683,
+    -133.49626048786513
+  ],
+  "right_projection": [
+    1531.582474887644,
+    82.40885107476431,
+    815.4147342950151,
+    -98632.86818677068,
+    107.9686159083213,
+    1385.4558553107152,
+    273.36020352907366,
+    -58464.47956196064,
+    0.19365232750048036,
+    0.07117225036570832,
+    0.9784852001085799,
+    -106.34259942686558
+  ],
+  "retarget_review": {
+    "source_workspace_id": "beast-workspace-comfort-layout-20261006-v1",
+    "source_workspace_sha256": "7455aa644607b578ea98ff5d08803aecb3093e06130e484a876e020020459491",
+    "old_A_mm": [
+      150.73385944201263,
+      156.14870765226289,
+      60.0
+    ],
+    "new_A_mm": [
+      148.73667795585922,
+      155.70133073931308,
+      60.0
+    ],
+    "method": "Refit unchanged eye pixels with R @ corrected_A + t for each source observation",
+    "assumption": "Same physical target; registration correction only, not moved object",
+    "source_captures_preserved": true,
+    "new_wearing_validated": false
+  },
+  "depth_shift_review": {
+    "source_candidate_sha256": "9cd653b96ffee82149f2bbfad602c137ebb2ab7d39621428e38da16737585a9f",
+    "setup_id": "20261114-A-mid-near-1652",
+    "target_id": "A",
+    "scope": "A-only read-only trial, not active calibration",
+    "fit": {
+      "shift_mm": 51.39246447841774,
+      "bias_px": [
+        [
+          8.465700086454262,
+          34.665897486976114
+        ],
+        [
+          -14.517679198269738,
+          31.422726731001564
+        ]
+      ],
+      "squared_error": 219.53238519757988,
+      "bounds_mm": [
+        -100.0,
+        300.0
+      ],
+      "bound_hit": false
+    },
+    "source_camera_z_range_mm": [
+      365.6001724706024,
+      518.1317182161835
+    ],
+    "live_validation": "pending",
+    "stage_offsets_allowed": false,
+    "cd_depth_config_allowed": false,
+    "runtime_range_enforced": false
+  }
+}

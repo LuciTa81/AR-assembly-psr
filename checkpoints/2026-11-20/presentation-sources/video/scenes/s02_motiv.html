@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+#ph{left:110px;top:290px;width:640px;height:470px}
+.row{left:790px;width:1020px;height:146px}
+.row .tg{position:absolute;left:28px;top:26px}
+.row .h{position:absolute;left:112px;top:20px;font-size:32px;font-weight:800;white-space:nowrap}
+.row .d{position:absolute;left:112px;top:70px;font-size:21px;color:var(--grey);font-weight:500;line-height:1.45;width:600px}
+.gz{position:absolute;right:26px;top:26px;width:250px;height:94px}
+.bx{position:absolute;top:0;width:100px;height:58px;border-radius:10px;border:1.5px solid #D5DCE6;background:#F7F9FC;font-size:15px;font-weight:700;color:#6B7280;text-align:center;line-height:56px}
+.gd{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%}
+.gl{position:absolute;left:0;right:0;top:68px;text-align:center;font-size:14px;color:#8A93A3;font-weight:600}
+.goal{top:826px;width:553px;height:120px}
+.goal .n{position:absolute;left:24px;top:22px;font-size:40px;font-weight:300;color:#38577D;line-height:1}
+.goal .h{position:absolute;left:90px;top:22px;font-size:26px;font-weight:800;white-space:nowrap}
+.goal .d{position:absolute;left:90px;top:64px;font-size:19px;color:var(--grey);font-weight:500;white-space:nowrap}
+#gk{left:110px;top:790px;font-size:17px;font-weight:800;color:var(--orange)}
+</style></head>
+<body><div id="stage">
+<div class="a media" id="ph"><img src="../assets/motiv.jpg"></div>
+<div class="a panel row" id="r0" style="top:290px"><span class="tag tg" style="background:#EEF2F7;color:#38577D">배경</span><div class="h">조립 작업은 설명서에 의존합니다</div><div class="d" style="width:880px">익숙하지 않은 작업자는 설명서와 부품을 번갈아 확인하며 순서를 따라갑니다.</div></div>
+<div class="a panel row" id="r1" style="top:452px"><span class="tag tg" style="background:#FBEBDD;color:#D9822B">문제</span><div class="h">손을 멈추는 사이 순서를 놓칩니다</div><div class="d">시선이 설명서와 작업대를 오가고, 어디까지 했는지 다시 찾아야 합니다.</div>
+  <div class="gz" id="gz1"><div class="bx" id="bxm" style="left:0">설명서</div><div class="bx" id="bxw" style="left:150px">작업대</div><div class="gd" id="gd1" style="background:#D9822B;top:-12px"></div><div class="gl">시선이 오감</div></div></div>
+<div class="a panel row" id="r2" style="top:614px"><span class="tag tg" style="background:#38577D;color:#fff">목표</span><div class="h">작업 위치에서 다음 행동을 확인합니다</div><div class="d">작업할 위치와 다음 행동을 AR 안경으로 눈앞에 보여줍니다.</div>
+  <div class="gz" id="gz2"><div class="bx" style="left:75px;border-color:#22B07D;background:#F2FBF7;color:#1F2733" id="wb">작업대</div><div class="gd" id="gd2" style="background:#22B07D;left:125px;top:-12px"></div><div class="gl">시선이 머묾</div></div></div>
+<div class="a" id="gk">핵심 목표</div>
+<div class="a panel goal" id="g0" style="left:110px"><div class="n">01</div><div class="h">작업 위치에 직접 안내</div><div class="d">마커로 계산한 위치에 목표를 표시합니다.</div></div>
+<div class="a panel goal" id="g1" style="left:683px"><div class="n">02</div><div class="h">작업 단계를 따라가는 안내</div><div class="d">도구의 움직임을 보고 다음 단계로 넘어갑니다.</div></div>
+<div class="a panel goal" id="g2" style="left:1256px"><div class="n">03</div><div class="h">혼자서도 쓸 수 있는 구성</div><div class="d">안경과 노트북으로 시작하고 끝냅니다.</div></div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({kicker:'01 · 개발 동기', chap:0, title:'설명서를 보지 않아도, 작업 위치에서 다음 행동을 알 수 있게', sub:'배경 → 문제 → 목표, 그리고 핵심 목표 세 가지'});
+const T = KIT.timeline([
+  {k:'a', t:'조립 작업은 보통 설명서에 의존합니다.', at:1.6},
+  {k:'b', t:'익숙하지 않으면 설명서와 부품을 번갈아 보며 순서를 따라가죠.'},
+  {k:'c', t:'그런데 손을 멈추고 설명서를 보는 사이, 어디까지 했는지 놓치기 쉽습니다.'},
+  {k:'d', t:'그래서 작업할 위치와 다음 행동을 AR 안경으로 눈앞에 보여줍니다.'},
+  {k:'e', t:'목표는 세 가지입니다. 작업 위치에 직접 안내하고,', pre:0.3},
+  {k:'f', t:'도구의 움직임을 보고 다음 단계로 넘어가며,'},
+  {k:'g', t:'안경과 노트북만으로 혼자서도 쓸 수 있게 하는 것입니다.'},
+]);
+const ROWT=[T.a[0]-0.2, T.c[0]-0.1, T.d[0]-0.1], GT=[T.e[0]+1.4, T.f[0], T.g[0]];
+function act(el,on){ el.style.borderColor = on ? '#38577D' : '#E3E7EE'; el.style.boxShadow = on ? '0 10px 28px rgba(56,87,125,.18)' : '0 6px 22px rgba(31,39,51,.06)'; }
+window.SCENE = t=>{
+  show('ph',t,1.0,0.7,22); $('ph').querySelector('img').style.transform=`scale(${1.10-0.08*ss(t/KIT.dur)})`;
+  ['r0','r1','r2'].forEach((id,i)=>{ show(id,t,ROWT[i],0.5,0,26); act($(id), t>=ROWT[i] && t<(ROWT[i+1]??T.e[0])); });
+  // 시선: 설명서 ↔ 작업대 왕복
+  const ph=(t-ROWT[1])/1.5; const x = 50 + 150*(0.5-0.5*Math.cos(Math.PI*ph));
+  $('gd1').style.left = (t<ROWT[1] ? 50 : x)+'px';
+  const nearM = (t<ROWT[1] ? true : x<125); $('bxm').style.borderColor = nearM ? '#D9822B' : '#D5DCE6'; $('bxw').style.borderColor = nearM ? '#D5DCE6' : '#D9822B';
+  const pk = 1+0.12*Math.sin(t*4); $('gd2').style.transform=`scale(${pk})`;
+  show('gk',t,T.e[0]-0.2,0.4,0);
+  ['g0','g1','g2'].forEach((id,i)=>{ show(id,t,GT[i]-0.15,0.45,18); act($(id), t>=GT[i] && t<(GT[i+1]??KIT.dur)); });
+};
+</script></body></html>

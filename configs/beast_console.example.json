@@ -1,0 +1,7 @@
+{
+  "schema_version": "beast_console_profile_v1",
+  "python": "C:/ARAssembly/beast-mvp/.venv/Scripts/python.exe",
+  "trial_directory": "C:/ARAssembly/beast-reference-return-20261114",
+  "action_guidance_directory": "C:/ARAssembly/beast-action-guide-20261115",
+  "presentation_config": "C:/ARAssembly/beast-pose-continuation-20261116/presentation-rms32.json"
+}

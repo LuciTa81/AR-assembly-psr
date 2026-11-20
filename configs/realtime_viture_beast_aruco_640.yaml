@@ -1,0 +1,74 @@
+schema_version: realtime_v1
+
+source:
+  type: camera
+  camera_index: 1
+  camera_backend: dshow
+  # The current camera probe reports 640x480, so request the native size first.
+  width: 640
+  height: 480
+  replay_fps: 5.0
+  dummy_fps: 10.0
+
+overlay:
+  host: 127.0.0.1
+  port: 8765
+  web_root: web_overlay
+  transition_ack_frames: 18
+
+aruco:
+  enabled: true
+  layout: configs/marker_layout_v2_session_17.yaml
+  min_markers: 4
+  min_quality: 0.25
+  detect_scale: 1.0
+  use_previous_h: true
+  max_fallback_frames: 5
+
+roi:
+  enabled: true
+  layout: configs/roi_layout_v2.yaml
+  refs: refs/roi_templates_v2
+  box_threshold: 0.50
+  lid_threshold: 0.52
+  score_alpha: 0.35
+  screw_done_threshold: 0.54
+  screw_delta_threshold: 0.012
+  screw_event_min_score: 0.43
+  screw_event_hold_frames: 6
+  screw_confirm_frames: 3
+  screw_min_dwell_frames: 8
+  screw_done_threshold_a: 0.51
+  screw_confirm_frames_a: 3
+  require_screw_delta: true
+
+yolo:
+  enabled: true
+  weights: models/yolo/driver_standard_model/best-3.pt
+  conf: 0.20
+  imgsz: 640
+  interval_frames: 2
+  workspace_width: 800
+  workspace_height: 600
+  tool_score_radius: 110
+  tool_score_softness: 50
+  tool_score_threshold: 0.30
+  target_dominance_ratio: 0.75
+  max_age_frames: 8
+  require_for_screw: true
+
+state_filter:
+  initial_state: S0
+  max_state: S6
+  min_confidence: 0.55
+  box_min_confidence: 0.55
+  lid_min_confidence: 0.54
+  screw_min_confidence: 0.55
+  min_dwell_frames: 3
+  dummy_auto_advance_frames: 0
+
+logging:
+  output_root: outputs/realtime_sessions
+  session_prefix: viture_aruco640_rt
+  save_frames: false
+  save_frame_every: 10

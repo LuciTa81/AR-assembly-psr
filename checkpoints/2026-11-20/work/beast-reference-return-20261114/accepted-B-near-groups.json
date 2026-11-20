@@ -1,0 +1,41 @@
+{
+  "schema_version": "beast_manual_observation_group_selection_v1",
+  "target_id": "B",
+  "setup_id": "20261114-A-mid-near-1652",
+  "session_id": "43a0ce2f954a44e890df062f768d40ad",
+  "candidate_sha256": "2709092d8fd0a4ef9796dd90f8a4411c26f307dd93dc3dd4270b82dc69e24845",
+  "selection_reason": "User explicitly confirmed BOTH adjustment groups were aligned and comfortable. Do not supersede the first group with the last.",
+  "groups": [
+    {
+      "label": "B_near_1",
+      "selected_record": "C:/Users/fresh/AppData/Local/ARAssembly/beast-mvp/display_correspondence/43a0ce2f954a44e890df062f768d40ad/diagnostic-frame-1559.json",
+      "selected_record_sha256": "6e3d78896761b345c828d17fd0ed4b70971d5b0a31d416aa8e45038a4cf08b1b",
+      "cluster_frames": [1539, 1559],
+      "camera_xyz_mm": [34.32476612859023, 24.938160775749452, 344.93155684774115],
+      "left_offset_px": [-46.0, 26.0],
+      "right_offset_px": [-24.0, 8.0],
+      "marker_rms_px": 2.857345235532784,
+      "conservative_age_ms": 100.6142999883366
+    },
+    {
+      "label": "B_near_2",
+      "selected_record": "C:/Users/fresh/AppData/Local/ARAssembly/beast-mvp/display_correspondence/43a0ce2f954a44e890df062f768d40ad/diagnostic-frame-2433.json",
+      "selected_record_sha256": "42a70a30d630db9c66f29c02450b3b9f11638410b4b45ebfab0eb177cc4c58fc",
+      "cluster_frames": [2431, 2433],
+      "camera_xyz_mm": [22.06985571721367, 16.67422240120368, 399.3247437894779],
+      "left_offset_px": [-12.0, 6.0],
+      "right_offset_px": [-4.0, 0.0],
+      "marker_rms_px": 2.444427424621603,
+      "conservative_age_ms": 129.02529998365253
+    }
+  ],
+  "independent_pose_count": 2,
+  "superseded_frames": [],
+  "representative_xyz_delta_mm": [-12.254910411376557, -8.263938374545774, 54.39318694173676],
+  "relative_rotation_deg": 7.200344635966969,
+  "exact_pose_replay_verified": true,
+  "saved_pixels_replay_verified": true,
+  "raw_records_preserved": true,
+  "activation_allowed": false,
+  "notes": "Camera Z is not eye-to-target distance. Each cluster contributes one pose, not two saves. Both depth and orientation changed; do not label their residual difference as purely depth-driven. No runtime calibration changed."
+}

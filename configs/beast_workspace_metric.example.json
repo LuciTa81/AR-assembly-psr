@@ -1,0 +1,26 @@
+{
+  "schema_version": "beast_workspace_metric_v1",
+  "profile_id": "fill-with-your-measured-layout",
+  "units": "mm",
+  "axes": "x_right_y_away_z_up",
+  "origin_marker_id": 3,
+  "marker_centers_mm": {
+    "0": null,
+    "1": null,
+    "2": null,
+    "3": [
+      0,
+      0,
+      0
+    ],
+    "4": null,
+    "5": null
+  },
+  "targets_mm": {},
+  "measurement_source": {
+    "kind": "not_measured"
+  },
+  "status": "incomplete_example",
+  "activation_status": "not_activated",
+  "display_alignment_verified": false
+}

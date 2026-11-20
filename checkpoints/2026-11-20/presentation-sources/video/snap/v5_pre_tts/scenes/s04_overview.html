@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+.lab{font-size:17px;font-weight:800;color:var(--orange)}
+#tgt{left:110px;top:316px;font-size:30px;font-weight:800;white-space:nowrap}
+.chip{top:372px;width:120px;height:80px;border-radius:14px;background:rgba(255,255,255,.94);border:1.5px solid #E3E7EE}
+.chip .n{position:absolute;left:14px;top:11px;font-size:14px;font-weight:700;color:#9AA3B2}
+.chip .t{position:absolute;left:14px;top:36px;font-size:19px;font-weight:800;color:#1F2733;white-space:nowrap}
+.chip .ck{position:absolute;right:10px;top:9px;font-size:14px;font-weight:800;color:#22B07D}
+.node{top:522px;width:160px;height:112px;border-radius:16px;background:rgba(255,255,255,.94);border:1.5px solid #E3E7EE}
+.node .n{position:absolute;left:16px;top:13px;font-size:14px;font-weight:700;color:#9AA3B2}
+.node .t{position:absolute;left:16px;top:38px;font-size:21px;font-weight:800;line-height:1.3;color:#1F2733}
+.arr{top:562px;font-size:22px;color:#AFC0D6;font-weight:800}
+#track{left:110px;top:652px;width:900px;height:3px;border-radius:2px;background:#E3E7EE}
+#pk{top:646px;width:15px;height:15px;border-radius:50%;background:#13B8D4;box-shadow:0 0 12px rgba(19,184,212,.8)}
+.res{left:110px;width:900px;height:96px}
+.res .k{position:absolute;left:26px;top:30px;font-size:24px;font-weight:800;color:#38577D;white-space:nowrap}
+.res .v{position:absolute;left:180px;top:33px;font-size:21px;color:#4B5563;font-weight:600;white-space:nowrap}
+#vid{left:1060px;top:290px;width:750px;height:422px}
+#leg{left:1060px;top:734px;width:750px;height:198px}
+#leg .lab{position:absolute;left:24px;top:18px}
+.lg{position:absolute;left:24px;width:700px;height:40px}
+.lg .sw{position:absolute;left:0;top:6px;width:120px;font-size:19px;font-weight:800;white-space:nowrap}
+.lg .m{position:absolute;left:150px;top:6px;font-size:20px;color:#4B5563;font-weight:600;white-space:nowrap}
+</style></head>
+<body><div id="stage">
+<div class="a lab" id="l1" style="left:110px;top:290px">대상</div>
+<div class="a" id="tgt">상자 조립 일곱 단계</div>
+<div class="a lab" id="l2" style="left:110px;top:488px">핵심 처리 흐름</div>
+<div class="a" id="track"></div><div class="a" id="pk"></div>
+<div class="a lab" id="l3" style="left:110px;top:690px">안내 결과</div>
+<div class="a panel res" id="q0" style="top:724px"><div class="k">AR 안경</div><div class="v">현재 나사 강조, 상자 · 뚜껑 윤곽, 행동 가이드라인</div></div>
+<div class="a panel res" id="q1" style="top:834px"><div class="k">관제 화면</div><div class="v">현재 작업, 다음 행동, 진행 상태, 작업 완료 시간</div></div>
+<div class="a media" id="vid"><video id="v" src="../assets/comp_ov.mp4" muted preload="auto"></video></div>
+<div class="a mtag" id="vt" style="left:1072px;top:302px">카메라 화면에 안내를 겹친 영상 · 재현</div>
+<div class="a panel" id="leg"><div class="lab">화면 읽는 법</div>
+  <div class="lg" id="k0" style="top:52px"><div class="sw" style="color:#13B8D4">━ 청록 선</div><div class="m">상자와 뚜껑의 윤곽</div></div>
+  <div class="lg" id="k1" style="top:96px"><div class="sw" style="color:#E0A800">◎ 노란 표시</div><div class="m">지금 작업할 나사</div></div>
+  <div class="lg" id="k2" style="top:140px"><div class="sw" style="color:#38577D">A · B · C · D</div><div class="m">나사 네 개의 위치</div></div>
+</div>
+</div>
+<script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({kicker:'01 · 서비스 개요', chap:0, title:'카메라 영상에서 위치와 단계를 판단해 안경에 안내합니다', sub:'상자 조립 일곱 단계 · 다섯 단계 처리 흐름 · 안경과 관제 화면'});
+const ST=['상자 배치','뚜껑 닫기','나사 A','나사 B','나사 C','나사 D','최종 확인'];
+const ND=['카메라 영상','마커로<br>위치 계산','도구 검출','단계 판단','AR 안경 ·<br>관제 전달'];
+const st=$('stage');
+ST.forEach((s,i)=>{ const e=document.createElement('div'); e.className='a chip'; e.id='s'+i; e.style.left=(110+i*130)+'px';
+  e.innerHTML=`<div class="n">${i+1}</div><div class="t">${s}</div><div class="ck">✓</div>`; st.insertBefore(e,$('cap')); });
+ND.forEach((s,i)=>{ const e=document.createElement('div'); e.className='a node'; e.id='n'+i; e.style.left=(110+i*185)+'px';
+  e.innerHTML=`<div class="n">0${i+1}</div><div class="t">${s}</div>`; st.insertBefore(e,$('cap'));
+  if(i<4){ const a=document.createElement('div'); a.className='a arr'; a.id='ar'+i; a.style.left=(110+i*185+164)+'px'; a.textContent='→'; st.insertBefore(a,$('cap')); } });
+const T = KIT.timeline([
+  {k:'a', t:'대상은 상자 조립 일곱 단계입니다.', at:1.6},
+  {k:'b', t:'상자를 놓고 뚜껑을 닫은 뒤, 나사 A부터 D까지 조이고 최종 확인으로 끝납니다.'},
+  {k:'c', t:'처리 흐름은 다섯 단계입니다.', pre:0.2},
+  {k:'d', t:'카메라 영상에서 마커로 위치를 계산하고, 도구를 검출해 지금 단계를 판단한 뒤,'},
+  {k:'e', t:'AR 안경과 관제 화면으로 보냅니다.'},
+  {k:'f', t:'안경에는 지금 작업할 나사와 상자 윤곽, 행동 가이드라인이 나옵니다.', pre:0.2},
+  {k:'h', t:'오른쪽 영상에서 청록 선은 상자와 뚜껑의 윤곽, 노란 표시는 지금 작업할 나사입니다.'},
+  {k:'g', t:'관제 화면에는 현재 작업과 다음 행동, 진행 상태, 작업 완료 시간이 나옵니다.', pre:0.2},
+]);
+const b=T.b, d=T.d, h=T.h;
+const SW=[0,0.12,0.3,0.42,0.54,0.66,0.84].map(k=>b[0]+k*(b[1]-b[0]));      // 일곱 단계 훑기
+const NT=[d[0],d[0]+0.28*(d[1]-d[0]),d[0]+0.55*(d[1]-d[0]),d[0]+0.78*(d[1]-d[0]),T.e[0]];
+const KT=[h[0]+0.15*(h[1]-h[0]), h[0]+0.58*(h[1]-h[0]), h[1]-0.4];
+// 영상: 상자 · 뚜껑(0~27초) → 나사 A 한 사이클(42.6~49.8초) → 나사 D 이탈 · 최종 확인(116.6~121.5초)
+const VIN=T.a[0]+0.3, CUT1=KT[1]-1.9, CUT2=CUT1+6.7;
+function vt(t){ if(t<CUT1) return clamp(t-VIN,0,26.95); if(t<CUT2) return 27.5+(t-CUT1); return Math.min(39.05, 34.2+(t-CUT2)); }
+KIT.vid('v', vt);
+window.SCENE = t=>{
+  show('l1',t,T.a[0]-0.3,0.4,0); show('tgt',t,T.a[0]-0.2,0.5,12);
+  ST.forEach((s,i)=>{ const e=$('s'+i); show(e,t,T.a[0]+0.1+i*0.08,0.4,14);
+    const on = t>=SW[i] && t<(SW[i+1]??b[1]+0.3); const done=t>=(SW[i+1]??b[1]+0.3);
+    e.style.background = on ? '#38577D' : 'rgba(255,255,255,.94)'; e.style.borderColor = on ? '#38577D' : '#E3E7EE';
+    e.querySelector('.t').style.color = on ? '#fff' : '#1F2733'; e.querySelector('.n').style.color = on ? '#C9D6EC' : '#9AA3B2';
+    e.querySelector('.ck').style.opacity = done && t<T.c[0]+0.5 ? 1 : 0; });
+  show('l2',t,T.c[0]-0.3,0.4,0); show('track',t,T.c[0],0.5,0);
+  ND.forEach((s,i)=>{ const e=$('n'+i); show(e,t,T.c[0]+i*0.1,0.45,14); if(i<4) show('ar'+i,t,T.c[0]+0.3+i*0.1,0.4,0,-8);
+    const on = t>=NT[i] && t<(NT[i+1]??T.f[0]);
+    e.style.borderColor = on ? '#13B8D4' : '#E3E7EE'; e.style.boxShadow = on ? '0 10px 26px rgba(19,184,212,.22)' : '0 6px 22px rgba(31,39,51,.06)';
+    e.querySelector('.n').style.color = on||t>=NT[i] ? '#13B8D4' : '#9AA3B2'; });
+  // 패킷: 설명 중에는 설명 위치를, 이후에는 계속 흐름
+  let px; if(t<NT[0]) px=0; else if(t<T.f[0]){ let i=NT.findIndex((x,j)=>t<(NT[j+1]??1e9)); const a=NT[i], bb=NT[i+1]??T.f[0]; px=i+clamp((t-a)/Math.min(0.6,bb-a)); px=Math.min(px,4); }
+  else px=((t-T.f[0])/2.6%1)*4;
+  $('pk').style.left=(110+80+px*185-7.5)+'px'; $('pk').style.opacity = t>=NT[0] ? 1 : 0;
+  show('l3',t,T.f[0]-0.3,0.4,0); show('q0',t,T.f[0]-0.1,0.45,16); show('q1',t,T.g[0]-0.1,0.45,16);
+  const dip=Math.min(1, ...[CUT1,CUT2].map(c=>Math.min(1,Math.abs(t-c)/0.18))); $('v').style.opacity=dip;
+  [['q0',T.f[0],T.h[0]],['q1',T.g[0],KIT.dur]].forEach(([id,a,bb])=>{ const on=t>=a&&t<bb; $(id).style.borderColor=on?'#38577D':'#E3E7EE'; });
+  show('vid',t,VIN,0.6,22); show('vt',t,VIN+0.4,0.4,0); show('leg',t,VIN+0.3,0.5,16);
+  ['k0','k1','k2'].forEach((id,i)=>{ const on=t>=KT[i]-0.1; $(id).style.opacity = (t<h[0]-0.2 || t>h[1]+0.3) ? 1 : (on?1:0.35); });
+  $('leg').style.borderColor = (t>=h[0]-0.1 && t<h[1]+0.3) ? '#38577D' : '#E3E7EE';
+};
+</script></body></html>

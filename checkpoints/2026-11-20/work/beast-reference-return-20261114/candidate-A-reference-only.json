@@ -1,0 +1,80 @@
+{
+  "schema_version": "beast_candidate_projection_probe_v1",
+  "candidate_only": true,
+  "calibration_valid": false,
+  "display_alignment_verified": false,
+  "coordinate_convention": "eye_local_pixels_top_left",
+  "display_mode": "full_sbs",
+  "channel_order": "left_half_left_eye_right_half_right_eye",
+  "eye_width": 1920,
+  "eye_height": 1080,
+  "camera_profile_id": "beast-combined-20260927T065914Z-89414bbe",
+  "workspace_profile_id": "beast-workspace-comfort-layout-20261006-v1-A-trial-20261031",
+  "camera_profile_sha256": "25f025bc5c2f71e4c83e6645e5cdc742bda81cd75d30c55ff7e5aca99924872e",
+  "workspace_profile_sha256": "5d4f4c6610af3264e0583eb64b038b3d66b12a9fc4844849d21d4f770d5c7acc",
+  "left_projection": [
+    1465.290828122325,
+    68.92319256360425,
+    888.2869823031031,
+    -113593.34194311281,
+    78.50400817613756,
+    1300.7872456635348,
+    269.7510697119702,
+    -85721.94514406005,
+    0.17344945383454846,
+    0.07792438108171088,
+    0.9817551007239683,
+    -183.9510746283271
+  ],
+  "right_projection": [
+    1538.6542084593045,
+    85.00789648143818,
+    851.146742932835,
+    -146258.78186984773,
+    103.04544570545417,
+    1383.6464626388374,
+    248.48444167638382,
+    -68531.18855916009,
+    0.19365232750048036,
+    0.07117225036570832,
+    0.9784852001085799,
+    -156.62936531610325
+  ],
+  "retarget_review": {
+    "source_workspace_id": "beast-workspace-comfort-layout-20261006-v1",
+    "source_workspace_sha256": "7455aa644607b578ea98ff5d08803aecb3093e06130e484a876e020020459491",
+    "old_A_mm": [
+      150.73385944201263,
+      156.14870765226289,
+      60
+    ],
+    "new_A_mm": [
+      148.73667795585922,
+      155.70133073931308,
+      60
+    ],
+    "method": "Refit unchanged eye pixels with R @ corrected_A + t for each source observation",
+    "assumption": "Same physical target; registration correction only, not moved object",
+    "source_captures_preserved": true,
+    "new_wearing_validated": false
+  },
+  "reference_return_review": {
+    "purpose": "Read-only A return-to-reference check, not a new fit",
+    "setup_id": "20261114-A-mid-near-1652",
+    "reference_record": "7c0002ecf5cc425b9953fc4451a2498e/diagnostic-frame-1277.json",
+    "reference_sha256": "f9676cbe7134025752d1dd7d0318e40fa26afce5845662a95af1d4a88c9c8580",
+    "source_candidate_sha256": "9cd653b96ffee82149f2bbfad602c137ebb2ab7d39621428e38da16737585a9f",
+    "left_offset_px": [
+      18,
+      4
+    ],
+    "right_offset_px": [
+      22,
+      6
+    ],
+    "method": "P_row0 += dx * P_row2; P_row1 += dy * P_row2",
+    "apply_stage_a_offset": false,
+    "target_id": "A",
+    "activation": "trial_only"
+  }
+}

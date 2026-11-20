@@ -1,0 +1,9 @@
+/* 1 관제 화면 톤 · 밝게 (대시보드 밝은 테마 색) */
+.blob{display:none!important}
+#stage{background:linear-gradient(110deg,rgba(17,111,123,.08),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 80%,rgba(17,111,123,.08)),#E9EEEB}
+.panel,.chip,.node{background:#fff!important;border-color:#CED8D2!important;box-shadow:0 1px 2px #172a2010,0 0 0 1px #172a2008!important}
+.kicker{background:#DCEFF0!important;color:#116F7B!important}
+.title{color:#202A25!important}.sub{color:#526359!important}.crumb b{color:#116F7B!important}
+.lab,#gk,#lab1{color:#116F7B!important}
+.res .k,.goal .n,.row .n{color:#116F7B!important}
+#cap{background:rgba(19,25,23,.86)!important}

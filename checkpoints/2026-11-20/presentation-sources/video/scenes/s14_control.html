@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+#shot{left:110px;top:290px;width:1000px;height:632px}
+#cam{position:absolute;left:0;top:0;width:1000px;height:632px;transform-origin:0 0}
+#shot img{position:absolute;left:0;top:0;width:1000px;height:632px;object-fit:cover}
+.hb{position:absolute;border:3px solid #F2A23A;border-radius:10px;box-shadow:0 0 0 4px rgba(242,162,58,.22);pointer-events:none;z-index:5}
+#ml{left:1150px;top:288px;font-size:17px;font-weight:800;color:#38577D}
+.mi{position:absolute;left:1150px;width:660px;height:136px;border-radius:14px;background:#F3F6FA;border:1.5px solid transparent}
+.mi .t{position:absolute;left:24px;top:18px;font-size:24px;font-weight:800;color:#1F2733;white-space:nowrap}
+.mi .d{position:absolute;left:24px;top:58px;width:610px;font-size:18px;line-height:1.55;color:#6B7280;font-weight:500}
+</style></head>
+<body><div id="stage">
+<div class="a media" id="shot"><div id="cam"><img id="i0" src="../assets/ctl.jpg"><img id="i1" src="../assets/ctl1.jpg"><img id="i2" src="../assets/ctl2.jpg"><img id="i3" src="../assets/ctl3.jpg"><div class="hb" id="hb"></div></div></div>
+<div class="a" id="ml">화면 위쪽 메뉴 네 개 · 실제 관제 화면</div>
+<div class="mi" id="m0" style="top:322px"><div class="t">실시간 관제</div><div class="d">작업대 영상과 현재 작업, 다음 행동을 한 화면에서 봅니다. 작업 시작과 종료도 여기서 합니다.</div></div>
+<div class="mi" id="m1" style="top:470px"><div class="t">작업 기록</div><div class="d">상자 배치부터 최종 확인까지 단계가 바뀐 시각과 작업 완료 시간을 남기고, 기록을 내려받습니다.</div></div>
+<div class="mi" id="m2" style="top:618px"><div class="t">연결 · 진단</div><div class="d">마커 추적, 재투영 오차, 처리 속도 같은 입력 상태를 확인합니다.</div></div>
+<div class="mi" id="m3" style="top:766px"><div class="t">설정</div><div class="d">화면 테마와 작업대 영상 표시, 판정 · 보정 설정을 다룹니다.</div></div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({chap:5, title:'관제 화면 하나로 연결부터 작업 진행까지 확인합니다', sub:'작업자는 눈앞의 안내를, 지켜보는 사람은 노트북 관제 화면을 봅니다'});
+const T = KIT.timeline([
+  {k:'a', t:'작업을 지켜보는 사람은 노트북의 관제 화면 하나로 전체 흐름을 봅니다.', at:1.4},
+  {k:'b', t:'실시간 관제에서는 작업대 영상과 현재 작업, 다음 행동을 보고, | 작업 시작과 종료도 여기서 합니다.'},
+  {k:'c', t:'작업 기록에는 상자 배치부터 최종 확인까지, 단계가 바뀐 시각과 작업 완료 시간이 남고,'},
+  {k:'d', t:'연결 · 진단에서는 마커 추적과 재투영 오차, 처리 속도 같은 입력 상태를 확인합니다.'},
+  {k:'e', t:'설정에서는 화면 표시와 판정 · 보정 설정을 다룹니다.'},
+]);
+// 강조 상자 좌표 (화면 상자 1000×632 기준). ctl.jpg 는 1024px 원본, 나머지는 사용자 캡처(2000px 보기 기준 좌표)
+const K=1000/1024;
+const A=(r)=>r.map(v=>v*K);                                   // ctl.jpg
+const B1=([x0,y0,x1,y1])=>{ const s=0.503844; return [x0*s-3.75, y0*s, (x1-x0)*s, (y1-y0)*s]; };   // 작업 기록 (2870×1800)
+const B2=([x0,y0,x1,y1])=>{ const s=0.5056;   return [x0*s-5.5, y0*s, (x1-x0)*s, (y1-y0)*s]; };   // 연결·진단, 설정 (2880×1800)
+const R={tab0:A([136,4,82,36]), live:A([14,124,664,428]), cur:A([684,124,334,428]), btn:A([858,80,160,34]),
+  tab1:B1([462,4,586,74]), first:B1([22,1102,1060,1174]), rows:B1([22,527,1060,1175]), fin:B1([22,597,1060,668]),
+  tab2:B2([628,4,754,74]), mk:B2([22,588,960,792]), fps:B2([22,860,960,996]),
+  tab3:B2([800,4,882,74]), theme:B2([22,468,800,702]), judge:B2([883,852,1662,922])};
+const b=T.b, bs=b[1]-b[0], c=T.c, cs=c[1]-c[0], d=T.d, ds=d[1]-d[0], e=T.e, es=e[1]-e[0];
+const SEQ=[[b[0],'tab0'],[b[0]+bs*0.18,'live'],[b[0]+bs*0.42,'cur'],[b[0]+bs*0.72,'btn'],
+  [c[0],'tab1'],[c[0]+cs*0.12,'first'],[c[0]+cs*0.34,'rows'],[c[0]+cs*0.66,'fin'],
+  [d[0],'tab2'],[d[0]+ds*0.22,'mk'],[d[0]+ds*0.56,'fps'],
+  [e[0],'tab3'],[e[0]+es*0.28,'theme'],[e[0]+es*0.62,'judge']];
+const IMG=[[0,0],[c[0],1],[d[0],2],[e[0],3]];     // 탭이 바뀌는 시각과 보일 화면
+// 확대: [배율, 보이는 창의 왼쪽, 위쪽] (화면 상자 좌표). 세부를 짚을 때는 글씨가 읽히도록 당겨 본다
+const CAM={tab0:[1,0,0],live:[1,0,0],cur:[1,0,0],btn:[1,0,0],tab1:[1,0,0],first:[1.8,0,281],rows:[1.8,0,281],fin:[1.8,0,281],
+  tab2:[1,0,0],mk:[1.8,0,240],fps:[1.8,0,240],tab3:[1,0,0],theme:[1.8,0,190],judge:[1.8,420,262]};
+function cam(t){ let i=-1; SEQ.forEach(([a],j)=>{ if(t>=a) i=j; }); if(i<1) return CAM.tab0;
+  const [a,k]=SEQ[i], cur=CAM[k], prev=CAM[SEQ[i-1][1]], u=ss((t-a)/0.7); return cur.map((v,j)=>lerp(prev[j],v,u)); }
+function box(t){ let i=-1; SEQ.forEach(([a],j)=>{ if(t>=a) i=j; }); if(i<0) return null;
+  const [a,k]=SEQ[i], cur=R[k]; if(i===0) return [cur,ramp(t,a,0.3)];
+  const prev=R[SEQ[i-1][1]], u=eo((t-a)/0.45); return [cur.map((v,j)=>lerp(prev[j],v,u)),1]; }
+window.SCENE = t=>{
+  show('shot',t,0.4,0.6,20);
+  IMG.forEach(([a,n],j)=>{ const im=$('i'+n);
+    const on = j===0 ? 1 : ramp(t,a-0.05,0.35); const next=IMG[j+1]; const off = next ? ramp(t,next[0]+0.3,0.1) : 0;
+    im.style.opacity = on*(1-off); im.style.zIndex = j+1; });
+  const [cs_,cx,cy]=cam(t); $('cam').style.transform=`translate(${-cx*cs_}px,${-cy*cs_}px) scale(${cs_})`;
+  const bx=box(t), hb=$('hb'); hb.style.borderWidth=(3/cs_)+'px'; hb.style.borderRadius=(10/cs_)+'px'; hb.style.boxShadow=`0 0 0 ${4/cs_}px rgba(242,162,58,.22)`;
+  if(!bx || t>KIT.dur-1.2){ hb.style.opacity=0; } else { const [r,o]=bx; hb.style.opacity=o;
+    const pd=4/cs_; hb.style.left=(r[0]-pd)+'px'; hb.style.top=(r[1]-pd)+'px'; hb.style.width=(r[2]+2*pd)+'px'; hb.style.height=(r[3]+2*pd)+'px'; }
+  show('ml',t,T.a[0],0.4,0);
+  const MS=[T.b[0],T.c[0],T.d[0],T.e[0]];
+  ['m0','m1','m2','m3'].forEach((id,i)=>{ show(id,t,T.a[0]+0.3+i*0.12,0.45,12); const on=t>=MS[i] && t<(MS[i+1]??KIT.dur);
+    $(id).style.background = on ? '#fff' : '#F3F6FA'; $(id).style.borderColor = on ? '#38577D' : 'transparent'; $(id).style.boxShadow = on ? '0 10px 26px rgba(56,87,125,.16)' : 'none'; });
+};
+</script></body></html>

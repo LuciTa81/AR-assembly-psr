@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+.cd{position:absolute;top:290px;width:540px;height:598px;border-radius:16px;background:#fff;border:1.5px solid #D5DCE6;overflow:hidden}
+.cd .md{position:absolute;left:0;top:0;width:540px;height:300px;background:#111;overflow:hidden}
+.cd .md img,.cd .md video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cd .lb{position:absolute;left:26px;top:318px;font-size:16px;font-weight:800;color:#D9822B}
+.cd .tt{position:absolute;left:26px;top:344px;font-size:26px;font-weight:800;line-height:1.38;color:#1F2733;white-space:nowrap}
+.cd .hr{position:absolute;left:26px;right:26px;top:430px;height:1px;background:#E3E7EE}
+.cd .k{position:absolute;left:26px;font-size:14px;font-weight:800;color:#8A93A3}
+.cd .why{position:absolute;left:26px;top:466px;width:488px;font-size:18px;line-height:1.5;color:#4B5563;font-weight:500}
+.cd .chips{position:absolute;left:26px;top:556px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.stp{padding:6px 11px;border-radius:9px;background:#EEF2F7;color:#38577D;font-size:16px;font-weight:800}
+.ar{color:#9AA3B2;font-size:15px;font-weight:800}
+.mt{position:absolute;left:12px;top:12px;z-index:5}
+#bar{left:110px;top:902px;width:1700px;height:56px;border-radius:14px;border:1.5px solid #D5DCE6;background:#fff}
+#bar .tag{position:absolute;left:20px;top:13px;background:#FBEBDD;color:#D9822B}
+#bar .x{position:absolute;left:150px;top:12px;font-size:24px;font-weight:800;color:#1F2733;white-space:nowrap}
+</style></head>
+<body><div id="stage">
+<div id="cards"></div>
+<div class="a" id="bar"><span class="tag">공통된 방법</span><div class="x">원인을 나눠서 재고, 설계를 바꾼 뒤, 다시 확인했습니다.</div></div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({chap:1, title:'만들면서 풀어야 했던 문제 세 가지', sub:'단계 인식 · 양안 정합 · 가림과 복구'});
+const C=[
+ {lb:'문제 1 · 단계 인식', tt:'화면에 드라이버가 보인다고<br>지금 몇 단계인지 알 수는 없습니다', why:'한 프레임의 검출은 도구가 스치거나 가려지는 순간에 틀립니다.',
+  ch:['데이터 수집','비교 실험','이어진 관측으로 판단'], md:'<video id="v1a" src="../assets/ch1_yolo.mp4" muted preload="auto"></video><video id="v1b" src="../assets/ch1_yolo.mp4" muted preload="auto"></video>', tag:'5월 검출 기록 · YOLO'},
+ {lb:'문제 2 · 양안 정합', tt:'카메라에서 맞는 위치가<br>안경에서는 어긋납니다', why:'카메라와 두 눈 위치가 다르고, 쓸 때마다 조금씩 달라집니다.',
+  ch:['눈별 투영','양안 보정','착용 확인'], md:'<img id="i2" src="../assets/ch2.jpg">', tag:'좌 · 우 눈 안내가 어긋난 화면'},
+ {lb:'문제 3 · 가림과 복구', tt:'손이 마커를 가리면<br>계산에 필요한 추적이 끊깁니다', why:'추적이 끊기면 나사를 조립 중인지,<br>중간에 멈췄는지 확인할 수가 없습니다.',
+  ch:['추적과 진행 분리','진행 보존','기록으로 확인'], md:'<video id="v3a" src="../assets/ch3_occ.mp4" muted preload="auto"></video><video id="v3b" src="../assets/ch3_occ.mp4" muted preload="auto"></video>', tag:'시연 영상 · 재현'},
+];
+C.forEach((c,i)=>{ const e=document.createElement('div'); e.className='cd'; e.id='c'+i; e.style.left=(110+i*580)+'px';
+  e.innerHTML=`<div class="md">${c.md}<span class="mtag mt">${c.tag}</span></div><div class="lb">${c.lb}</div><div class="tt">${c.tt}</div><div class="hr"></div>
+   <div class="k" style="top:442px" id="k1_${i}">원인</div><div class="why" id="w${i}">${c.why}</div><div class="k" style="top:532px" id="k2_${i}">푼 방법</div>
+   <div class="chips" id="ch${i}">${c.ch.map((x,j)=>`<span class="stp" id="p${i}${j}">${x}</span>`).join('<span class="ar">→</span>')}</div>`;
+  $('cards').appendChild(e); });
+const T = KIT.timeline([
+  {k:'a', t:'만들면서 풀어야 했던 문제는 세 가지였습니다.', at:1.4},
+  {k:'b', t:'첫째, 화면에 드라이버가 보인다고 지금 몇 단계인지 알 수는 없습니다.'},
+  {k:'c', t:'한 프레임 검출은 도구가 스치거나 가려지면 틀리기 때문에, 이어진 관측으로 판단했습니다.'},
+  {k:'d', t:'둘째, 카메라에서 맞는 위치가 안경에서는 어긋났습니다.', pre:0.2},
+  {k:'e', t:'카메라와 두 눈의 위치가 다르고 쓸 때마다 달라져서, 눈마다 투영하고 보정했습니다.'},
+  {k:'f', t:'셋째, 손이 마커를 가리면 추적이 끊겨, 나사를 조립 중인지 중간에 멈췄는지 알 수 없었습니다.', pre:0.2},
+  {k:'g', t:'그래서 추적과 진행을 나눠, 끊겨도 한 일은 지우지 않게 했습니다.'},
+  {k:'h', t:'세 문제 모두 원인을 나눠서 재고, 설계를 바꾼 뒤, 다시 확인했습니다.', pre:0.2},
+]);
+const L1 = KIT.loopVid('v1a','v1b',{start:T.b[0]-0.4, c0:0, len:14.6, xf:0.3});
+const L3 = KIT.loopVid('v3a','v3b',{start:T.f[0]-0.4, c0:0, len:7.0, xf:0.3});
+const IN=[T.b[0]-0.3, T.d[0]-0.3, T.f[0]-0.3], WHY=[T.c[0], T.e[0], T.g[0]], ACT=[[T.b[0],T.d[0]],[T.d[0],T.f[0]],[T.f[0],T.h[0]]];
+window.SCENE = t=>{
+  L1(t); L3(t);
+  C.forEach((c,i)=>{ show('c'+i,t,IN[i],0.55,26);
+    const on = t>=ACT[i][0] && t<ACT[i][1];
+    $('c'+i).style.borderColor = on ? '#38577D' : '#D5DCE6'; $('c'+i).style.boxShadow = on ? '0 12px 30px rgba(56,87,125,.18)' : 'none';
+    show('k1_'+i,t,WHY[i]-0.1,0.4,0); show('w'+i,t,WHY[i],0.45,8);
+    show('k2_'+i,t,WHY[i]+(T[['c','e','g'][i]][1]-WHY[i])*0.4,0.4,0);
+    const w=WHY[i], d=T[['c','e','g'][i]]; const span=d[1]-d[0];
+    c.ch.forEach((x,j)=>show(`p${i}${j}`,t,w+span*(0.45+j*0.15),0.4,8));
+    $('ch'+i).querySelectorAll('.ar').forEach((a,j)=>a.style.opacity=ramp(t,w+span*(0.45+(j+1)*0.15)-0.1,0.3));
+  });
+  const z=1.0+0.05*ss((t-IN[1])/12); $('i2').style.transform=`scale(${z})`;
+  show('bar',t,T.h[0]-0.1,0.5,14); $('bar').style.borderColor = t>=T.h[0] ? '#38577D' : '#D5DCE6';
+};
+</script></body></html>

@@ -1,0 +1,8 @@
+/* 6 파스텔 격자: 커팅 매트 격자 위에 대각선 파스텔 물빛 */
+.blob{display:none!important}
+#stage{background-color:#F6F8FA;background-image:
+ linear-gradient(rgba(56,87,125,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(56,87,125,.075) 1px,transparent 1px),
+ linear-gradient(rgba(56,87,125,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(56,87,125,.03) 1px,transparent 1px),
+ linear-gradient(115deg,rgba(201,214,236,.65) 0%,rgba(207,237,230,.55) 48%,rgba(251,227,207,.6) 100%);
+ background-size:200px 200px,200px 200px,40px 40px,40px 40px,100% 100%;background-position:-10px -10px,-10px -10px,-10px -10px,-10px -10px,0 0}
+.panel,.chip,.node{background:#fff!important}

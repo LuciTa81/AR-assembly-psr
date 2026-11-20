@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+.sc{position:absolute;top:290px;width:400px;height:360px}
+.sc .md{position:absolute;left:0;top:0;width:400px;height:250px;border-radius:14px;overflow:hidden;background:#111;box-shadow:0 8px 24px rgba(31,39,51,.14)}
+.sc .md img,.sc .md video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sc .no{position:absolute;left:0;top:268px;font-size:16px;font-weight:800;color:#38577D}
+.sc .t{position:absolute;left:34px;top:263px;font-size:23px;font-weight:800;color:#1F2733;white-space:nowrap}
+.sc .d{position:absolute;left:0;top:302px;width:392px;font-size:17px;line-height:1.5;color:#6B7280;font-weight:500}
+.arw{top:400px;font-size:24px;font-weight:800;color:#AFC0D6}
+#stats{left:110px;top:684px;width:1700px;height:196px;border-radius:16px;border:1.5px solid #D5DCE6;background:#fff}
+#stats .lab{position:absolute;left:26px;top:18px;font-size:17px;font-weight:800;color:#38577D}
+.st{position:absolute;top:52px;width:400px}
+.st .v{font-size:58px;font-weight:800;color:#38577D;letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.st .v small{font-size:26px;font-weight:700;margin-left:6px;color:#38577D}
+.st .s{margin-top:6px;font-size:17px;color:#6B7280;font-weight:500;white-space:nowrap}
+#fn{left:112px;top:898px;font-size:15px;color:#8A93A3;font-weight:500;white-space:nowrap}
+.mt{position:absolute;top:10px;z-index:5}
+</style></head>
+<body><div id="stage">
+<div class="sc" id="c0" style="left:110px"><div class="md"><img src="../assets/ds1.jpg"></div><div class="no">01</div><div class="t">촬영</div><div class="d">Unity로 만든 Quest 3 캡처용 앱으로 조립 한 번을 60초, 초당 2장씩 저장했습니다.</div></div>
+<div class="sc" id="c1" style="left:543px"><div class="md"><img src="../assets/ds2.jpg"><span class="mtag mt" style="left:10px">원본</span><span class="mtag mt" style="left:210px">보정 후</span></div><div class="no">02</div><div class="t">정면 보정</div><div class="d">ArUco 마커로 작업대를 위에서 본 좌표로 펴서, 시점이 달라져도 같은 자리를 봅니다.</div></div>
+<div class="sc" id="c2" style="left:976px"><div class="md"><img src="../assets/ds3.jpg"></div><div class="no">03</div><div class="t">라벨링 · 학습</div><div class="d">드라이버 · 손잡이 · 나사 이미지를 하나씩 Roboflow로 라벨링하고 YOLOv11을 학습했습니다.</div></div>
+<div class="sc" id="c3" style="left:1409px"><div class="md"><video id="va" src="../assets/ds4_det.mp4" muted preload="auto"></video><video id="vb" src="../assets/ds4_det.mp4" muted preload="auto"></video><span class="mtag mt" style="left:10px">보정 화면 위 YOLO 검출 · 1학기</span></div><div class="no">04</div><div class="t">검출 · 특징 추출</div><div class="d">드라이버를 찾고, 도구 끝과 나사의 거리, 영역 점수, 손 위치를 프레임마다 뽑았습니다.</div></div>
+<div class="a arw" id="a0" style="left:513px">→</div><div class="a arw" id="a1" style="left:946px">→</div><div class="a arw" id="a2" style="left:1379px">→</div>
+<div class="a" id="stats"><div class="lab">규모</div>
+  <div class="st" id="s0" style="left:26px"><div class="v" id="v0">0<small>세션</small></div><div class="s">학습용 16, 시험용 1 (session 17)</div></div>
+  <div class="st" id="s1" style="left:451px"><div class="v" id="v1">0<small>프레임</small></div><div class="s">세션마다 약 120장</div></div>
+  <div class="st" id="s2" style="left:876px"><div class="v" id="v2">0<small>장 라벨링</small></div><div class="s">드라이버 · 손잡이 · 나사 3종 데이터 라벨링</div></div>
+  <div class="st" id="s3" style="left:1301px"><div class="v" id="v3">0<small>mAP</small></div><div class="s">YOLOv11 · 5월 학습본의 시험 세트</div></div>
+</div>
+<div class="a" id="fn">1학기 최종 보고서 기준 · YOLOv11 2026. 5. 16 학습본 · Roboflow 시험 세트 39장</div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({chap:2, title:'조립 장면을 직접 찍고, 라벨을 붙여 검출 모델을 학습했습니다', sub:'문제 1 · 단계 인식 — 촬영 → 정면 보정 → 라벨링 · 학습 → 검출 · 특징 추출'});
+const T = KIT.timeline([
+  {k:'a', t:'단계를 인식하려면 먼저 학습할 데이터가 필요했습니다.', at:1.4},
+  {k:'b', t:'Unity로 Quest 3 캡처용 앱을 만들어, 조립 한 번을 60초 동안 초당 2장씩 저장했습니다.'},
+  {k:'c', t:'그리고 ArUco 마커로 작업대를 위에서 본 좌표로 펴서, | 시점이 달라져도 같은 자리를 보게 했습니다.'},
+  {k:'d', t:'드라이버와 손잡이, 나사 이미지를 Roboflow로 하나씩 라벨링해 YOLOv11을 학습했고,'},
+  {k:'e', t:'프레임마다 도구 끝과 나사의 거리, 영역 점수, 손 위치를 뽑았습니다.'},
+  {k:'f', t:'모두 17세션, 1,920프레임을 찍어 970장에 라벨을 붙였고,', pre:0.2},
+  {k:'g', t:'5월 학습본은 시험 세트에서 mAP 94.1%를 기록했습니다.'},
+]);
+const L = KIT.loopVid('va','vb',{start:T.e[0]-0.5, c0:0, len:9.8, xf:0.3});
+const IN=[T.b[0]-0.2,T.c[0]-0.2,T.d[0]-0.2,T.e[0]-0.2];
+const f=T.f, SIN=[f[0]+0.3, f[0]+(f[1]-f[0])*0.35, f[0]+(f[1]-f[0])*0.62, T.g[0]+0.6];
+const VAL=[[17,0,'세션'],[1920,0,'프레임'],[970,0,'장'],[94.1,1,'%']];
+const fmt=(x,d)=>d? x.toFixed(d) : Math.round(x).toLocaleString('en-US');
+window.SCENE = t=>{
+  L(t);
+  for(let i=0;i<4;i++){ show('c'+i,t,IN[i],0.55,24); if(i<3) show('a'+i,t,IN[i+1]-0.1,0.4,0,-10);
+    const on = t>=IN[i] && t<(IN[i+1]??f[0]); const md=$('c'+i).querySelector('.md');
+    md.style.boxShadow = on ? '0 0 0 3px #38577D, 0 10px 28px rgba(56,87,125,.25)' : '0 8px 24px rgba(31,39,51,.14)'; }
+  const z=1.0+0.06*ss((t-IN[1])/6); $('c1').querySelector('img').style.transform=`scale(${z})`;
+  show('stats',t,f[0]-0.2,0.5,18);
+  VAL.forEach(([v,d,u],i)=>{ show('s'+i,t,SIN[i],0.4,10); const k=eo((t-SIN[i])/1.3); const x=v*k;
+    $('v'+i).innerHTML = (i===3 ? fmt(x,1)+'<small>% mAP</small>' : fmt(x,0)+`<small>${u}</small>`); });
+  show('fn',t,T.g[0]+0.8,0.5,0);
+};
+</script></body></html>

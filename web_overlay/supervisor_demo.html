@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <script src="/supervisor_shell.js"></script>
+  <title>AR Assembly | 작업 관제</title>
+  <link rel="stylesheet" href="/supervisor_demo.css">
+  <script defer src="/supervisor_state.js"></script>
+  <script defer src="/supervisor_video.js"></script>
+  <script defer src="/supervisor.js"></script>
+  <script defer src="/supervisor_demo.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#actionSurface">현재 작업으로 이동</a>
+  <header class="topbar">
+    <a class="brand" href="#live"><svg class="icon brand-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg><span>AR Assembly<small>조립 작업 안내</small></span></a>
+    <nav class="main-nav" aria-label="주 메뉴"><div role="tablist" aria-label="관제 화면">
+      <button type="button" role="tab" id="tab-live" data-view="live" aria-controls="view-live" aria-selected="true" tabindex="0"><svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg><span>실시간 관제</span></button>
+      <button type="button" role="tab" id="tab-history" data-view="history" aria-controls="view-history" aria-selected="false" tabindex="-1"><svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg><span>작업 기록</span></button>
+      <button type="button" role="tab" id="tab-tracking" data-view="tracking" aria-controls="view-tracking" aria-selected="false" tabindex="-1"><svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg><span>연결·진단</span></button>
+      <button type="button" role="tab" id="tab-settings" data-view="settings" aria-controls="view-settings" aria-selected="false" tabindex="-1"><svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 17H5"/><path d="M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg><span>설정</span></button>
+    </div></nav>
+    <div class="header-tools">
+      <button id="themeToggle" class="icon-button" type="button" title="화면 테마 바꾸기" aria-label="화면 테마 바꾸기" aria-pressed="false"><svg class="icon theme-sun" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="icon theme-moon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg></button>
+      <button id="fullscreen" class="icon-button" type="button" title="전체 화면" aria-label="전체 화면" aria-pressed="false"><svg id="expandIcon" class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg><svg id="collapseIcon" class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg></button>
+    </div>
+  </header>
+  <main>
+    <div class="page-heading"><div class="page-heading-left"><h1 id="pageTitle">실시간 관제</h1><span id="sourceKind" class="source-label">입력 확인 중</span></div><span id="status" role="status" data-tone="neutral">연결 대기</span></div>
+    <div id="returnToLive" class="return-line" hidden><div><span class="label">현재 작업</span><strong id="backgroundTask">연결 대기</strong></div><a href="#live">작업 화면으로 <svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
+    <section id="view-live" class="view" role="tabpanel" aria-labelledby="tab-live">
+    <div class="workspace">
+      <section class="camera-view" aria-label="작업대 영상">
+        <div class="section-heading" data-hover="tool"><h2><svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></svg>작업대 영상</h2><label class="switch"><input id="videoEnabled" type="checkbox" role="switch"><span>영상 표시</span></label></div>
+        <div class="video-stage" id="videoStage" data-status="OFF">
+          <img id="videoImage" alt="로컬 작업대 입력 영상" hidden>
+          <div class="video-empty-wrap"><svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.66 6H14a2 2 0 0 1 2 2v2.5l5.248-3.062A.5.5 0 0 1 22 7.87v8.196"/><path d="M16 16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/><path d="m2 2 20 20"/></svg><div id="videoEmpty">영상 표시 꺼짐</div><button id="showVideo" class="command-button" data-hover type="button"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></svg>영상 표시</button></div>
+          <span id="videoStatus" class="video-status" role="status">꺼짐</span>
+        </div>
+        <div class="video-meta"><strong id="videoSource">입력 미확인</strong><span>카메라 시점 · AR 화면은 별도</span></div>
+        <details class="video-details"><summary>영상 상태 자세히</summary><div class="video-meta"><span id="videoFrame">영상 프레임 --</span><span id="videoAge">영상 나이 --</span></div><p class="video-note">원본 영상 · 상태와 별도 수신 · 실물 정합 표시 없음</p></details>
+      </section>
+      <section class="guidance" id="actionSurface" tabindex="-1" aria-label="현재 작업 안내" data-tone="neutral" data-hover="tool">
+        <div class="state-row"><span class="label">현재 작업</span><span id="liveCue">연결을 기다려요</span></div>
+        <div class="target-heading"><strong id="targetLetter" aria-hidden="true">--</strong><div><h2 id="stateLabel">작업 대기</h2></div></div>
+        <div class="instruction-block" aria-live="polite"><p class="label" id="instructionCaption">다음 행동</p><p id="actionTitle">입력 연결을 기다리고 있어요</p><p id="acknowledgement">&nbsp;</p></div>
+
+        <ol class="phase-rail" id="phaseRail" aria-label="현재 나사의 관측 상태" hidden>
+          <li><span>1</span><b id="phaseStart">대상 접근</b></li><li><span>2</span><b>접근 유지</b></li><li><span>3</span><b id="phaseEnd">이탈 대기</b></li>
+        </ol>
+        <div id="feedback" class="feedback" aria-live="polite" aria-atomic="true"><h3 id="feedbackTitle">상태 수신 대기</h3><p id="feedbackDetail">로컬 인식 서버의 연결을 기다립니다.</p></div>
+        <div id="operatorControls" class="operator-controls" hidden><button id="confirmStep" type="button" data-hover disabled>현재 작업 완료 확인</button><p id="confirmationHint"></p><p id="operatorResult" role="status"></p></div>
+        <div class="target-map-row"><div class="target-map" id="targetMap" role="img" aria-label="작업자 기준 목표 도식">
+          <span data-screw="A">A</span><span data-screw="B">B</span><span data-screw="C">C</span><span data-screw="D">D</span><span class="map-near">작업자 쪽</span>
+        </div><div><p id="mapLabel">작업 대기</p><small>작업자 기준 위치 안내 그림</small></div></div>
+      </section>
+    </div>
+    <section class="sequence" aria-label="전체 조립 순서"><div class="section-heading"><h2>작업 순서</h2><span id="stepProgress">단계 수신 대기</span></div>
+      <ol id="steps" class="steps"><li data-state="S0"><b>01</b><span>상자 배치</span></li><li data-state="S1"><b>02</b><span>뚜껑 닫기</span></li><li data-state="S2"><b>03</b><span>나사 A</span></li><li data-state="S3"><b>04</b><span>나사 B</span></li><li data-state="S4"><b>05</b><span>나사 C</span></li><li data-state="S5"><b>06</b><span>나사 D</span></li><li data-state="S6"><b>07</b><span>최종 확인</span></li></ol>
+    </section>
+      <section class="recent-section" aria-label="최근 단계 전환"><div class="section-heading"><h2>최근 진행</h2><a class="subtle-link" href="#history">작업 기록 <svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div><p id="historyEmpty">아직 작업 기록이 없습니다.</p><ol id="recentEvents"></ol></section>
+    </section>
+    <section id="view-history" class="view" role="tabpanel" aria-labelledby="tab-history" hidden>
+      <div class="section-intro"><div><h2>이번 작업 기록</h2></div><button id="downloadEvents" class="command-button" data-hover type="button" disabled><svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>기록 내려받기</button></div>
+      <div class="table-toolbar"><span id="eventCount">기록 0개</span><label>표시 <select id="historyFilter"><option value="steps">단계 전환</option><option value="all">전체 변화</option><option value="attention">보류·재확인</option></select></label></div>
+      <div class="table-scroll"><table class="event-table"><thead><tr><th scope="col">경과 시간</th><th scope="col">작업</th><th scope="col">기록</th></tr></thead><tbody id="historyRows"></tbody></table><p id="filteredEmpty" class="empty-note">아직 작업 기록이 없습니다.</p></div>
+      <details class="history-details"><summary>기록 정보</summary><div class="server-instruction"><span class="label">세션 ID</span><p id="historySession">아직 작업 기록이 없습니다.</p><p>이 페이지에서 수신한 시점부터의 기록입니다. 단계 전환과 전체 변화는 각각 최근 120개까지 보관하며, 새로고침하면 초기화됩니다.</p></div></details>
+    </section>
+    <section id="view-tracking" class="view" role="tabpanel" aria-labelledby="tab-tracking" hidden>
+      <div class="section-intro"><div><h2>입력 상태와 추적 근거</h2><p id="trackingSummary">새 입력을 기다립니다.</p></div><a class="command-button" href="/" target="_blank" rel="noopener"><svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>카메라 진단</a></div>
+      <div class="tracking-grid">
+        <div><h3 class="section-label">현재 수신값</h3><dl class="metric-list">
+          <div><dt>작업 대상</dt><dd id="target">--</dd></div><div><dt>마커 추적</dt><dd id="marker">--</dd></div><div><dt>검출 마커</dt><dd id="markerCount">--</dd></div><div><dt id="qualityLabel">Warp 품질</dt><dd id="quality">--</dd></div><div><dt>드라이버 관측</dt><dd id="driverEvidence">정보 없음</dd></div><div><dt>처리 FPS</dt><dd id="fps">--</dd></div><div><dt>서버 처리 시간</dt><dd id="latency">--</dd></div><div><dt>수신 데이터 나이</dt><dd id="age">--</dd></div>
+        </dl></div>
+        <div class="tracking-detail"><h3 class="section-label">공간 안내</h3><p id="poseFeedback" class="notice">위치 안내 대기</p><div class="capability-note"><h3>작업 확인 안내</h3><p>드라이버의 접근, 유지, 이탈을 확인해 다음 나사로 안내합니다. 체결 강도와 전체 조립 상태는 작업자가 확인해 주세요.</p><p>이 화면에는 카메라 영상이 표시되며, 위치 안내는 안경에 표시됩니다.</p></div>
+          <details id="diagnostics"><summary>기술 정보 자세히</summary><dl class="metric-list"><div><dt id="stateCaption">현재 상태</dt><dd id="currentState">--</dd></div><div><dt>진행 방식</dt><dd id="interactionMode">안내 보류</dd></div></dl><div class="server-instruction"><span class="label">서버 원문</span><p id="instruction">Waiting for the local vision server</p></div><p class="session-line"><span id="session">연결 대기</span><span id="frame">프레임 --</span></p></details><p id="dataNote" class="server-instruction">상태 데이터 수신 대기</p>
+        </div>
+      </div>
+    </section>
+    <section id="view-settings" class="view" role="tabpanel" aria-labelledby="tab-settings" hidden>
+      <div class="section-intro"><div><h2>표시 환경</h2><p>현재 브라우저</p></div></div>
+      <div class="settings-layout">
+        <section class="setting-section"><h3>화면 테마</h3><fieldset class="theme-options"><legend class="sr-only">화면 테마</legend>
+          <label class="theme-option" data-hover><input type="radio" name="theme" value="light"><span class="theme-sample sample-light" aria-hidden="true"><i></i><b></b><em></em></span><span class="theme-name"><svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>라이트<svg class="icon theme-check" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></label><label class="theme-option" data-hover><input type="radio" name="theme" value="dark"><span class="theme-sample sample-dark" aria-hidden="true"><i></i><b></b><em></em></span><span class="theme-name"><svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>다크<svg class="icon theme-check" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></label><label class="theme-option" data-hover><input type="radio" name="theme" value="system"><span class="theme-sample sample-system" aria-hidden="true"><i></i><b></b><em></em></span><span class="theme-name"><svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>시스템<svg class="icon theme-check" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></label>
+        </fieldset></section>
+        <section class="setting-section"><h3>화면 반응</h3><label class="setting-row"><span><strong>동작 효과</strong><small id="motionStatus">동작 효과 켜짐</small></span><span class="switch"><input id="motionEnabled" type="checkbox" role="switch" checked></span></label><label class="setting-row"><span><strong>포인터 강조</strong><small>동작 효과가 켜져 있을 때 적용</small></span><span class="switch"><input id="highlightEnabled" type="checkbox" role="switch" checked></span></label></section>
+        <section class="setting-section"><h3>영상 입력</h3><label class="setting-row"><span><strong>작업대 영상 표시</strong><small>새로고침 시 꺼짐 · 화면 표시만, 저장 안 함</small></span><span class="switch"><input id="settingsVideo" type="checkbox" role="switch"></span></label></section>
+        <section class="setting-section"><h3>작업 환경</h3><dl class="metric-list"><div><dt>판정·보정 설정</dt><dd>서버 실행 프로필</dd></div><div><dt>기존 화면</dt><dd><a href="/supervisor.html">기존 관제 열기 <svg class="icon " aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></dd></div></dl></section>
+      </div>
+    </section>
+    <footer><div><p>AR Assembly · 로컬 작업 안내</p></div><span>노트북 관제</span></footer>
+    <p id="displayError" role="status" hidden></p>
+  </main>
+<!-- Icons: Lucide 1.8.0, see lucide-LICENSE.txt. -->
+</body>
+</html>

@@ -1,0 +1,186 @@
+{
+  "schema_version": "beast_workspace_metric_v1",
+  "profile_id": "beast-workspace-comfort-layout-20261006-v1-A-trial-20261031",
+  "units": "mm",
+  "axes": "x_right_y_away_z_up",
+  "origin_marker_id": 3,
+  "marker_centers_mm": {
+    "0": [
+      0,
+      285,
+      0
+    ],
+    "1": [
+      205,
+      285,
+      0
+    ],
+    "2": [
+      410,
+      285,
+      0
+    ],
+    "3": [
+      0,
+      0,
+      0
+    ],
+    "4": [
+      75,
+      175,
+      0
+    ],
+    "5": [
+      330,
+      175,
+      0
+    ]
+  },
+  "targets_mm": {
+    "A": [
+      148.73667795585922,
+      155.70133073931308,
+      60.0
+    ],
+    "B": [
+      261.19613132470437,
+      159.63734926777704,
+      60
+    ],
+    "C": [
+      151.83744722842215,
+      46.26787335294682,
+      60
+    ],
+    "D": [
+      263.11443529070334,
+      48.447903794166336,
+      60
+    ]
+  },
+  "measurement_source": {
+    "kind": "user_measured_offsets_after_marker_relocation",
+    "date": "2026-10-06",
+    "precision": "approximate_user_measurements",
+    "reference_marker_id": 2,
+    "reference_marker_center_mm": [
+      410,
+      285,
+      0
+    ],
+    "displacements_to_reference_cm": {
+      "4": {
+        "right": 33.5,
+        "away": 11
+      },
+      "5": {
+        "right": 8,
+        "away": 11
+      }
+    },
+    "derived_marker_centers_mm": {
+      "4": [
+        75,
+        175,
+        0
+      ],
+      "5": [
+        330,
+        175,
+        0
+      ]
+    },
+    "unchanged_marker_ids": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "unchanged_anchor_and_box_positions": "Inherited from user instruction to keep anchors and box fixed; physical verification pending",
+    "known_hole_spacing_mm": [
+      110,
+      110
+    ],
+    "approximate_lid_height_mm": 60,
+    "approximate_marker_side_mm": 70,
+    "parent_profile_path": "C:\\Users\\fresh\\AppData\\Local\\ARAssembly\\beast-mvp\\workspace_registration\\projection-20260927T113047Z-dfc98943\\target-candidate.json",
+    "parent_profile_sha256": "b56c998f3514b55b12feae8667cfd3420a75a72aada4c5f5a85622c37db2c755",
+    "previous_measurement_source": {
+      "kind": "user_ruler_and_grid_alignment_confirmation",
+      "date": "2026-09-27",
+      "user_report_cm": {
+        "3_to_0": 28.5,
+        "3_to_4": 20.5,
+        "3_to_5": 41,
+        "3_to_1_diagonal": 35,
+        "3_to_2_diagonal": 50
+      },
+      "row_column_alignment_confirmed": true,
+      "precision": "approximate_user_measurements",
+      "known_hole_spacing_mm": [
+        110,
+        110
+      ],
+      "approximate_lid_height_mm": 60,
+      "approximate_marker_side_mm": 70
+    },
+    "comfortable_posture_confirmed_by_user": true,
+    "reference_photo": "C:\\Users\\fresh\\Downloads\\Beast_View_Retry_20261006_fd277ffc\\workspace-view.png"
+  },
+  "status": "A_camera_projection_trial_only",
+  "activation_status": "not_activated",
+  "display_alignment_verified": false,
+  "target_registration": {
+    "method": "user_clicks_intersect_measured_height_plane",
+    "source_image": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\workspace_registration\\reference-20260927T110847Z-9c0e5ff6\\reference-02.png",
+    "source_image_sha256": "a06fd23eb74001a41bb944a653d1f7b1d4ee61636d04d8e8924bb9350e08079f",
+    "clicks_raw_px": {
+      "A": [
+        564,
+        270
+      ],
+      "B": [
+        754,
+        264
+      ],
+      "C": [
+        549,
+        413
+      ],
+      "D": [
+        777,
+        408
+      ]
+    },
+    "picked_head_height_mm": 60,
+    "target_height_mm": 60,
+    "expected_square_mm": 110,
+    "spacing_tolerance_mm": 10,
+    "camera_profile_id": "beast-combined-20260927T065914Z-89414bbe",
+    "camera_profile_sha256": "25f025bc5c2f71e4c83e6645e5cdc742bda81cd75d30c55ff7e5aca99924872e",
+    "marker_layout_sha256": "5dc774485e16f01b9600603f0bf48bc1e18eec6b987718724a6180c2fdad8c68",
+    "validation": "Spacing sanity check only; held-out physical target checks and eye alignment remain pending"
+  },
+  "physical_accuracy_verified": false,
+  "target_inheritance": {
+    "status": "inherited_pending_reprojection_and_physical_check",
+    "reason": "Targets and fixed marker anchors reportedly not moved; preserve original target_registration provenance",
+    "parent_profile_id": "beast-workspace-centers-20260927-v1-targets-20260927T113302Z-ce42c89c"
+  },
+  "target_adjustment": {
+    "target": "A",
+    "parent_profile_path": "C:\\Users\\fresh\\AppData\\Local\\ARAssembly\\beast-mvp\\workspace_registration\\comfort-layout-20261006-v1\\workspace-candidate.json",
+    "parent_profile_sha256": "7455aa644607b578ea98ff5d08803aecb3093e06130e484a876e020020459491",
+    "frozen_fit_result": "C:\\Users\\fresh\\Downloads\\AR_Beast_Diagnostics_20261030\\A-coordinate-hypothesis-01\\results\\analysis.json",
+    "frozen_fit_sha256": "ca1a27228d7be3440781fe6ebb26f979fcb42596cfe7e6183cc82bb83e1b7f88",
+    "user_labels": "C:\\Users\\fresh\\Downloads\\AR_Beast_Diagnostics_20261030\\A-coordinate-hypothesis-01\\user-check\\run-20261031T003934-ef35c3bc\\observations.json",
+    "user_labels_sha256": "93b4b1f1ffbeaef97b5f86f73bd7fc82624690792bbee2ca3dbbb6ecd002ac4c",
+    "original_A_mm": [
+      150.73385944201263,
+      156.14870765226289,
+      60
+    ],
+    "validation": "Three user-labelled saved photos; no refit, no eye alignment validation",
+    "display_binding": "New workspace ID/hash; existing SBS binding must not be rewritten"
+  }
+}

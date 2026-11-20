@@ -1,0 +1,4 @@
+/* A 대각선 둘: 왼쪽 아래 민트, 오른쪽 위 라벤더 */
+#b1{left:-300px!important;top:520px!important;width:980px!important;height:980px!important;background:#C4EBE1!important;opacity:0.62!important}
+#b2{left:1240px!important;top:-360px!important;width:900px!important;height:900px!important;background:#DAD3F4!important;opacity:0.62!important}
+#b3{display:none!important}

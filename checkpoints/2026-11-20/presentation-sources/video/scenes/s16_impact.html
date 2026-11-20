@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+#ph{left:0;top:0;width:840px;height:1080px;overflow:hidden}
+#ph img{width:100%;height:100%;object-fit:cover;transform-origin:40% 60%}
+#ph .sh{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,30,48,.82) 0%,rgba(20,30,48,.45) 38%,rgba(20,30,48,0) 62%)}
+#h1{left:72px;top:96px;font-size:58px;font-weight:800;color:#fff;line-height:1.3;white-space:nowrap}
+#hr{left:76px;top:282px;width:56px;height:3px;background:#fff}
+#h2{left:76px;top:304px;font-size:23px;font-weight:500;color:#E6ECF4;white-space:nowrap}
+#lab{left:924px;top:96px;font-size:34px;font-weight:800;color:#38577D}
+.rw{position:absolute;left:924px;width:886px;height:150px;border-bottom:1px solid #E3E7EE}
+.rw .n{position:absolute;left:0;top:6px;font-size:22px;font-weight:300;color:#38577D}
+.rw .t{position:absolute;left:48px;top:2px;font-size:27px;font-weight:800;color:#1F2733;white-space:nowrap}
+.rw .d{position:absolute;left:48px;top:48px;width:830px;font-size:20px;line-height:1.55;color:#4B5563;font-weight:500}
+.rw .d b{color:#38577D;font-weight:800}
+#cl{left:924px;top:706px;width:886px;height:120px;border-left:5px solid #38577D;background:#EEF2F7;padding:22px 28px;font-size:25px;font-weight:800;color:#1F2733;line-height:1.5}
+#src{left:924px;top:852px;width:886px;font-size:14px;color:#9AA3B2;line-height:1.6;font-weight:500}
+</style></head>
+<body><div id="stage">
+<div class="a" id="ph"><img src="../assets/imp.jpg"><div class="sh"></div></div>
+<div class="a" id="h1">처음 하는 사람도<br>바로 조립할 수 있게</div>
+<div class="a" id="hr"></div>
+<div class="a" id="h2">집에서도, 산업 현장에서도 조립은 어렵습니다.</div>
+<div class="a" id="lab">Expected Impact</div>
+<div class="rw" id="r0" style="top:180px"><div class="n">01</div><div class="t">집에서도 어렵습니다</div><div class="d">조립식 가구를 조립해 본 사람 <b>3명 중 2명</b>이 스트레스라고 답했습니다.</div></div>
+<div class="rw" id="r1" style="top:350px"><div class="n">02</div><div class="t">산업 현장에는 경험자가 부족합니다</div><div class="d">사람을 못 뽑는 이유 1위는 요구하는 경험을 갖춘 지원자가 없다는 것(<b>25.8%</b>)입니다.</div></div>
+<div class="rw" id="r2" style="top:520px;border-bottom:none"><div class="n">03</div><div class="t">AR 안내는 이미 효과가 확인됐습니다</div><div class="d">Boeing · Iowa State 실험에서 PDF 설명서보다 조립 시간은 <b>약 30%</b> 줄고, 첫 시도 품질은 <b>90%</b> 가까이 좋아졌습니다.</div></div>
+<div class="a" id="cl">버튼을 누르지 않아도 단계가 자동으로 정확하게 넘어가,<br>처음 하는 사람도 두 손으로 끝까지 조립합니다.</div>
+<div class="a" id="src">출처: SIMBA 영국 주택 소유자 2,000명 설문(2017) · 고용노동부 직종별사업체노동력조사(2026. 6. 30) · Boeing · Iowa State Univ.(I/ITSEC 2014)</div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.bgOn=false; KIT.capX=1367; KIT.build(); KIT.header({chap:5});
+$('crumb').style.top='40px';
+const T = KIT.timeline([
+  {k:'a', t:'그렇다면 이 시스템은 누구에게 필요할까요.', at:1.6},
+  {k:'b', t:'집에서는 조립식 가구를 조립해 본 사람 세 명 중 두 명이 스트레스라고 답했고,', pre:0.6},
+  {k:'c', t:'산업 현장에서는 사람을 못 뽑는 이유 1위가 | 요구하는 경험을 갖춘 지원자가 없다는 것이었습니다.', pre:0.6},
+  {k:'d', t:'AR 안내의 효과는 이미 확인됐습니다. | Boeing과 Iowa State 실험에서 조립 시간이 약 30% 줄었습니다.', pre:0.6},
+  {k:'e', t:'버튼을 누르지 않아도 단계가 자동으로 정확하게 넘어가니, | 처음 하는 사람도 두 손으로 끝까지 조립할 수 있습니다.', pre:0.8},
+],{tail:2.8});
+const RT=[T.b[0]-0.7,T.c[0]-0.7,T.d[0]-0.7];   // 항목을 먼저 보여 주고 한 박자 뒤에 말한다
+window.SCENE = t=>{
+  show('ph',t,0,0.8,0,-30); $('ph').querySelector('img').style.transform=`scale(${1.1-0.08*ss(t/KIT.dur)})`;
+  show('h1',t,0.6,0.7,20); show('hr',t,1.0,0.5,0,-20); show('h2',t,1.2,0.6,10); show('lab',t,0.9,0.6,14);
+  ['r0','r1','r2'].forEach((id,i)=>{ show(id,t,RT[i],0.5,0,24); const on=t>=RT[i]+0.2 && t<(RT[i+1]??T.e[0]);
+    $(id).querySelector('.t').style.color = on ? '#38577D' : '#1F2733'; });
+  show('cl',t,T.e[0]-0.6,0.5,14); show('src',t,T.d[0]+1,0.5,0);
+};
+</script></body></html>

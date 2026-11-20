@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+.rw{position:absolute;left:110px;width:1700px;height:145px}
+.rw .nm{position:absolute;left:0;top:34px;font-size:24px;font-weight:800;color:#1F2733;white-space:nowrap}
+.rw .ds{position:absolute;left:0;top:72px;font-size:17px;color:#6B7280;font-weight:500;width:250px;line-height:1.45}
+.rw .pc{position:absolute;left:1340px;top:14px;font-size:52px;font-weight:800;color:#38577D;font-variant-numeric:tabular-nums}
+.rw .er{position:absolute;left:1342px;top:80px;font-size:18px;font-weight:700;color:#D9822B;font-variant-numeric:tabular-nums}
+.rw .nt{position:absolute;left:1342px;top:108px;font-size:15.5px;color:#6B7280;font-weight:500;width:360px;white-space:nowrap}
+#svg{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.yl{font-size:12px;fill:#9AA3B2;font-weight:700}
+.xl{font-size:14px;fill:#9AA3B2;font-weight:600}
+#lg{right:110px;top:282px;font-size:15px;color:#6B7280;font-weight:600;display:flex;gap:22px;align-items:center}
+#lg i{display:inline-block;vertical-align:middle;margin-right:7px}
+#bar{left:110px;top:832px;width:1700px;height:100px;border-radius:14px;border:1.5px solid #D5DCE6;background:#fff}
+#bar .tag{position:absolute;left:22px;top:20px;background:#FBEBDD;color:#D9822B}
+#bar .x{position:absolute;left:170px;top:16px;font-size:23px;font-weight:800;color:#1F2733;white-space:nowrap}
+#bar .y{position:absolute;left:170px;top:56px;font-size:19px;color:#38577D;font-weight:700;white-space:nowrap}
+#fn{left:112px;top:944px;font-size:14px;color:#9AA3B2;font-weight:500;white-space:nowrap}
+#top{left:110px;top:284px;font-size:17px;font-weight:800;color:#38577D}
+</style></head>
+<body><div id="stage">
+<div class="a" id="top">같은 조립 한 번 · 119프레임 · 정답 라벨과 비교</div>
+<div class="a" id="lg"><span><i style="width:28px;height:6px;border-radius:3px;background:#C3CDDA"></i>정답</span><span><i style="width:28px;height:3px;background:#38577D"></i>판단</span><span><i style="width:12px;height:16px;background:rgba(217,130,43,.35);border-bottom:3px solid #D9822B"></i>틀린 프레임</span></div>
+<div id="rows"></div>
+<svg id="svg" viewBox="0 0 1920 1080"><g id="g"></g></svg>
+<div class="a" id="bar"><span class="tag">실험에서 얻은 것</span><div class="x">한 프레임의 검출이 아니라, 이어진 관측과 순서를 함께 봐야 단계가 흔들리지 않습니다.</div>
+<div class="y" id="by">2학기에는 이 판단을 실시간 구조로 옮겼습니다: &nbsp;프레임별 시간 증거 게이트 &nbsp;→&nbsp; HMM · Viterbi 단계 추정 + FSM</div></div>
+<div class="a" id="fn">1학기 실험 · Meta Quest 3로 찍은 session 17 한 세션(119프레임, 초당 2장)</div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({chap:2, title:'한 장면만 보고 판단하면 틀립니다', sub:'문제 1 · 단계 인식 — 1학기 비교 실험'});
+const S = {"GT": [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6], "FW": [0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6], "FSM": [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6], "HMM": [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6]};
+const M=[['FW','프레임별 판단','프레임마다 따로 판단','88.2%','7 · 26번째 프레임에서 순간적으로 다른 단계로 튐'],
+         ['FSM','규칙 기반 FSM','정해진 순서만 허용','91.6%','경계에서 실제와 비교했을 때 전환이 늦음'],
+         ['HMM','HMM · Viterbi','관측 점수와 전이 확률을 함께 판단','94.1%','튐이 없고, 경계에서 1 ~ 3프레임만 늦음']];
+const RY=[322,486,650], X0=390, X1=1410, HW=(X1-X0)/118/2;
+const fx=f=>X0+(f-1)*(X1-X0)/118, NS='http://www.w3.org/2000/svg';
+const g0=$('g'); let g=g0; const el=(n,a)=>{ const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); g.appendChild(e); return e; };
+const GR=[];   // 줄마다 그림 묶음 (제목 뒤에 줄과 함께 나타남)
+const R=[];
+M.forEach(([key,nm,ds,pc,nt],i)=>{
+  const y0=RY[i], fy=s=>y0+125-s*(107/6);
+  g=document.createElementNS(NS,'g'); g.style.opacity=0; g0.appendChild(g); GR.push(g);
+  const d=document.createElement('div'); d.className='rw'; d.id='r'+i; d.style.top=y0+'px';
+  d.innerHTML=`<div class="nm">${nm}</div><div class="ds">${ds}</div><div class="pc" id="pc${i}">${pc}</div><div class="er" id="er${i}"></div><div class="nt" id="nt${i}">${nt}</div>`; $('rows').appendChild(d);
+  for(let s=0;s<7;s++) el('line',{x1:X0-HW,x2:X1+HW,y1:fy(s),y2:fy(s),stroke:'#E3E7EE','stroke-width':1});
+  el('text',{x:X0-30,y:fy(6)+4,class:'yl'}).textContent='S6'; el('text',{x:X0-30,y:fy(0)+4,class:'yl'}).textContent='S0';
+  const errs=[]; S.GT.forEach((gt,k)=>{ if(gt!==S[key][k]) errs.push(k+1); });
+  const eb=errs.map(f=>[el('rect',{x:fx(f)-HW,y:y0+6,width:2*HW,height:124,fill:'rgba(217,130,43,.28)'}), el('rect',{x:fx(f)-HW,y:y0+132,width:2*HW,height:5,fill:'#D9822B'}), f]);
+  const pts=seq=>seq.map((s,k)=>`${fx(k+1)-HW},${fy(s)} ${fx(k+1)+HW},${fy(s)}`).join(' ');
+  el('polyline',{points:pts(S.GT),fill:'none',stroke:'#C3CDDA','stroke-width':7,'stroke-linejoin':'round'});
+  const cp=document.createElementNS(NS,'clipPath'); cp.id='cp'+i; const cr=document.createElementNS(NS,'rect'); cr.setAttribute('x',X0-HW); cr.setAttribute('y',y0); cr.setAttribute('height',145); cp.appendChild(cr); g.appendChild(cp);
+  const pl=el('polyline',{points:pts(S[key]),fill:'none',stroke:'#38577D','stroke-width':2.6,'stroke-linejoin':'round','clip-path':`url(#cp${i})`});
+  const ph=el('line',{y1:y0+2,y2:y0+137,stroke:'#13B8D4','stroke-width':2});
+  R.push({eb,cr,ph,errs});
+});
+g=GR[2];
+[1,30,60,90,119].forEach(f=>{ const t=el('text',{x:fx(f)-6,y:RY[2]+158,class:'xl'}); t.textContent=f; t.id='xl'+f; });
+const xlab=el('text',{x:X1+18,y:RY[2]+158,class:'xl'}); xlab.textContent='프레임';
+const T = KIT.timeline([
+  {k:'a', t:'같은 조립 한 번, 119프레임을 세 가지 방법으로 판단해 정답과 비교했습니다.', at:1.4},
+  {k:'b', t:'프레임마다 따로 판단하면 드라이버가 잠깐 보이기만 해도 | 다른 단계로 튀어, 88.2%에 그쳤습니다.'},
+  {k:'c', t:'정해진 순서만 허용하는 FSM은 튐은 없앴지만, 경계에서 전환이 늦어 91.6%였고,'},
+  {k:'d', t:'관측 점수와 전이 확률을 함께 보는 HMM은 | 경계에서 1~3프레임만 늦어 94.1%로 가장 정확했습니다.'},
+  {k:'e', t:'한 세션 기준이지만, 이어진 관측과 순서를 함께 봐야 단계가 흔들리지 않는다는 걸 확인했고,', pre:0.2},
+  {k:'f', t:'2학기에는 이 판단을 실시간 구조로 옮겼습니다.'},
+]);
+const SW=[T.b,T.c,T.d].map(([a,b])=>[a+0.2, a+0.2+(b-a)*0.62]);
+window.SCENE = t=>{
+  show('top',t,T.a[0]-0.2,0.5,0); show('lg',t,T.a[0],0.5,0);
+  M.forEach((m,i)=>{ const r=R[i], [a,b]=SW[i]; const p=clamp((t-a)/(b-a)); const f=1+p*118;
+    const rk=show('r'+i,t,T.a[0]+0.3+i*0.15,0.5,12); GR[i].style.opacity=rk; GR[i].style.transform=`translate(0px,${(1-rk)*12}px)`;
+    r.cr.setAttribute('width', t<a?0:(fx(f)+HW-(X0-HW)));
+    r.ph.setAttribute('x1',fx(f)); r.ph.setAttribute('x2',fx(f)); r.ph.style.opacity = (t>=a && t<b+0.3) ? 1-ramp(t,b,0.3) : 0;
+    let n=0; r.eb.forEach(([x,y,ff])=>{ const on = t>=a && ff<=f+0.01; x.style.opacity=on?1:0; y.style.opacity=on?1:0; if(on) n++; });
+    $('er'+i).textContent = t>=a ? `틀린 프레임 ${n}` : ''; $('er'+i).style.opacity = t>=a?1:0;
+    const k=ramp(t,b,0.5); $('pc'+i).style.opacity=k; $('pc'+i).style.transform=`translateY(${(1-k)*10}px)`; $('nt'+i).style.opacity=ramp(t,b+0.2,0.5);
+    const act = t>=a && t<(SW[i+1]?SW[i+1][0]:T.e[0]); $('r'+i).querySelector('.nm').style.color = act ? '#38577D' : '#1F2733';
+  });
+  show('bar',t,T.e[0]-0.1,0.5,14); $('bar').style.borderColor = t>=T.e[0] ? '#38577D' : '#D5DCE6';
+  show('by',t,T.f[0]-0.1,0.5,0,-12); show('fn',t,T.e[0]+0.6,0.5,0);
+};
+</script></body></html>

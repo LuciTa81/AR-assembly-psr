@@ -1,0 +1,118 @@
+{
+  "profile": {
+    "schema_version": "beast_display_projection_synthetic_v1",
+    "profile_id": "synthetic-display-r2",
+    "calibration_status": "synthetic",
+    "display_alignment_verified": false,
+    "units": "mm",
+    "camera_axes": "x_right_y_down_z_forward",
+    "coordinate_convention": "eye_local_pixels_top_left",
+    "channel_order": "left_half_left_eye_right_half_right_eye",
+    "display_mode": "full_sbs",
+    "eye_size": [
+      1920,
+      1080
+    ],
+    "camera_profile_id": "synthetic-camera",
+    "workspace_profile_id": "synthetic-workspace",
+    "camera_profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "workspace_profile_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "left_projection": [
+      [
+        800,
+        0,
+        960,
+        24000
+      ],
+      [
+        0,
+        800,
+        540,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ]
+    ],
+    "right_projection": [
+      [
+        820,
+        0,
+        958,
+        -24600
+      ],
+      [
+        0,
+        810,
+        538,
+        810
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ]
+    ]
+  },
+  "input": {
+    "target_id": "A",
+    "camera_xyz_mm": [
+      0,
+      0,
+      500
+    ],
+    "camera_profile_id": "synthetic-camera",
+    "workspace_profile_id": "synthetic-workspace",
+    "camera_profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "workspace_profile_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "pose_frame_id": 7,
+    "pose_timestamp_ms": 1000
+  },
+  "now_ms": 1025,
+  "expected": {
+    "schema_version": "realtime_v1",
+    "session_id": "synthetic-r2",
+    "frame_id": 8,
+    "timestamp_ms": 1020,
+    "frame_age_ms": 5,
+    "system_status": "RUNNING",
+    "marker_status": "OK",
+    "current_state": "S2",
+    "current_label": "Lid closed",
+    "next_action": "Fasten screw A",
+    "target": "screw_a",
+    "spatial": {
+      "schema_version": "beast_spatial_guidance_v1",
+      "display_profile_id": "synthetic-display-r2",
+      "camera_profile_id": "synthetic-camera",
+      "workspace_profile_id": "synthetic-workspace",
+      "camera_profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "workspace_profile_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "calibration_status": "synthetic",
+      "display_alignment_verified": false,
+      "coordinate_convention": "eye_local_pixels_top_left",
+      "channel_order": "left_half_left_eye_right_half_right_eye",
+      "display_mode": "full_sbs",
+      "eye_width": 1920,
+      "eye_height": 1080,
+      "target_id": "A",
+      "pose_frame_id": 7,
+      "pose_timestamp_ms": 1000,
+      "pose_age_ms": 25,
+      "target_visible": true,
+      "reason": "",
+      "left_pixel": [
+        1008,
+        540
+      ],
+      "right_pixel": [
+        908.8,
+        539.62
+      ]
+    }
+  }
+}

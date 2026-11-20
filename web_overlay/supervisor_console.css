@@ -1,0 +1,18 @@
+.console-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0 14px;border-top:1px solid var(--line)}
+.console-status{display:flex;align-items:center;gap:12px;min-width:0}.console-status strong{font-size:14px}.console-status span{font-size:12px;color:var(--muted)}
+.console-actions{display:flex;gap:8px;flex-shrink:0}.console-actions button{min-height:40px;border-radius:6px;padding:8px 14px}
+.console-actions .console-primary{background:var(--button);color:var(--button-text);border-color:transparent;font-weight:600}
+.console-actions button:disabled{opacity:.45}.console-actions button:not(:disabled):hover{filter:brightness(1.12)}
+.console-setup{display:flex;flex-direction:column;gap:18px;min-width:0;height:100%;padding-top:18px;text-align:left}
+.console-setup h2{font-size:20px;line-height:1.5;font-weight:600;word-break:keep-all}.console-checks{list-style:none;padding:0;margin:0;border-block:1px solid var(--line)}
+.console-checks li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;font-size:13px}.console-checks span{color:var(--muted);font-size:12px;white-space:nowrap}
+.console-checks [data-ok=true] span{color:var(--green)}.console-checks [data-ok=false] span,.console-error{color:var(--red)}
+.console-prepared{display:flex;align-items:flex-start;gap:10px;line-height:1.7;font-size:13px;cursor:pointer}.console-prepared input{width:18px;height:18px;margin-top:3px;flex-shrink:0;accent-color:var(--accent)}
+.console-privacy,.console-profile{color:var(--muted);font-size:12px;line-height:1.7}.console-profile{margin-top:auto}.console-profile p{padding-top:8px;overflow-wrap:anywhere}
+body[data-console=running] .console-setup{display:none}
+body[data-console]:not([data-console=running]) .guidance>:not(.console-setup){display:none}
+body[data-console]:not([data-console=running]) #status,body[data-console]:not([data-console=running]) #sourceKind{visibility:hidden}
+body[data-console]:not([data-console=running]) .sequence,body[data-console]:not([data-console=running]) .recent-section{display:none}
+body[data-console] .video-stage{height:clamp(280px,calc(100dvh - 422px),700px)}
+body[data-console=running] #consoleStatus{color:var(--green)}
+@media(max-width:800px){body[data-console] .video-stage{height:auto;width:100%;aspect-ratio:16/9}.console-bar{align-items:stretch;flex-direction:column}.console-status{justify-content:space-between;align-items:flex-start}.console-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.console-actions button{padding:8px 4px;font-size:12px;gap:5px;min-height:44px}.console-actions .icon{width:16px;height:16px}.console-setup h2{font-size:18px}}

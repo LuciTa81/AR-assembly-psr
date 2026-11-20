@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+#ph{left:1050px;top:0;width:870px;height:1080px;overflow:hidden}
+#ph img{width:100%;height:100%;object-fit:cover;transform-origin:60% 40%}
+#ph .sh{position:absolute;inset:0;background:linear-gradient(0deg,rgba(14,22,36,.88) 0%,rgba(14,22,36,.55) 40%,rgba(14,22,36,0) 66%)}
+#p1{left:1110px;top:620px;font-size:54px;font-weight:800;color:#fff;line-height:1.3;white-space:nowrap}
+#p2{left:1114px;top:778px;width:56px;height:3px;background:#fff}
+#p3{left:1114px;top:800px;font-size:21px;font-weight:500;color:#E6ECF4;line-height:1.6;white-space:nowrap}
+#p4{left:1114px;top:876px;font-size:15px;font-weight:500;color:#AFC0D6;white-space:nowrap}
+#lab{left:110px;top:96px;font-size:34px;font-weight:800;color:#38577D}
+.sl{position:absolute;left:110px;font-size:17px;font-weight:800;color:#D9822B}
+.it{position:absolute;left:110px;width:880px;height:76px}
+.it .n{position:absolute;left:0;top:4px;font-size:21px;font-weight:300;color:#38577D}
+.it .t{position:absolute;left:44px;top:0;font-size:25px;font-weight:800;color:#1F2733;white-space:nowrap}
+.it .d{position:absolute;left:44px;top:40px;font-size:18px;color:#6B7280;font-weight:500;white-space:nowrap}
+.vl{position:absolute;left:110px;font-size:42px;font-weight:800;color:#38577D;white-space:nowrap;font-variant-numeric:tabular-nums}
+.vs{position:absolute;left:112px;font-size:17px;color:#6B7280;font-weight:600;white-space:nowrap}
+#cl{left:110px;top:742px;width:880px;height:112px;border-left:5px solid #38577D;background:#EEF2F7;padding:20px 26px;font-size:24px;font-weight:800;color:#1F2733;line-height:1.5}
+#src{left:110px;top:872px;width:900px;font-size:14px;color:#9AA3B2;line-height:1.6;font-weight:500}
+</style></head>
+<body><div id="stage">
+<div class="a" id="ph"><img src="../assets/fut.jpg"><div class="sh"></div></div>
+<div class="a" id="p1">AI 안경이<br>일상으로 들어옵니다</div><div class="a" id="p2"></div>
+<div class="a" id="p3">AI 안경 출하는 2030년 2,730만 대,<br>4년 만에 두 배가 될 전망입니다.</div>
+<div class="a" id="p4">Meta 국내 출시 (2026. 5) · 삼성 · 구글 출시 예정 (2026. 12) · 사진은 AI 안경의 예</div>
+<div class="a" id="lab">Future Work</div>
+<div class="sl" id="l1" style="top:176px">후속 연구</div>
+<div class="it" id="i0" style="top:210px"><div class="n">01</div><div class="t">현장 사용자 평가</div><div class="d">처음 하는 사람들과 종이 설명서를 비교해 시간 · 오류를 잽니다.</div></div>
+<div class="it" id="i1" style="top:292px"><div class="n">02</div><div class="t">조임 완료 판단</div><div class="d">나사가 끝까지 조여졌는지 영상과 공구 신호로 확인합니다.</div></div>
+<div class="it" id="i2" style="top:374px"><div class="n">03</div><div class="t">마커 없이, 안경만으로</div><div class="d">마커 없는 추적과 경량화로 노트북 없이 실행합니다.</div></div>
+<div class="sl" id="l2" style="top:478px">기대 가치</div>
+<div class="vl" id="v0" style="top:508px">시장규모 149.6억 → <span id="x0">149.6</span>억 달러</div>
+<div class="vs" id="s0" style="top:566px">집 · 조립식 DIY 가구 세계 시장 (2024 → 2029, 연평균 9.2%)</div>
+<div class="vl" id="v1" style="top:610px">40만 대 미만 → <span id="x1">40</span>만 대</div>
+<div class="vs" id="s1" style="top:668px">현장 · 제조 현장으로 나가는 AR 안경 연간 출하 (2024 → 2030)</div>
+<div class="a" id="cl">현장에는 작업대 단위 구독으로,<br>집에는 제품별 조립 안내로 넓힙니다.</div>
+<div class="a" id="src">출처: The Business Research Company(2025. 5) · ABI Research(2026) · IDC(2026. 6. 15) · Meta 뉴스룸(2026. 5. 19) · 연합뉴스(2026. 11. 9)</div>
+</div>
+<script src="../kit.js"></script>
+<script>
+KIT.bgOn=false; KIT.capX=550; KIT.build(); KIT.header({chap:5});
+$('crumb').style.right='auto'; $('crumb').style.left='110px'; $('crumb').style.top='40px';
+const T = KIT.timeline([
+  {k:'a', t:'앞으로는 세 가지를 더 하려고 합니다.', at:1.4},
+  {k:'b', t:'처음 하는 사람들과 종이 설명서를 비교해 시간과 오류를 재고,', pre:0.3},
+  {k:'c', t:'나사가 끝까지 조여졌는지까지 판단하며,', pre:0.3},
+  {k:'d', t:'마커 없이 안경만으로 실행하는 것입니다.', pre:0.3},
+  {k:'e', t:'조립식 가구 시장도, 제조 현장의 AR 안경도 빠르게 커지고 있고,', pre:0.6},
+  {k:'f', t:'이제 AI 안경은 우리 주변의 일상으로 들어오고 있습니다.', pre:0.5},
+  {k:'g', t:'현장에는 작업대 단위 구독으로, 집에는 제품별 조립 안내로 넓혀 가겠습니다.', pre:0.5},
+],{tail:2.3});
+window.SCENE = t=>{
+  show('ph',t,0,0.8,0,30); $('ph').querySelector('img').style.transform=`scale(${1.08-0.06*ss(t/KIT.dur)})`;
+  show('lab',t,0.6,0.6,14); show('l1',t,T.a[0]+0.2,0.4,0);
+  [T.b[0],T.c[0],T.d[0]].forEach((a,i)=>{ show('i'+i,t,a-0.5,0.5,0,-20); $('i'+i).querySelector('.t').style.color = (t>=a && t<([T.c[0],T.d[0],T.e[0]][i])) ? '#38577D' : '#1F2733'; });
+  const e=T.e, es=e[1]-e[0]; show('l2',t,e[0]-0.6,0.4,0);
+  show('v0',t,e[0],0.5,10); show('s0',t,e[0]+0.2,0.5,0); show('v1',t,e[0]+es*0.5,0.5,10); show('s1',t,e[0]+es*0.5+0.2,0.5,0);
+  const k0=eo((t-e[0]-0.3)/1.4), k1=eo((t-e[0]-es*0.5-0.2)/1.4);
+  $('x0').textContent=(149.6+(212.6-149.6)*clamp(k0)).toFixed(1); $('x1').textContent=Math.round(40+(650-40)*clamp(k1));
+  show('p1',t,T.f[0]-0.8,0.6,20); show('p2',t,T.f[0]-0.5,0.5,0,-20); show('p3',t,T.f[0]-0.2,0.6,10); show('p4',t,T.f[0]+0.3,0.6,0);
+  show('cl',t,T.g[0]-0.5,0.5,14); show('src',t,T.e[0]+1,0.5,0);
+};
+</script></body></html>

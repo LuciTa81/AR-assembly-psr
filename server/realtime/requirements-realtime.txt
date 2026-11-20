@@ -1,0 +1,5 @@
+# ArUco is in main OpenCV 4.7+; use one cv2 provider, also required by Ultralytics.
+opencv-python==4.14.0.94
+pyyaml
+numpy
+ultralytics

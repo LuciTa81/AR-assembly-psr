@@ -1,0 +1,5 @@
+-r requirements-realtime.txt
+pytest==8.4.1
+websockets==15.0.1
+# Offline joint display-calibration comparison; not needed by the realtime server.
+scipy==1.18.1

@@ -1,0 +1,5 @@
+/* G 흩어진 넷: 왼쪽 가운데 · 위 오른쪽 · 아래 오른쪽 · 아래 가운데 */
+#b1{left:-420px!important;top:180px!important;width:720px!important;height:720px!important;background:#C9D6EC!important;opacity:.36!important}
+#b2{left:1080px!important;top:-420px!important;width:700px!important;height:700px!important;background:#CFEDE6!important;opacity:.36!important}
+#b3{left:1460px!important;top:600px!important;width:680px!important;height:680px!important;background:#FBE3CF!important;opacity:.36!important}
+#stage::before{content:'';position:absolute;left:380px;top:760px;width:620px;height:620px;border-radius:50%;filter:blur(90px);opacity:.36;background:#DDD5F4}

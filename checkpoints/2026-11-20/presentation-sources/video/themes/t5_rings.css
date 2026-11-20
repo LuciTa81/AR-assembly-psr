@@ -1,0 +1,5 @@
+/* 5 목표 링: 안경 속 목표 원을 바탕 무늬로 (오른쪽 아래에서 퍼지는 동심원 + 파스텔) */
+.blob{display:none!important}
+#stage{background:radial-gradient(circle at 94% 104%,rgba(207,237,230,.95),rgba(207,237,230,0) 48%),radial-gradient(circle at 6% -8%,rgba(201,214,236,.75),rgba(201,214,236,0) 42%),linear-gradient(120deg,#F6F8FB,#FAF6F2)}
+#stage::before{content:'';position:absolute;inset:0;background:repeating-radial-gradient(circle at 94% 104%,rgba(19,150,170,.20) 0 1.8px,transparent 1.8px 62px);
+ -webkit-mask-image:radial-gradient(circle at 94% 104%,#000 22%,rgba(0,0,0,.55) 45%,transparent 72%);mask-image:radial-gradient(circle at 94% 104%,#000 22%,rgba(0,0,0,.55) 45%,transparent 72%)}

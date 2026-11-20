@@ -1,0 +1,29 @@
+{
+  "schema_version": "beast_candidate_projection_probe_v1",
+  "candidate_only": true,
+  "calibration_valid": false,
+  "display_alignment_verified": false,
+  "coordinate_convention": "eye_local_pixels_top_left",
+  "display_mode": "full_sbs",
+  "channel_order": "left_half_left_eye_right_half_right_eye",
+  "eye_width": 1920,
+  "eye_height": 1080,
+  "camera_profile_id": "beast-combined-20260927T065914Z-89414bbe",
+  "workspace_profile_id": "beast-workspace-comfort-layout-20261006-v1-A-trial-20261031",
+  "camera_profile_sha256": "25f025bc5c2f71e4c83e6645e5cdc742bda81cd75d30c55ff7e5aca99924872e",
+  "workspace_profile_sha256": "5d4f4c6610af3264e0583eb64b038b3d66b12a9fc4844849d21d4f770d5c7acc",
+  "left_projection": [1463.6371090096256, 68.18023814379379, 878.9266347311474, -66669.29137363158, 83.8229913465998, 1303.1768667455226, 299.8574709880873, -75952.55551488796, 0.17344945383454846, 0.07792438108171088, 0.9817551007239683, -133.49626048786513],
+  "right_projection": [1531.582474887644, 82.40885107476431, 815.4147342950151, -98632.86818677068, 107.9686159083213, 1385.4558553107152, 273.36020352907366, -58464.47956196064, 0.19365232750048036, 0.07117225036570832, 0.9784852001085799, -106.34259942686558],
+  "collection_review": {
+    "setup_id": "20261114-A-mid-near-1652",
+    "target_id": "C",
+    "source_candidate_sha256": "2709092d8fd0a4ef9796dd90f8a4411c26f307dd93dc3dd4270b82dc69e24845",
+    "training_target_id": "A",
+    "scope": "C tracked alignment collection only; unchanged A-derived matrices used as adjustable seed",
+    "shared_AB_fit_applied": false,
+    "existing_CD_corrections_modified": false,
+    "stage_offsets_allowed": false,
+    "cd_depth_config_allowed": false,
+    "activation_allowed": false
+  }
+}

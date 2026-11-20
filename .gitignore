@@ -50,8 +50,10 @@ runs/
 models/**/*.pt
 .venv/
 .venv_mp/
+.venv_rt/
 __pycache__/
 *.pyc
+.worktrees/
 
 data/raw_sessions/
 datasets/
@@ -70,3 +72,14 @@ refs/roi_templates/
 !refs/
 !refs/roi_templates_v2/
 !refs/roi_templates_v2/*.jpg
+.gstack/
+
+# Local credentials and generated test output are not publication artifacts.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+TestResult.xml

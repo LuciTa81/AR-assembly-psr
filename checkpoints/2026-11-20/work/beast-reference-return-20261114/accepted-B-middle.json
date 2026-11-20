@@ -1,0 +1,23 @@
+{
+  "schema_version": "beast_manual_observation_selection_v1",
+  "target_id": "B",
+  "setup_id": "20261114-A-mid-near-1652",
+  "session_id": "7d68b7c595d8460f839201858f17d199",
+  "pose_label": "user_comfortable_frontal_middle",
+  "selected_record": "C:/Users/fresh/AppData/Local/ARAssembly/beast-mvp/display_correspondence/7d68b7c595d8460f839201858f17d199/diagnostic-frame-1876.json",
+  "selected_record_sha256": "d41a16a0d71c92ccac9b2e92df5e45ab42e5ef40dff65df909f3149aac762f15",
+  "candidate_sha256": "2709092d8fd0a4ef9796dd90f8a4411c26f307dd93dc3dd4270b82dc69e24845",
+  "selection_reason": "User confirmed the final saved position was comfortable and preferred the last adjustment; no subsequent adjustment in player log.",
+  "final_cluster_frames": [1838, 1840, 1843, 1872, 1876],
+  "superseded_frames": [1298, 1301, 1304],
+  "independent_pose_count": 1,
+  "camera_xyz_mm": [81.50841566887192, 51.127660537439624, 504.58992857316],
+  "left_offset_px": [54.0, -4.0],
+  "right_offset_px": [58.0, -8.0],
+  "conservative_age_ms": 138.02790000957543,
+  "marker_rms_px": 2.10092026363709,
+  "projection_replay_verified": true,
+  "raw_records_preserved": true,
+  "activation_allowed": false,
+  "notes": "Numeric diagnostic observation only. Camera Z is not eye distance. Final cluster contributes one pose, not five independent observations. Earlier adjustment is retained but excluded from fitting. No runtime calibration changed."
+}

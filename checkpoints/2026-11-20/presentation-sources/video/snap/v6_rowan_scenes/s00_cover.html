@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+body{background:#05090A}
+#bg{position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover;transform-origin:62% 55%}
+#gl{left:900px;top:402px;width:930px}
+.ring{position:absolute;border-radius:50%;border:2.6px solid #5EE6A0;box-shadow:0 0 18px rgba(34,197,94,.75),inset 0 0 8px rgba(34,197,94,.4)}
+.dot{position:absolute;border-radius:50%;background:#5EE6A0}
+.ln{position:absolute;background:#5EE6A0;box-shadow:0 0 10px rgba(34,197,94,.7)}
+#card{left:1437px;top:78px;width:366px;height:438px;border-radius:18px;background:rgba(12,25,18,.90);border:2.2px solid #5EE6A0;box-shadow:0 0 34px rgba(34,197,94,.35)}
+#card .no{position:absolute;left:27px;top:14px;font-size:62px;font-weight:300;color:#5EE6A0;line-height:1}
+#card .now{position:absolute;right:27px;top:30px;font-size:19px;color:#A9B8B0}
+#mbox{position:absolute;left:93px;top:120px;width:180px;height:105px;border:1.9px solid #C9D6CF;border-radius:13px}
+.sc{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:1.6px solid #C9D6CF;font-size:11px;font-weight:800;color:#0C1912;text-align:center;line-height:15px}
+.sl{position:absolute;font-size:16px;color:#A9B8B0;margin-top:-11px}
+#tgt{position:absolute;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;border:2.2px solid #5EE6A0;box-shadow:0 0 12px rgba(34,197,94,.7)}
+#arw{position:absolute;font-size:22px;color:#5EE6A0;font-weight:800;margin:-56px 0 0 -8px}
+#c1{position:absolute;left:27px;top:244px;font-size:19px;font-weight:600;color:#5EE6A0}
+#c2{position:absolute;left:27px;top:272px;font-size:32px;font-weight:800;color:#fff;white-space:nowrap}
+#c3{position:absolute;left:27px;top:322px;font-size:19px;color:#C2CCC6;white-space:nowrap}
+.pg{position:absolute;top:369px;width:96px;height:4px;background:#33443B}
+.pg i{position:absolute;left:0;top:0;bottom:0;background:#5EE6A0}
+.pl{position:absolute;top:382px;font-size:16px;color:#A9B8B0;white-space:nowrap}
+.tx{color:#fff;white-space:nowrap}
+#t0{left:108px;top:66px;font-size:21px;color:#8D9A94}
+#t1{left:108px;top:248px;font-size:34px;font-weight:800}
+#t2{left:100px;top:312px;font-size:100px;font-weight:300;line-height:1.08;letter-spacing:-.01em}
+#t2 .g{background:linear-gradient(90deg,#86EFAC,#38D6F0);-webkit-background-clip:text;background-clip:text;color:transparent}
+#t3{left:108px;top:574px;font-size:34px;font-weight:600;color:#E2E8E4}
+#t4{left:108px;top:626px;font-size:22px;color:#8D9A94}
+#t5{left:108px;top:900px;font-size:25px;font-weight:500;color:#D9E2DD}
+</style></head>
+<body><div id="stage">
+<img id="bg" src="../assets/cover_bg.jpg">
+<img class="a" id="gl" src="../assets/glasses.png">
+<div class="ln" id="lh"></div><div class="ln" id="lv"></div>
+<div class="ring" id="ring"></div><div class="dot" id="rdot"></div>
+<div class="a" id="card">
+  <div class="no">04</div><div class="now" id="now">지금 · 4 / 7</div>
+  <div id="mbox"></div>
+  <div class="sc" id="sA"></div><div class="sc" id="sB"></div><div class="sc" id="sC"></div><div class="sc" id="sD"></div>
+  <div class="sl" style="left:66px;top:138px">A</div><div class="sl" style="left:288px;top:138px">B</div>
+  <div class="sl" style="left:66px;top:208px">C</div><div class="sl" style="left:288px;top:208px">D</div>
+  <div id="tgt"></div><div id="arw">↓</div>
+  <div id="c1"></div><div id="c2"></div><div id="c3">드라이버 끝을 원 안에 맞추면 됩니다.</div>
+  <div class="pg" style="left:27px"><i id="g1"></i></div><div class="pg" style="left:135px"><i id="g2"></i></div><div class="pg" style="left:243px"><i id="g3"></i></div>
+  <div class="pl" id="l1" style="left:27px">접근</div><div class="pl" id="l2" style="left:135px">조임 확인</div><div class="pl" id="l3" style="left:243px">체결 판단</div>
+</div>
+<div class="a tx" id="t0">2026 홍익대학교 컴퓨터공학과 졸업프로젝트 · 인공지능</div>
+<div class="a tx" id="t1">AI Assembly Guide</div>
+<div class="a tx" id="t2"><span class="g">다음 작업</span>이<br>눈앞에 펼쳐집니다.</div>
+<div class="a tx" id="t3">작업 단계 인식 기반 AR 조립 안내 시스템</div>
+<div class="a tx" id="t4">Procedure-step recognition for AR assembly guidance</div>
+<div class="a tx" id="t5">2026. 11 &nbsp;&nbsp;|&nbsp;&nbsp; 최민준 C011207 &nbsp;&nbsp;|&nbsp;&nbsp; 지도교수 윤영 교수님</div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.bgOn=false; KIT.fadeIn='#000'; KIT.build();
+const T = KIT.timeline([
+  {k:'a', t:'작업 단계 인식 기반 AR 조립 안내 시스템, AI Assembly Guide입니다.', at:2.4},
+  {k:'b', t:'다음에 할 작업을, 작업하는 자리에서 바로 볼 수 있게 만들었습니다.'},
+],{tail:1.6});
+// 안경 · 목표 원 · 선 위치 (1920 기준)
+const GX=900, GY=402, GW=930, GH=GW*1021/1400, RX=GX+.115*GW, RY=GY+.45*GH, CY=78+321;
+const P={A:[93+18,120+18],B:[93+162,120+18],C:[93+18,120+87],D:[93+162,120+87]};
+for(const k in P){ const e=$('s'+k); e.style.left=P[k][0]+'px'; e.style.top=P[k][1]+'px'; }
+window.SCENE = t=>{
+  $('bg').style.transform=`scale(${1.06-0.04*ss(t/KIT.dur)})`;
+  show('gl',t,0.5,1.2,30);
+  // 목표 원과 선
+  const rk=ramp(t,1.5,0.4); const pulse=1+0.08*Math.sin(t*4.2);
+  const r=$('ring'); r.style.width=r.style.height=39*pulse+'px'; r.style.left=(RX-19.5*pulse)+'px'; r.style.top=(RY-19.5*pulse)+'px'; r.style.opacity=rk;
+  const d=$('rdot'); d.style.width=d.style.height='9px'; d.style.left=(RX-4.5)+'px'; d.style.top=(RY-4.5)+'px'; d.style.opacity=rk;
+  const lv=ramp(t,1.8,0.35), lh=ramp(t,2.1,0.4);
+  const V=$('lv'); V.style.left=(RX-1.5)+'px'; V.style.width='3px'; V.style.top=(CY+(RY-19.5-CY)*(1-lv))+'px'; V.style.height=((RY-19.5-CY)*lv)+'px';
+  const H=$('lh'); H.style.top=(CY-1.5)+'px'; H.style.height='3px'; H.style.left=RX+'px'; H.style.width=((1437-RX)*lh)+'px'; H.style.opacity=lv>0.98?1:0;
+  const ck=ramp(t,2.4,0.6); $('card').style.opacity=ck; $('card').style.transform=`translateY(${(1-ck)*20}px) scale(${0.97+0.03*ck})`;
+  // 카드 안: 나사 B 한 사이클 → 나사 C
+  const tc=t-3.0, swap=6.2;
+  const onC = t>=swap;
+  $('now').textContent = onC ? '지금 · 5 / 7' : '지금 · 4 / 7';
+  $('card').querySelector('.no').textContent = onC ? '05' : '04';
+  $('c1').textContent = onC ? '나사 C · 3/4' : '나사 B · 2/4';
+  $('c2').textContent = onC ? '나사 C를 조여주세요.' : '나사 B를 조여주세요.';
+  const sw = onC ? ramp(t,swap,0.35) : 1-ramp(t,swap-0.3,0.3);
+  ['c1','c2'].forEach(id=>$(id).style.opacity=sw);
+  const done = {A:true, B: t>=5.6, C:false, D:false};
+  for(const k of 'ABCD'){ const e=$('s'+k); const isT=(onC?'C':'B')===k;
+    e.style.background=done[k]?'#5EE6A0':'transparent'; e.style.borderColor=done[k]?'#5EE6A0':(isT?'#5EE6A0':'#C9D6CF'); e.textContent=done[k]?'✓':''; }
+  const tk=onC?'C':'B', tp=P[tk], tpl=1+0.1*Math.sin(t*5);
+  const tg=$('tgt'); tg.style.left=tp[0]+'px'; tg.style.top=tp[1]+'px'; tg.style.transform=`scale(${tpl})`; tg.style.opacity=onC?ramp(t,swap,0.4):1-ramp(t,5.6,0.3);
+  const aw=$('arw'); aw.style.left=tp[0]+'px'; aw.style.top=(tp[1]+4*Math.sin(t*4))+'px'; aw.style.opacity=tg.style.opacity;
+  // 진행 막대 (B: 접근 → 조임 확인 → 체결 판단, C: 접근 시작)
+  let f1,f2,f3;
+  if(!onC){ f1=clamp((tc-0.2)/0.5); f2=clamp((tc-0.9)/0.8); f3=clamp((tc-2.2)/0.4); }
+  else { f1=clamp((t-swap-0.8)/0.9); f2=0; f3=0; }
+  $('g1').style.width=f1*100+'%'; $('g2').style.width=f2*100+'%'; $('g3').style.width=f3*100+'%';
+  $('l1').style.color=f1>=1?'#5EE6A0':'#A9B8B0'; $('l2').style.color=f2>=1?'#5EE6A0':'#A9B8B0'; $('l3').style.color=f3>=1?'#5EE6A0':'#A9B8B0';
+  // 왼쪽 글
+  show('t0',t,0.6,0.6,0); show('t1',t,0.9,0.6,16); show('t2',t,1.15,0.8,22); show('t3',t,1.7,0.6,14); show('t4',t,1.9,0.6,10); show('t5',t,2.3,0.6,0);
+};
+</script></body></html>
