@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from typing import Dict, Optional
 
 from server.realtime.state_definitions import NEXT_ACTIONS, STATE_LABELS, STATES, TARGETS
+from server.realtime.guidance_timing import GuidanceTiming, TimedEvidenceGate
+from server.realtime.schemas import AssemblyGuidance
 
 
 @dataclass
@@ -15,6 +17,7 @@ class StateEstimate:
     confidence: float
     held_reason: str = ""
     transition_event: str = ""
+    guidance: Optional[AssemblyGuidance] = None
 
 
 class OnlineStateFilter:
@@ -33,6 +36,8 @@ class OnlineStateFilter:
         min_dwell_frames: int = 3,
         dummy_auto_advance_frames: int = 0,
         max_state: str = "S6",
+        guidance_policy: str = "legacy_frames",
+        timing: Optional[dict] = None,
     ):
         if initial_state not in STATES:
             raise ValueError(f"unknown initial state: {initial_state}")
@@ -47,6 +52,86 @@ class OnlineStateFilter:
         self.last_transition_frame = 0
         self.event_latches: Dict[str, int] = {}
         self.candidate_counts: Dict[str, int] = {}
+        self.last_observation_id = -1
+        if guidance_policy not in {"legacy_frames", "timed_v1"}:
+            raise ValueError(f"unknown guidance policy: {guidance_policy}")
+        if self.state_index > self.max_state_index:
+            raise ValueError("initial state exceeds max state")
+        if guidance_policy == "timed_v1" and self.dummy_auto_advance_frames:
+            raise ValueError("timed_v1 cannot use dummy auto advance")
+        self.timed_gate = TimedEvidenceGate(GuidanceTiming(**(timing or {}))) if guidance_policy == "timed_v1" else None
+        self.ack_until_ms, self.ack_text = 0, ""
+        self._hold_recheck = False
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**{key: config[key] for key in (
+            "initial_state", "min_confidence", "min_dwell_frames", "dummy_auto_advance_frames",
+            "max_state", "guidance_policy", "timing") if key in config})
+
+    def _timed_update(self, frame_id, marker_ok, features, *, timestamp_ms, observation_id,
+                      observation_timestamp_ms, evidence_valid, roi_valid):
+        had_progress = self.timed_gate.started_at is not None or self.timed_gate._suspended is not None
+        decision = self.timed_gate.evaluate(self.state_index, frame_id, timestamp_ms, marker_ok,
+            features, observation_id=observation_id, observation_timestamp_ms=observation_timestamp_ms,
+            evidence_valid=evidence_valid, roi_valid=roi_valid, min_confidence=self.min_confidence)
+        transition = ""
+        phase = decision.phase
+        if phase == "PAUSED":
+            self.ack_until_ms, self.ack_text = 0, ""
+        elif decision.advance and self.state_index < self.max_state_index:
+            previous = STATES[self.state_index]
+            self.state_index += 1
+            transition = f"{previous}->{STATES[self.state_index]}"
+            self.last_transition_frame = frame_id
+            self.ack_text = (STATE_LABELS[STATES[self.state_index]] if self.state_index <= 2
+                             else f"Screw {'ABCD'[self.state_index - 3]} interaction observed")
+            self.ack_until_ms = timestamp_ms + self.timed_gate.timing.ack_ms
+            self.timed_gate.reset_step(after_frame=frame_id)
+            phase = "AWAITING_CONFIRMATION" if self.state_index == 6 else "GUIDING"
+        remaining = max(0, self.ack_until_ms - timestamp_ms) if type(timestamp_ms) is int else 0
+        state = STATES[self.state_index]
+        action = NEXT_ACTIONS[state]
+        if phase == "OBSERVING":
+            action = ("Checking box placement" if self.state_index == 0 else "Checking lid closure"
+                      if self.state_index == 1 else f"Tool at screw {'ABCD'[self.state_index - 2]}")
+        elif phase == "OBSERVED":
+            action = f"When finished, move driver clear of screw {'ABCD'[self.state_index - 2]}"
+        elif phase == "PAUSED":
+            action = {
+                "marker_not_stable": "Tracking paused. Keep the workspace markers visible.",
+                "tool_not_visible": "Tool not visible. Keep the driver in view.",
+                "multiple_tool_candidates": "Multiple tool candidates. Recheck the target with one driver.",
+                "tool_position_unknown": "Tool position unclear. Keep the driver in view.",
+            }.get(decision.reason, "Recognition paused. Waiting for fresh evidence.")
+        hold_progress, hold_remaining = self._hold_feedback(had_progress, phase, transition, timestamp_ms)
+        if hold_progress == 'checkpoint' and phase == 'PAUSED':
+            action += (f' HOLD kept. Recheck screw {"ABCD"[self.state_index - 2]} '
+                       'with one driver; no repeated HOLD required.')
+        return StateEstimate(state, STATE_LABELS[state], action, TARGETS[state],
+            decision.confidence, decision.reason, transition,
+            AssemblyGuidance(phase=phase, reason=decision.reason,
+                acknowledgement=self.ack_text if remaining else "",
+                acknowledgement_remaining_ms=remaining,
+                hold_progress=hold_progress, hold_remaining_ms=hold_remaining))
+
+    def _hold_feedback(self, had_progress, phase, transition, timestamp_ms):
+        # Read-only UX metadata; it never feeds back into evidence timing or transitions.
+        gate = self.timed_gate
+        if transition or not 2 <= self.state_index <= 5 or phase in ('OBSERVING', 'OBSERVED'):
+            self._hold_recheck = False
+            return 'none', 0
+        if gate._suspended is not None:
+            source_time, _, armed = gate._suspended
+            remaining = gate._resume_budget(armed) - (timestamp_ms - source_time) if type(timestamp_ms) is int else 0
+            if remaining > 0:
+                return 'retained', remaining
+            self._hold_recheck = True
+        elif had_progress and gate.started_at is None:
+            self._hold_recheck = True
+        if gate.completed_hold:
+            return 'checkpoint', 0
+        return ('recheck' if self._hold_recheck else 'none'), 0
 
     def _candidate_state(self, frame_id: int, features: Dict[str, float]) -> Optional[int]:
         if self.dummy_auto_advance_frames <= 0:
@@ -151,17 +236,41 @@ class OnlineStateFilter:
             return float(features.get("screw_min_confidence", self.min_confidence))
         return self.min_confidence
 
-    def update(self, frame_id: int, marker_ok: bool, features: Optional[Dict[str, float]] = None) -> StateEstimate:
+    def update(
+        self, frame_id: int, marker_ok: bool, features: Optional[Dict[str, float]] = None,
+        *, observation_id: Optional[int] = None, evidence_valid: bool = True,
+        timestamp_ms: Optional[int] = None, observation_timestamp_ms: Optional[int] = None,
+        roi_valid: bool = False,
+    ) -> StateEstimate:
         features = features or {}
-        self.frames_in_state += 1
+        if self.timed_gate is not None:
+            return self._timed_update(frame_id, marker_ok, features, timestamp_ms=timestamp_ms,
+                observation_id=observation_id, observation_timestamp_ms=observation_timestamp_ms,
+                evidence_valid=evidence_valid, roi_valid=roi_valid)
         held_reason = ""
         transition_event = ""
         output_confidence = float(features.get("confidence", 0.55))
+        needs_yolo = (
+            2 <= self.state_index <= 5 and self.dummy_auto_advance_frames <= 0
+            and bool(features.get("require_yolo_for_screw", 0))
+        )
+        invalid_evidence = needs_yolo and (
+            not evidence_valid or observation_id is None
+            or observation_id < 0 or observation_id > frame_id
+        )
 
-        if not marker_ok:
-            held_reason = "marker_not_stable"
+        if not marker_ok or invalid_evidence:
+            self.event_latches.clear()
+            self.candidate_counts.clear()
+            self.frames_in_state = 0
+            held_reason = "marker_not_stable" if not marker_ok else "invalid_observation"
             output_confidence = min(output_confidence, 0.40)
+        elif needs_yolo and observation_id <= self.last_observation_id:
+            held_reason = "duplicate_observation"
         else:
+            if needs_yolo:
+                self.last_observation_id = observation_id
+            self.frames_in_state += 1
             candidate = self._candidate_state(frame_id, features)
             if candidate == 1:
                 raw = float(features.get("box_present_score", 0.80))

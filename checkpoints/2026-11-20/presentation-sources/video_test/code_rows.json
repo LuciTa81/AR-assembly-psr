@@ -1,0 +1,103 @@
+[
+{
+"n": 8,
+"code": "class GuidanceTiming:"
+},
+{
+"n": 9,
+"code": "    placement_ms: int = 300"
+},
+{
+"n": 10,
+"code": "    engage_ms: int = 800"
+},
+{
+"n": 11,
+"code": "    release_ms: int = 400"
+},
+{
+"gap": true
+},
+{
+"n": 71,
+"code": "        if not marker_ok:"
+},
+{
+"n": 72,
+"code": "            return self._pause(\"marker_not_stable\", frame_id)"
+},
+{
+"gap": true
+},
+{
+"n": 119,
+"code": "        if features.get(\"driver_visible\") != 1 or features.get(\"driver_count\") != 1:"
+},
+{
+"n": 120,
+"code": "            return self._pause(\"tool_not_visible\", frame_id)"
+},
+{
+"gap": true
+},
+{
+"n": 124,
+"code": "        for name in \"abcd\":"
+},
+{
+"n": 125,
+"code": "            values = [features.get(f\"tool_score_{name}\"), features.get(f\"tip_screw_score_{name}\")]"
+},
+{
+"gap": true
+},
+{
+"n": 132,
+"code": "        score = scores[index]"
+},
+{
+"gap": true
+},
+{
+"n": 143,
+"code": "        near = score >= threshold and score > other and score >= other * max(1.0, dominance) and confidence >= required"
+},
+{
+"n": 144,
+"code": "        far = score <= self.timing.release_score_max"
+},
+{
+"gap": true
+},
+{
+"n": 150,
+"code": "            if self.started_at is None:"
+},
+{
+"n": 151,
+"code": "                self.started_at = observation_timestamp_ms"
+},
+{
+"n": 152,
+"code": "            self.armed = observation_timestamp_ms - self.started_at >= self.timing.engage_ms"
+},
+{
+"gap": true
+},
+{
+"n": 157,
+"code": "        elif self.release_at is None:"
+},
+{
+"n": 158,
+"code": "            self.release_at = observation_timestamp_ms"
+},
+{
+"n": 159,
+"code": "        self.decision = EvidenceDecision(\"OBSERVED\", confidence=confidence,"
+},
+{
+"n": 160,
+"code": "            advance=far and observation_timestamp_ms - self.release_at >= self.timing.release_ms)"
+}
+]

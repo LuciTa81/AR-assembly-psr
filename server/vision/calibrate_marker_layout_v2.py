@@ -55,7 +55,9 @@ def collect_images_from_session(session_dir: Path) -> List[Dict[str, str]]:
             for i, p in enumerate(sorted(q for q in root.rglob("*") if q.suffix.lower() in IMAGE_EXTS), start=1)]
 
 
-def detect_markers(image_bgr, detect_scale: float):
+def detect_markers(image_bgr, detect_scale: float, *, corner_refinement: str = "subpix"):
+    if corner_refinement not in ("subpix", "apriltag"):
+        raise ValueError("Unknown corner refinement: " + corner_refinement)
     gray = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2GRAY)
     if detect_scale != 1.0:
         gray_detect = cv2.resize(gray, None, fx=detect_scale, fy=detect_scale, interpolation=cv2.INTER_CUBIC)
@@ -69,8 +71,12 @@ def detect_markers(image_bgr, detect_scale: float):
     params.minMarkerPerimeterRate = 0.015
     params.maxMarkerPerimeterRate = 4.0
     params.polygonalApproxAccuracyRate = 0.03
-    if hasattr(cv2.aruco, "CORNER_REFINE_SUBPIX"):
-        params.cornerRefinementMethod = cv2.aruco.CORNER_REFINE_SUBPIX
+    method = getattr(cv2.aruco, "CORNER_REFINE_" + corner_refinement.upper(), None)
+    if corner_refinement == "apriltag" and method is None:
+        raise ValueError("APRILTAG corner refinement is not available in this OpenCV build")
+    if method is not None:
+        # The opt-in method still decodes the same ArUco dictionary.
+        params.cornerRefinementMethod = method
     if hasattr(cv2.aruco, "ArucoDetector"):
         detector = cv2.aruco.ArucoDetector(aruco_dict, params)
         corners, ids, _ = detector.detectMarkers(gray_detect)

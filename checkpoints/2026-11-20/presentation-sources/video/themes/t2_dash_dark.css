@@ -1,0 +1,15 @@
+/* 2 관제 화면 톤 · 어둡게 (대시보드 어두운 테마 색) */
+.blob{display:none!important}
+html,body{background:#1C1F1E!important}
+#stage{background:linear-gradient(110deg,rgba(79,179,191,.08),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 80%,rgba(79,179,191,.08)),#1C1F1E;color:#E8E6DF}
+.panel,.chip,.node{background:#222625!important;border-color:#363C39!important;box-shadow:0 1px 2px #0005,0 0 0 1px #ffffff0a!important}
+.chip .t,.node .t,.res .v,.lg .m,.row .h,.goal .h,.ch,.rl{color:#E8E6DF!important}
+.chip .n,.node .n,.cell,.row .d,.goal .d{color:#A9B8AE!important}
+.kicker{background:#293F3E!important;color:#4FB3BF!important}
+.title{color:#F1EFE9!important}.sub{color:#A9B8AE!important}.crumb{color:#6E7A74!important}.crumb b{color:#4FB3BF!important}
+.lab,#gk,#lab1{color:#EDC16D!important}
+.res .k,.goal .n,.row .n,.ai{color:#4FB3BF!important}
+#track{background:#363C39!important}.arr{color:#4A524E!important}
+.lg .sw[style*="38577D"]{color:#96CBEC!important}
+#cap{background:rgba(232,230,223,.94)!important;color:#1C1F1E!important}
+.media{box-shadow:0 10px 30px rgba(0,0,0,.45)!important}

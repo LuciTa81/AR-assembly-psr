@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+#vid{left:110px;top:290px;width:600px;height:338px}
+#vcap{left:112px;top:638px;font-size:15.5px;color:#6B7280;font-weight:600;white-space:nowrap}
+#ch{left:740px;top:290px;width:1070px;height:310px;border-radius:16px;border:1.5px solid #D5DCE6;background:#fff}
+#svg{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.cl{font-size:15px;fill:#6B7280;font-weight:700}
+.sl{font-size:13.5px;fill:#38577D;font-weight:700}
+.ax{font-size:13px;fill:#9AA3B2;font-weight:600}
+#lg{left:1290px;top:302px;font-size:14px;color:#6B7280;font-weight:600;display:flex;gap:18px;white-space:nowrap}
+#lg i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.stt{position:absolute;top:612px;height:48px;border-radius:12px;background:#EEF2F7;padding:0 18px;display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:#4B5563;white-space:nowrap;font-variant-numeric:tabular-nums}
+.stt b{font-size:24px;color:#38577D}
+.cd{position:absolute;top:690px;width:553px;height:200px;border-radius:16px;border:1.5px solid #D5DCE6;background:#fff}
+.cd .k{position:absolute;left:24px;top:20px;font-size:15px;font-weight:800;color:#8A93A3}
+.cd .t{position:absolute;left:24px;top:46px;font-size:24px;font-weight:800;color:#1F2733;white-space:nowrap}
+.cd .d{position:absolute;left:24px;top:92px;width:505px;font-size:18px;line-height:1.55;color:#6B7280;font-weight:500}
+.ar{top:776px;font-size:22px;font-weight:800;color:#AFC0D6}
+#fn{left:112px;top:908px;font-size:14px;color:#9AA3B2;font-weight:500;white-space:nowrap}
+</style></head>
+<body><div id="stage">
+<div class="a media" id="vid"><video id="v" src="../assets/rc_clip.mp4" muted preload="auto"></video><span class="mtag" style="position:absolute;left:12px;top:12px">take4 0:30 ~ 0:38 · 재현 영상</span></div>
+<div class="a" id="vcap">가렸다가 돌아와도 <b style="color:#38577D">나사 A · 1/4</b> 그대로</div>
+<div class="a" id="ch"></div>
+<div class="a" id="lg"><span><i style="background:#38577D"></i>윤곽 보임</span><span><i style="background:#E59A4B"></i>윤곽 꺼짐 (손 · 도구가 마커를 가림)</span></div>
+<svg id="svg" viewBox="0 0 1920 1080"><g id="g"></g></svg>
+<div class="stt" id="t0" style="left:740px">1초 이상 꺼진 구간 <b id="n0">0</b>번</div>
+<div class="stt" id="t1" style="left:1060px">가장 긴 구간 <b id="n1">0.0</b>초</div>
+<div class="stt" id="t2" style="left:1340px">작업 단계가 뒤로 간 횟수 <b id="n2">0</b>번</div>
+<div class="cd" id="c0" style="left:110px"><div class="k">문제</div><div class="t">가리면 작업이 다시 시작됐습니다</div><div class="d">손이 마커를 가리는 순간 안내가 꺼지고, 진행 상태가 사라졌습니다.</div></div>
+<div class="cd" id="c1" style="left:683px"><div class="k">원인</div><div class="t">끊김과 정지를 같은 것으로 다뤘습니다</div><div class="d">마커를 잠깐 못 본 것(추적 끊김)과 작업을 중간에 멈춘 것을 같은 상태로 처리했습니다.</div></div>
+<div class="cd" id="c2" style="left:1256px"><div class="k" style="color:#D9822B">선택한 방법</div><div class="t">추적과 진행을 따로 둡니다</div><div class="d">끊기면 진행은 그대로 두고 안내만 멈춥니다. 다시 보이면 확인한 뒤 이어 갑니다.</div></div>
+<div class="a ar" id="a0" style="left:667px">→</div><div class="a ar" id="a1" style="left:1240px">→</div>
+<div class="a" id="fn">take4 시연 기록 한 번(2분 1.5초) · Unity 화면에서 윤곽 표시가 꺼진 구간을 0.1초 단위로 측정 · 짧은 가림에 대한 결과</div>
+</div>
+<script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({chap:4, title:'잠깐 안 보여도, 한 일은 지우지 않습니다', sub:'문제 3 · 가림과 복구 — 추적과 진행을 따로 둡니다'});
+const V = {"segs": [[0.0, 0.7, true], [0.7, 1.1, false], [1.1, 2.8, true], [2.8, 3.3, false], [3.3, 4.3, true], [4.3, 4.4, false], [4.4, 4.5, true], [4.5, 4.8, false], [4.8, 5.4, true], [5.4, 5.6, false], [5.6, 5.8, true], [5.8, 6.8, false], [6.8, 7.6, true], [7.6, 7.8, false], [7.8, 8.5, true], [8.5, 8.9, false], [8.9, 9.6, true], [9.6, 9.9, false], [9.9, 12.2, true], [12.2, 12.4, false], [12.4, 13.1, true], [13.1, 13.4, false], [13.4, 13.5, true], [13.5, 13.6, false], [13.6, 14.0, true], [14.0, 14.4, false], [14.4, 14.7, true], [14.7, 14.8, false], [14.8, 17.1, true], [17.1, 23.1, false], [23.1, 29.9, true], [29.9, 30.0, false], [30.0, 30.4, true], [30.4, 36.4, false], [36.4, 40.1, true], [40.1, 40.2, false], [40.2, 41.0, true], [41.0, 41.3, false], [41.3, 46.4, true], [46.4, 46.7, false], [46.7, 47.5, true], [47.5, 47.8, false], [47.8, 48.8, true], [48.8, 49.0, false], [49.0, 49.2, true], [49.2, 49.6, false], [49.6, 50.0, true], [50.0, 50.6, false], [50.6, 51.3, true], [51.3, 51.5, false], [51.5, 51.8, true], [51.8, 53.7, false], [53.7, 59.8, true], [59.8, 62.4, false], [62.4, 65.5, true], [65.5, 65.8, false], [65.8, 83.3, true], [83.3, 86.4, false], [86.4, 89.6, true], [89.6, 92.2, false], [92.2, 92.5, true], [92.5, 92.9, false], [92.9, 94.2, true], [94.2, 94.3, false], [94.3, 95.9, true], [95.9, 96.4, false], [96.4, 96.6, true], [96.6, 97.4, false], [97.4, 97.8, true], [97.8, 98.0, false], [98.0, 105.6, true], [105.6, 108.1, false], [108.1, 108.4, true], [108.4, 108.6, false], [108.6, 109.7, true], [109.7, 111.7, false], [111.7, 112.1, true], [112.1, 112.3, false], [112.3, 114.3, true], [114.3, 116.0, false], [116.0, 121.0, true], [121.0, 121.2, false], [121.2, 121.5, true]], "dur": 121.5}, DUR=V.dur;
+const STEP_T=[0,13.0,27.0,49.4,71.2,100.6,118.7], STEP_N=['상자 배치','뚜껑 닫기','나사 A','나사 B','나사 C','나사 D','최종 확인'];
+const X0=850, X1=1780, BY=340, SY0=560, SY6=410, NS='http://www.w3.org/2000/svg', g=$('g');
+const tx=s=>X0+s*(X1-X0)/DUR, sy=k=>SY0-k*(SY0-SY6)/6;
+const el=(n,a,txt)=>{ const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); if(txt!=null) e.textContent=txt; g.appendChild(e); return e; };
+el('text',{x:762,y:BY+13,class:'cl'},'윤곽 표시'); el('text',{x:762,y:sy(3)+5,class:'cl'},'작업 단계');
+for(let k=0;k<7;k++) el('line',{x1:X0,x2:X1,y1:sy(k),y2:sy(k),stroke:'#EEF2F7','stroke-width':1});
+const shades=[], segs=[];
+V.segs.forEach(([a,b,v])=>{ segs.push([el('rect',{x:tx(a),y:BY,width:Math.max(0.5,tx(b)-tx(a)),height:16,fill:v?'#38577D':'#E59A4B'}),a,b]);
+  if(!v && b-a>=0.3) shades.push([el('rect',{x:tx(a),y:BY+22,width:tx(b)-tx(a),height:SY0-BY-12,fill:'rgba(229,154,75,.16)'}),a,b]); });
+let pts=''; STEP_T.forEach((s,k)=>{ const e=STEP_T[k+1]??DUR; pts+=`${tx(s)},${sy(k)} ${tx(e)},${sy(k)} `; });
+const cp=document.createElementNS(NS,'clipPath'); cp.id='cp'; const cr=document.createElementNS(NS,'rect'); cr.setAttribute('x',X0); cr.setAttribute('y',300); cr.setAttribute('height',300); cp.appendChild(cr); g.appendChild(cp);
+const sl=el('polyline',{points:pts,fill:'none',stroke:'#38577D','stroke-width':3,'stroke-linejoin':'round','clip-path':'url(#cp)'});
+const labs=STEP_N.map((n,k)=>el('text',{x:Math.min(tx(STEP_T[k])+4,X1-62),y:sy(k)-8,class:'sl'},n));
+[[0,'0:00'],[30,'0:30'],[60,'1:00'],[90,'1:30'],[120,'2:00']].forEach(([s,l])=>el('text',{x:tx(s)-14,y:584,class:'ax'},l));
+const br=el('path',{d:`M${tx(30)} ${BY-6} V${BY-12} H${tx(38)} V${BY-6}`,fill:'none',stroke:'#1F2733','stroke-width':1.5});
+const brt=el('text',{x:tx(30)-4,y:BY-18,class:'ax',fill:'#1F2733'},'왼쪽 영상 구간');
+const ph=el('line',{y1:BY-4,y2:SY0+6,stroke:'#13B8D4','stroke-width':2});
+const T = KIT.timeline([
+  {k:'a', t:'세 번째 문제는 가림이었습니다.', at:1.4},
+  {k:'b', t:'처음에는 손이 마커를 가리는 순간 안내가 꺼지고, 진행 상태까지 사라졌습니다.'},
+  {k:'c', t:'마커를 잠깐 못 본 것과 작업을 중간에 멈춘 것을 같은 상태로 다뤘기 때문입니다.'},
+  {k:'d', t:'그래서 둘을 나눠, 끊기면 진행은 그대로 두고 안내만 멈췄다가 다시 보이면 이어 가게 했습니다.'},
+  {k:'e', t:'take4 시연 기록에서 윤곽이 1초 이상 꺼진 구간은 10번, 가장 길게는 6초였지만,', pre:0.2},
+  {k:'f', t:'작업 단계는 한 번도 뒤로 가지 않았습니다.'},
+]);
+const V0=T.d[0]-0.6; KIT.vid('v', t=>clamp(t-V0,0,8.95));
+const SW0=T.e[0]+0.2, SW1=T.f[0]+(T.f[1]-T.f[0])*0.6;
+window.SCENE = t=>{
+  show('vid',t,T.a[0]-0.1,0.6,22); show('vcap',t,T.d[0]+3,0.5,0);
+  show('ch',t,T.e[0]-0.4,0.5,14); show('lg',t,T.e[0]-0.2,0.4,0); g.style.opacity=ramp(t,T.e[0]-0.2,0.5);
+  const p=clamp((t-SW0)/(SW1-SW0)), s=p*DUR;
+  segs.forEach(([r,a,b])=>{ r.style.opacity = a<=s ? 1 : 0; r.setAttribute('width', Math.max(0, tx(Math.min(b,s))-tx(a))); });
+  shades.forEach(([r,a,b])=>{ r.style.opacity = a<=s ? 1 : 0; r.setAttribute('width', Math.max(0, tx(Math.min(b,s))-tx(a))); });
+  cr.setAttribute('width', tx(s)-X0+2); labs.forEach((l,k)=>l.style.opacity = STEP_T[k]<=s ? 1 : 0);
+  ph.setAttribute('x1',tx(s)); ph.setAttribute('x2',tx(s)); ph.style.opacity = (t>=SW0 && t<SW1+0.4) ? 1-ramp(t,SW1,0.4) : 0;
+  [br,brt].forEach(e=>e.style.opacity = s>=38 ? ramp(t, SW0+(38/DUR)*(SW1-SW0), 0.4) : 0);
+  let n=0, mx=0; V.segs.forEach(([a,b,v])=>{ if(!v && b-a>=0.999 && b<=s+1e-6){ n++; mx=Math.max(mx,b-a); } });
+  $('n0').textContent=n; $('n1').textContent=mx.toFixed(1); $('n2').textContent='0';
+  show('t0',t,T.e[0],0.4,8); show('t1',t,T.e[0]+0.4,0.4,8); show('t2',t,T.f[0],0.4,8);
+  $('t2').style.background = t>=T.f[0]+0.3 ? '#E7F6EF' : '#EEF2F7';
+  const C=[T.b[0],T.c[0],T.d[0]];
+  ['c0','c1','c2'].forEach((id,i)=>{ show(id,t,C[i]-0.15,0.5,16); const on=t>=C[i] && t<(C[i+1]??T.e[0]);
+    $(id).style.borderColor = on ? '#38577D' : '#D5DCE6'; $(id).style.boxShadow = on ? '0 10px 26px rgba(56,87,125,.16)' : 'none'; if(i<2) show('a'+i,t,C[i+1]-0.2,0.4,0,-8); });
+  show('fn',t,T.e[0]+1.0,0.5,0);
+};
+</script></body></html>

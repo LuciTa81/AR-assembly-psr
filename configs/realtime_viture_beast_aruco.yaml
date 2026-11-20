@@ -1,9 +1,10 @@
 schema_version: realtime_v1
 
 source:
-  # Re-run probe_cameras.py if device order changes.
+  # 2026-10-06: preview confirmed index 0 = Beast, index 1 = laptop.
+  # Camera indices can change after reconnecting; verify the view before capture.
   type: camera
-  camera_index: 1
+  camera_index: 0
   camera_backend: dshow
   width: 1280
   height: 720
@@ -30,7 +31,9 @@ roi:
   layout: configs/roi_layout_v2.yaml
   refs: refs/roi_templates_v2
   box_threshold: 0.50
-  lid_threshold: 0.52
+  # Local open/closed probe 2026-10-06: open <= 0.4795, closed >= 0.5097.
+  # Recheck after camera/viewpoint/lighting changes; not a calibrated probability.
+  lid_threshold: 0.50
   score_alpha: 0.35
   screw_done_threshold: 0.54
   screw_delta_threshold: 0.012
@@ -55,14 +58,24 @@ yolo:
   tool_score_threshold: 0.30
   target_dominance_ratio: 0.75
   max_age_frames: 8
+  max_age_ms: 800
   require_for_screw: true
 
 state_filter:
+  guidance_policy: timed_v1
+  timing:
+    placement_ms: 300
+    engage_ms: 800
+    release_ms: 400
+    max_gap_ms: 350
+    max_age_ms: 800
+    ack_ms: 1200
+    release_score_max: 0.15
   initial_state: S0
   max_state: S6
   min_confidence: 0.55
   box_min_confidence: 0.55
-  lid_min_confidence: 0.54
+  lid_min_confidence: 0.50
   screw_min_confidence: 0.55
   min_dwell_frames: 3
   dummy_auto_advance_frames: 0

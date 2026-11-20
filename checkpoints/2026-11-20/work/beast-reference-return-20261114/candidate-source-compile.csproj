@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <LangVersion>9.0</LangVersion>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(BeastRoot)/client_unity/Assets/Scripts/*.cs" />
+    <Reference Include="C:/Program Files/Unity/Hub/Editor/6000.3.25f1/Editor/Data/Managed/UnityEngine/*.dll" />
+  </ItemGroup>
+</Project>

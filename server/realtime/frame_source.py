@@ -2,12 +2,10 @@ from __future__ import annotations
 
 import csv
 import time
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator, List, Optional
-
-import cv2
-import numpy as np
 
 from server.realtime.schemas import FramePacket
 
@@ -40,6 +38,8 @@ class DummyFrameSource(BaseFrameSource):
         self.interval = 1.0 / max(1e-6, float(config.dummy_fps))
 
     def __iter__(self) -> Iterator[FramePacket]:
+        import cv2
+        import numpy as np
         frame_id = 0
         while True:
             frame_id += 1
@@ -64,6 +64,7 @@ class DummyFrameSource(BaseFrameSource):
 
 class CameraFrameSource(BaseFrameSource):
     def __init__(self, config: FrameSourceConfig):
+        import cv2
         self.config = config
         backend_map = {
             "any": cv2.CAP_ANY,
@@ -77,6 +78,7 @@ class CameraFrameSource(BaseFrameSource):
         if config.height > 0:
             self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, config.height)
         if not self.cap.isOpened():
+            self.cap.release()
             raise RuntimeError(f"Failed to open camera index {config.camera_index} with backend {config.camera_backend}")
 
     def __iter__(self) -> Iterator[FramePacket]:
@@ -105,44 +107,57 @@ class SessionFrameSource(BaseFrameSource):
         if not self.session_path.exists():
             raise FileNotFoundError(f"session path not found: {self.session_path}")
         self.items = self._collect_items()
+        if not self.items:
+            raise ValueError(f"No recorded images in session: {self.session_path}")
+        for path, _, _ in self.items:
+            if not path.is_file():
+                raise FileNotFoundError(f"Session image missing: {path}")
         self.interval = 1.0 / max(1e-6, float(config.replay_fps))
 
-    def _collect_items(self) -> List[Path]:
+    def _collect_items(self) -> list[tuple[Path, Optional[int], Optional[int]]]:
         frames_csv = self.session_path / "frames.csv"
         if frames_csv.exists():
-            paths: List[Path] = []
+            items = []
+            unrecorded = 0
             with frames_csv.open("r", encoding="utf-8-sig", newline="") as f:
                 for row in csv.DictReader(f):
-                    rel = row.get("image_path") or row.get("path") or ""
+                    rel = row.get("saved_frame") or row.get("image_path") or row.get("path") or ""
                     frame_id = row.get("frame_id") or ""
+                    timestamp = row.get("timestamp_ms") or row.get("timestamp_unix_ms") or ""
                     if rel:
-                        paths.append((self.session_path / rel).resolve())
+                        path = (self.session_path / rel).resolve()
+                    elif "saved_frame" in row:
+                        unrecorded += 1
+                        continue
                     elif frame_id:
-                        paths.append((self.session_path / "frames" / f"{int(frame_id):06d}.jpg").resolve())
-            if paths:
-                return paths
+                        path = (self.session_path / "frames" / f"{int(frame_id):06d}.jpg").resolve()
+                    else:
+                        raise ValueError("Frame row has no image path or frame_id")
+                    items.append((path, int(frame_id) if frame_id else None,
+                                  int(timestamp) if timestamp else None))
+            if unrecorded:
+                warnings.warn(f"{unrecorded} input frames were not recorded; replay uses saved images only",
+                              RuntimeWarning, stacklevel=2)
+            return items
         root = self.session_path / "frames" if (self.session_path / "frames").exists() else self.session_path
-        return sorted(p for p in root.rglob("*") if p.suffix.lower() in IMAGE_EXTS)
+        return [(p, None, None) for p in sorted(root.rglob("*")) if p.suffix.lower() in IMAGE_EXTS]
 
     def __iter__(self) -> Iterator[FramePacket]:
-        frame_id = 0
-        while True:
-            for path in self.items:
-                started = time.perf_counter()
-                frame = cv2.imread(str(path))
-                if frame is None:
-                    continue
-                frame_id += 1
-                yield FramePacket(
-                    frame_id=frame_id,
-                    timestamp_ms=int(time.perf_counter() * 1000),
-                    source="session",
-                    frame=frame,
-                    source_path=str(path),
-                )
-                elapsed = time.perf_counter() - started
-                if elapsed < self.interval:
-                    time.sleep(self.interval - elapsed)
+        import cv2
+        import numpy as np
+        for frame_id, (path, original_id, original_timestamp) in enumerate(self.items, 1):
+            started = time.perf_counter()
+            frame = cv2.imdecode(np.frombuffer(path.read_bytes(), dtype=np.uint8), cv2.IMREAD_COLOR)
+            if frame is None:
+                raise ValueError(f"Unreadable session image: {path}")
+            yield FramePacket(
+                frame_id=frame_id, timestamp_ms=int(time.perf_counter() * 1000),
+                source="session", frame=frame, source_path=str(path),
+                source_frame_id=original_id, source_timestamp_ms=original_timestamp,
+            )
+            elapsed = time.perf_counter() - started
+            if elapsed < self.interval:
+                time.sleep(self.interval - elapsed)
 
 
 def create_frame_source(config: FrameSourceConfig) -> BaseFrameSource:

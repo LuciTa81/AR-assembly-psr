@@ -1,0 +1,61 @@
+{
+  "schema_version": "beast_candidate_projection_probe_v1",
+  "candidate_only": true,
+  "calibration_valid": false,
+  "display_alignment_verified": false,
+  "coordinate_convention": "eye_local_pixels_top_left",
+  "display_mode": "full_sbs",
+  "channel_order": "left_half_left_eye_right_half_right_eye",
+  "eye_width": 1920,
+  "eye_height": 1080,
+  "camera_profile_id": "beast-combined-20260927T065914Z-89414bbe",
+  "workspace_profile_id": "beast-workspace-comfort-layout-20261006-v1-A-trial-20261031",
+  "camera_profile_sha256": "25f025bc5c2f71e4c83e6645e5cdc742bda81cd75d30c55ff7e5aca99924872e",
+  "workspace_profile_sha256": "5d4f4c6610af3264e0583eb64b038b3d66b12a9fc4844849d21d4f770d5c7acc",
+  "left_projection": [
+    1462.168737953303,
+    67.52055370413345,
+    870.6153904900716,
+    -110282.22259980293,
+    77.81021036079936,
+    1300.475548139208,
+    265.8240493090743,
+    -84986.14084554675,
+    0.17344945383454846,
+    0.07792438108171088,
+    0.9817551007239683,
+    -183.9510746283271
+  ],
+  "right_projection": [
+    1534.393857254294,
+    83.4421069733926,
+    829.6200685304462,
+    -142812.93583289348,
+    101.88353174045129,
+    1383.2194291366432,
+    242.61353047573235,
+    -67591.41236726347,
+    0.19365232750048036,
+    0.07117225036570832,
+    0.9784852001085799,
+    -156.62936531610325
+  ],
+  "retarget_review": {
+    "source_workspace_id": "beast-workspace-comfort-layout-20261006-v1",
+    "source_workspace_sha256": "7455aa644607b578ea98ff5d08803aecb3093e06130e484a876e020020459491",
+    "old_A_mm": [
+      150.73385944201263,
+      156.14870765226289,
+      60.0
+    ],
+    "new_A_mm": [
+      148.73667795585922,
+      155.70133073931308,
+      60.0
+    ],
+    "method": "Refit unchanged eye pixels with R @ corrected_A + t for each source observation",
+    "assumption": "Same physical target; registration correction only, not moved object",
+    "source_captures_preserved": true,
+    "new_wearing_validated": false
+  }
+}

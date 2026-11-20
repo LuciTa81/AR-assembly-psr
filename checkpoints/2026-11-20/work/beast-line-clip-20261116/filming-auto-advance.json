@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "mode": "filming_only",
+  "trigger": "unity_rendered_release_tone",
+  "delay_ms": 2000,
+  "fastening_verified": false
+}

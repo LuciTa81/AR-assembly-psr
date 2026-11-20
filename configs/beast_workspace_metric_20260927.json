@@ -1,0 +1,62 @@
+{
+  "schema_version": "beast_workspace_metric_v1",
+  "profile_id": "beast-workspace-centers-20260927-v1",
+  "units": "mm",
+  "axes": "x_right_y_away_z_up",
+  "origin_marker_id": 3,
+  "marker_centers_mm": {
+    "0": [
+      0,
+      285,
+      0
+    ],
+    "1": [
+      205,
+      285,
+      0
+    ],
+    "2": [
+      410,
+      285,
+      0
+    ],
+    "3": [
+      0,
+      0,
+      0
+    ],
+    "4": [
+      205,
+      0,
+      0
+    ],
+    "5": [
+      410,
+      0,
+      0
+    ]
+  },
+  "targets_mm": {},
+  "measurement_source": {
+    "kind": "user_ruler_and_grid_alignment_confirmation",
+    "date": "2026-09-27",
+    "user_report_cm": {
+      "3_to_0": 28.5,
+      "3_to_4": 20.5,
+      "3_to_5": 41,
+      "3_to_1_diagonal": 35,
+      "3_to_2_diagonal": 50
+    },
+    "row_column_alignment_confirmed": true,
+    "precision": "approximate_user_measurements",
+    "known_hole_spacing_mm": [
+      110,
+      110
+    ],
+    "approximate_lid_height_mm": 60,
+    "approximate_marker_side_mm": 70
+  },
+  "status": "measured_layout_pending_projection_validation",
+  "activation_status": "not_activated",
+  "display_alignment_verified": false
+}

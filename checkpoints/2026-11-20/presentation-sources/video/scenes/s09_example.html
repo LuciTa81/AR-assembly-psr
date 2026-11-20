@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+:root{--navy:#38577D;--ink:#1F2733;--grey:#6B7280;--lgrey:#9AA3B2;--line:#E3E7EE;--orange:#D9822B;--cyan:#13B8D4;--green:#22B07D;--pale:#EEF2F7}
+
+.card{left:110px;width:450px;height:100px;border-radius:16px;background:rgba(255,255,255,.92);border:1.5px solid var(--line);box-shadow:0 6px 22px rgba(31,39,51,.06);padding:16px 20px 0 64px}
+.card .no{position:absolute;left:20px;top:17px;font-size:17px;font-weight:800;color:#AFC0D6}
+.card .t{font-size:21px;margin-top:2px;font-weight:800;color:var(--ink)}
+.card .d{font-size:15.5px;color:var(--grey);margin-top:7px;font-weight:500;white-space:nowrap}
+.card .ok{position:absolute;right:18px;top:18px;width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;font-size:15px;font-weight:800;text-align:center;line-height:26px}
+.cam{left:600px;top:290px;width:470px;height:294px;border-radius:14px;overflow:hidden;background:#111;box-shadow:0 10px 30px rgba(31,39,51,.18)}
+.cam video{width:100%;height:100%;object-fit:cover;display:block}
+.camtag{left:612px;top:302px;padding:4px 10px;border-radius:999px;background:rgba(10,14,20,.72);color:#E5E9EF;font-size:13px;font-weight:600}
+.hud{left:600px;top:598px;width:470px;height:40px;border-radius:12px;background:#0E141B;color:#fff;font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px}
+.hud .dot{width:9px;height:9px;border-radius:50%}
+.gate{left:600px;top:652px;width:470px;height:234px;border-radius:16px;background:rgba(255,255,255,.94);border:1.5px solid var(--line);padding:16px 20px}
+.gate .lab{font-size:15px;font-weight:700;color:var(--grey)}
+.bar{position:relative;height:12px;border-radius:6px;background:#E8ECF2;margin-top:12px;overflow:visible}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:var(--navy)}
+.bar .thr{position:absolute;top:-6px;width:2px;height:24px;background:var(--orange)}
+.thrlab{position:absolute;top:17px;font-size:12px;color:var(--orange);font-weight:700;transform:translateX(-50%)}
+.track{display:flex;gap:8px;margin-top:34px}
+.seg{flex:1;border-radius:10px;background:#F1F4F8;border:1.5px solid #E3E7EE;padding:8px 10px;height:74px;position:relative;overflow:hidden}
+.seg .s1{font-size:15px;font-weight:800;color:#9AA3B2}
+.seg .s2{font-size:12.5px;color:#9AA3B2;margin-top:3px;font-weight:600}
+.seg .pf{position:absolute;left:0;bottom:0;height:5px;background:var(--cyan)}
+.seg .ck{position:absolute;right:8px;top:8px;font-size:13px;font-weight:800}
+.code{left:1110px;top:290px;width:700px;height:596px;border-radius:16px;background:#131820;box-shadow:0 18px 40px rgba(15,20,28,.28);overflow:hidden}
+.code .bar2{height:40px;background:#1B212B;display:flex;align-items:center;padding-left:16px;gap:8px}
+.code .bar2 i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.code .fname{margin-left:14px;font-family:'DejaVu Sans Mono',monospace;font-size:13px;color:#93A0B4}
+.rows{position:relative;padding:14px 0}
+.row{position:relative;height:22px;white-space:pre;font-family:'DejaVu Sans Mono',monospace;font-size:14.2px;line-height:22px;color:#C9D1DC}
+.row.gap{height:13px;line-height:13px;color:#4A5566;font-size:11px}
+.row .ln{display:inline-block;width:52px;text-align:right;padding-right:16px;color:#4F5B6D}
+.hl{position:absolute;left:0;right:0;background:rgba(122,152,214,.22);border-left:3px solid #8FB0F0}
+.k{color:#C792EA}.s{color:#C3E88D}.n{color:#F78C6C}.f{color:#82AAFF}.sf{color:#F07178}
+.summary{left:110px;top:900px;display:flex;gap:16px;align-items:center}
+.pill{padding:14px 22px;border-radius:14px;font-size:20px;font-weight:700}
+.pill.no{background:#fff;border:1.5px solid var(--line);color:var(--grey)}
+.pill.yes{background:var(--navy);color:#fff}
+.readout{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px dashed #E3E7EE;font-size:16px;font-weight:700;color:#1F2733;font-variant-numeric:tabular-nums}
+.dec{font-family:'DejaVu Sans Mono',monospace;font-size:13px;font-weight:400;padding:4px 10px;border-radius:8px;background:#131820;color:#C3E88D}
+.adv{left:600px;top:598px;width:470px;height:40px;border-radius:12px;background:var(--green);color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center}
+</style></head>
+<body><div id="stage">
+<div id="cards"></div>
+<div class="a cam" id="cam"><video id="v" src="../assets/clipA.mp4" muted preload="auto" playsinline></video></div>
+<div class="a camtag" id="camtag">take4 시연 · 재현 영상</div>
+<div class="a hud" id="hud"><span style="position:absolute;left:16px;font-size:13px;font-weight:600;color:#7D8796">안경 문구</span><span class="dot" id="hdot"></span><span id="htxt"></span></div>
+<div class="a adv" id="adv">나사 A 완료 &nbsp;→&nbsp; 나사 B · 2/4</div>
+<div class="a gate" id="gate">
+  <div class="lab">목표 나사 A 점수 <span style="float:right;font-weight:600;color:#AEB6C3">흐름 설명용 그림</span></div>
+  <div class="bar" id="sbar"><div class="fill" id="sfill"></div><div class="thr" style="left:15%;background:#22B07D"></div><div class="thrlab" style="left:15%;color:#22B07D">이탈 0.15</div><div class="thr" style="left:35%"></div><div class="thrlab" style="left:35%">기준 0.35</div></div>
+  <div class="track">
+    <div class="seg" id="p1"><div class="s1">접근</div><div class="s2">기준을 넘음</div><div class="pf"></div><div class="ck"></div></div>
+    <div class="seg" id="p2"><div class="s1">조임 동작 확인</div><div class="s2">끊김 없이 유지</div><div class="pf"></div><div class="ck"></div></div>
+    <div class="seg" id="p3"><div class="s1">체결 판단</div><div class="s2">드라이버를 뗌</div><div class="pf"></div><div class="ck"></div></div>
+  </div>
+  <div class="readout"><span id="rtxt"></span><span class="dec" id="rdec"></span></div>
+</div>
+<div class="a code" id="code">
+  <div class="bar2"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span class="fname">server/realtime/guidance_timing.py</span></div>
+  <div class="rows" id="rows"></div><div style="position:absolute;right:0;top:40px;bottom:0;width:70px;background:linear-gradient(90deg,rgba(19,24,32,0),#131820 80%)"></div>
+</div>
+<div class="a summary" id="summary">
+  <div class="pill no" id="sn">도구가 잠깐 스치면 &nbsp;→&nbsp; 넘어가지 않음</div>
+  <div class="pill yes" id="sy">조임 동작 확인 &nbsp;→&nbsp; 체결 판단 &nbsp;→&nbsp; 다음 나사</div>
+</div>
+<div class="a" id="note" style="right:110px;top:902px;text-align:right;font-size:15px;line-height:1.55;color:#8A93A3;font-weight:500">실제 코드 · server/realtime/guidance_timing.py<br>단계 변경은 OnlineStateFilter가 순서대로 맡습니다</div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({chap:2, title:'드라이버가 보인다고, 바로 넘어가지 않습니다', sub:'나사 A 하나로 따라가기 — 마커 → 도구 검출 → 목표 나사 점수 → 조임 동작 확인 → 체결 판단'});
+const ROWS = [{"n": 8, "code": "class GuidanceTiming:"}, {"n": 9, "code": "    placement_ms: int = 300"}, {"n": 10, "code": "    engage_ms: int = 800"}, {"n": 11, "code": "    release_ms: int = 400"}, {"gap": true}, {"n": 71, "code": "        if not marker_ok:"}, {"n": 72, "code": "            return self._pause(\"marker_not_stable\", frame_id)"}, {"gap": true}, {"n": 119, "code": "        if features.get(\"driver_visible\") != 1 or features.get(\"driver_count\") != 1:"}, {"n": 120, "code": "            return self._pause(\"tool_not_visible\", frame_id)"}, {"gap": true}, {"n": 124, "code": "        for name in \"abcd\":"}, {"n": 125, "code": "            values = [features.get(f\"tool_score_{name}\"), features.get(f\"tip_screw_score_{name}\")]"}, {"gap": true}, {"n": 132, "code": "        score = scores[index]"}, {"gap": true}, {"n": 143, "code": "        near = score >= threshold and score > other and score >= other * max(1.0, dominance) and confidence >= required"}, {"n": 144, "code": "        far = score <= self.timing.release_score_max"}, {"gap": true}, {"n": 150, "code": "            if self.started_at is None:"}, {"n": 151, "code": "                self.started_at = observation_timestamp_ms"}, {"n": 152, "code": "            self.armed = observation_timestamp_ms - self.started_at >= self.timing.engage_ms"}, {"gap": true}, {"n": 157, "code": "        elif self.release_at is None:"}, {"n": 158, "code": "            self.release_at = observation_timestamp_ms"}, {"n": 159, "code": "        self.decision = EvidenceDecision(\"OBSERVED\", confidence=confidence,"}, {"n": 160, "code": "            advance=far and observation_timestamp_ms - self.release_at >= self.timing.release_ms)"}];
+const T = KIT.timeline([
+  {k:'a', t:'나사 A 처리 과정을 따라가 보겠습니다. 먼저 마커로 나사 A부터 D까지의 위치를 잡고,', at:1.6},
+  {k:'b', t:'YOLO로 드라이버와 도구 끝을 찾습니다.'},
+  {k:'c', t:'도구 끝이 목표 나사에 가까워질수록 점수가 올라가는데,'},
+  {k:'d', t:'기준을 넘은 채 끊김 없이 머물러야 드라이버로 조이는 동작으로 확인하고,'},
+  {k:'e', t:'드라이버를 떼면, 나사 체결을 판단한 후 다음 나사로 넘어갑니다.'},
+  {k:'f', t:'그래서 도구가 잠깐 스치기만 해서는 단계가 넘어가지 않습니다.', pre:0.3},
+]);
+// 영상 맞춤 (클립 시간 = 원본 - 40)
+//  원본 44.5초(청록 '나사 A를 조여주세요')는 d 줄 시작 무렵, 47.5초(초록 '드라이버를 떼어주세요')는 e 줄 직전,
+//  49.7초(나사 B로 전환)는 e 줄 안에 오도록. 드라이버를 대고 있는 44.5~47.5초 구간만 느리게 늘려 맞춘다.
+const D0=T.d[0], T_C=D0+0.3, GREEN=T.e[0]-0.2, P0=T_C-3.5;
+function comp(t){ if(t<P0) return 41.0; if(t<T_C) return 41.0+(t-P0);
+  if(t<GREEN) return 44.5+3.0*(t-T_C)/(GREEN-T_C); return Math.min(52.4, 47.5+(t-GREEN)); }
+KIT.vid('v', t=>comp(t)-40);
+const T_NEAR=T_C-0.1, T_ARM=GREEN-0.1, T_ADV=GREEN+2.2, T_FAR=T_ADV-0.6;
+const CARDS = [
+  {t:'마커로 나사 위치', d:'ArUco · PnP로 나사 A ~ D 좌표를 구합니다', at:T.a[0]+1.2, done:T.b[0]},
+  {t:'도구 검출', d:'YOLO가 드라이버와 도구 끝을 찾습니다', at:T.b[0], done:T.c[0]},
+  {t:'목표 나사 점수', d:'도구 끝이 목표 나사에 가까울수록 오릅니다', at:T.c[0], done:T.d[0]},
+  {t:'드라이버 조임 동작 확인', d:'끊김 없이 머물러야 조이는 동작으로 봅니다', at:T.d[0], done:T_ARM},
+  {t:'나사 체결 판단 → 다음 나사', d:'드라이버를 떼면 체결 판단 후 다음 나사로', at:T.e[0], done:T_ADV},
+];
+const HL = [ [CARDS[0].at,T.b[0],[71,72]], [T.b[0],T.c[0],[119,120]], [T.c[0],T.c[0]+2.2,[124,125,132]], [T.c[0]+2.2,T.d[0],[143]],
+             [T.d[0],T.e[0],[10,150,151,152]], [T.e[0],T.f[0],[11,144,157,158,159,160]], [T.f[0]+1.0,KIT.dur-0.6,[10,11]] ];
+const cards = $('cards');
+CARDS.forEach((c,i)=>{ const e=document.createElement('div'); e.className='a card'; e.id='c'+i; e.style.top=(290+i*121.5)+'px';
+  e.innerHTML=`<div class="no">0${i+1}</div><div class="t">${c.t}</div><div class="d">${c.d}</div><div class="ok">✓</div>`; cards.appendChild(e); });
+function hi(code){
+  let s = code.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  s = s.replace(/("[^"]*"|f"[^"]*")/g,'\u0001$1\u0002');
+  const parts = s.split(/(\u0001[^\u0002]*\u0002)/);
+  return parts.map(p=>{ if(p.startsWith('\u0001')) return '<span class="s">'+p.slice(1,-1)+'</span>';
+    return p.replace(/\b(class|if|not|or|and|for|in|return|elif|is|None)\b/g,'<span class="k">$1</span>')
+            .replace(/\b(self)\b/g,'<span class="sf">$1</span>')
+            .replace(/\b(\d+(?:\.\d+)?)\b/g,'<span class="n">$1</span>')
+            .replace(/\b(max|get|_pause|EvidenceDecision|append)\b(?=\()/g,'<span class="f">$1</span>'); }).join('');
+}
+const rowsEl = $('rows'); const rowY = {}; let y = 14;
+ROWS.forEach(r=>{ const e=document.createElement('div');
+  if(r.gap){ e.className='row gap'; e.innerHTML='<span class="ln">⋮</span>'; y+=13; }
+  else { e.className='row'; e.innerHTML=`<span class="ln">${r.n}</span>`+hi(r.code); rowY[r.n]=y; y+=22; }
+  rowsEl.appendChild(e); });
+const hlEls = []; for(let i=0;i<8;i++){ const h=document.createElement('div'); h.className='hl'; h.style.opacity=0; rowsEl.insertBefore(h, rowsEl.firstChild); hlEls.push(h); }
+function score(t){
+  const S0=T_NEAR-2.4;
+  if(t<S0) return 0.05;
+  if(t<T_NEAR) return 0.05+0.31*ss((t-S0)/(T_NEAR-S0));
+  if(t<T_NEAR+0.6) return 0.36+0.46*eo((t-T_NEAR)/0.6);
+  if(t<T_FAR-0.08) return 0.82+0.03*Math.sin(t*7.3)+0.015*Math.sin(t*13.1);
+  if(t<T_FAR+0.04) return 0.82-0.74*eo((t-(T_FAR-0.08))/0.12);
+  return 0.08;
+}
+window.SCENE = t=>{
+  show('code',t,1.0,0.6,26);
+  [...rowsEl.querySelectorAll('.row')].forEach((e,i)=>{ e.style.opacity = ramp(t,1.3+i*0.025,0.35); });
+  CARDS.forEach((c,i)=>{ const e=$('c'+i); show(e,t,c.at,0.5,22);
+    const active = t>=c.at && t<c.done; const done = t>=c.done;
+    e.style.borderColor = active ? '#38577D' : '#E3E7EE';
+    e.style.boxShadow = active ? '0 10px 28px rgba(56,87,125,.20)' : '0 6px 22px rgba(31,39,51,.06)';
+    e.querySelector('.no').style.color = active ? '#38577D' : '#AFC0D6';
+    e.querySelector('.ok').style.opacity = done ? ramp(t,c.done,0.3) : 0;
+    e.style.background = '#fff'; });
+  show('cam',t,1.6,0.6,22); show('camtag',t,2.0,0.5,0); show('gate',t,1.9,0.6,22);
+  const hk = show('hud',t,1.8,0.5,10);
+  const c=comp(t); let txt='나사 A · 1/4', dot='#9AA3B2';
+  if(c>=43.0){ txt='드라이버 끝을 나사 A에 맞춰주세요'; dot='#F2B233'; }
+  if(c>=44.5){ txt='나사 A를 조여주세요'; dot='#13B8D4'; }
+  if(c>=47.5){ txt='드라이버를 떼어주세요'; dot='#22B07D'; }
+  $('htxt').textContent=txt; $('hdot').style.background=dot;
+  const ak = ramp(t,T_ADV,0.35); $('adv').style.opacity=ak; $('adv').style.transform=`scale(${0.96+0.04*ak})`; $('hud').style.opacity = hk*(1-ak);
+  const s=score(t); $('sfill').style.width=(s*100)+'%'; $('sfill').style.background = s>=0.35 ? '#38577D' : '#9AA3B2';
+  let rt, rd;
+  if(t<T_NEAR-2.4){ rt='목표 나사 A · 도구를 기다리는 중'; rd='GUIDING'; }
+  else if(t<T_NEAR){ rt='접근 중 · 점수 '+s.toFixed(2)+' / 기준 0.35'; rd='GUIDING'; }
+  else if(t<T_ARM){ rt='조임 동작 확인 중'; rd='OBSERVING'; }
+  else if(t<T_FAR){ rt='조임 동작 확인 · 드라이버를 뗄 때까지 대기'; rd='OBSERVED'; }
+  else if(t<T_ADV){ rt='드라이버 뗌 · 체결 판단'; rd='OBSERVED'; }
+  else { rt='다음 단계로 · 나사 B'; rd='advance=True'; }
+  $('rtxt').textContent=rt; $('rdec').textContent=rd;
+  const seg=(id,on,fill,color,doneT)=>{ const e=$(id); const done=t>=doneT;
+    e.style.borderColor = on ? color : (done ? '#CDEFE2' : '#E3E7EE'); e.style.background = on ? '#fff' : (done ? '#F2FBF7' : '#F1F4F8');
+    e.querySelector('.s1').style.color = on||done ? '#1F2733' : '#9AA3B2'; e.querySelector('.s2').style.color = on||done ? '#6B7280' : '#9AA3B2';
+    e.querySelector('.pf').style.width=(fill*100)+'%'; e.querySelector('.pf').style.background=color;
+    const ck=e.querySelector('.ck'); ck.textContent = done ? '✓' : ''; ck.style.color='#22B07D'; };
+  seg('p1', t>=T_NEAR-2.4 && t<T_NEAR, t<T_NEAR-2.4?0:(t>=T_NEAR?1:clamp((s-0.05)/0.30)), '#38577D', T_NEAR);
+  seg('p2', t>=T_NEAR && t<T_ARM, clamp((t-T_NEAR)/(T_ARM-T_NEAR)), '#13B8D4', T_ARM);
+  seg('p3', t>=T_FAR && t<T_ADV, clamp((t-T_FAR)/(T_ADV-T_FAR)), '#22B07D', T_ADV);
+  hlEls.forEach(h=>h.style.opacity=0);
+  let k=0; HL.forEach(([a,b,lines])=>{ const o = Math.min(ramp(t,a,0.25), 1-ramp(t,b-0.05,0.25)); if(o<=0.001) return;
+    const ls=[...lines].sort((x,y)=>x-y); let start=ls[0], prev=ls[0]; const bands=[];
+    for(let i=1;i<=ls.length;i++){ const n=ls[i]; if(n!==undefined && rowY[n]===rowY[prev]+22){ prev=n; continue; } bands.push([start,prev]); start=n; prev=n; }
+    bands.forEach(([p,q])=>{ const h=hlEls[k++]; if(!h) return; h.style.top=(rowY[p]-1)+'px'; h.style.height=(rowY[q]-rowY[p]+24)+'px'; h.style.opacity=o; }); });
+  show('sn',t,T.f[0]-0.1,0.5,14); show('sy',t,T.f[0]+1.0,0.5,14); show('note',t,T.f[0]+1.8,0.6,0);
+};
+</script></body></html>

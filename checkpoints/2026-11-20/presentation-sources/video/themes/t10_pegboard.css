@@ -1,0 +1,5 @@
+/* 10 타공판: 공구 걸이판 점무늬 + 좌우 파스텔 */
+.blob{display:none!important}
+#stage{background-color:#F7F8FB;background-image:radial-gradient(circle,rgba(56,87,125,.17) 0 1.8px,transparent 2.4px),
+ linear-gradient(120deg,rgba(201,214,236,.75) 0%,rgba(247,248,251,.1) 45%,rgba(247,248,251,.1) 60%,rgba(251,227,207,.75) 100%);
+ background-size:34px 34px,100% 100%;background-position:5px 5px,0 0}

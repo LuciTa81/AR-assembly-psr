@@ -1,0 +1,3 @@
+# Preserve archived bytes so calibration/profile SHA-256 bindings remain valid.
+/checkpoints/** -text
+/configs/beast*.json -text

@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import csv
 import json
+import hashlib
+import os
+import subprocess
 import time
+from contextlib import ExitStack
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import cv2
 import yaml
 
 
@@ -15,7 +18,9 @@ class RealtimeLogger:
         self.output_root = Path(output_root)
         self.session_id = session_id
         self.session_dir = self.output_root / session_id
-        self.session_dir.mkdir(parents=True, exist_ok=True)
+        if not session_id or Path(session_id).name != session_id or session_id in {".", ".."}:
+            raise ValueError("session_id must be a single directory name")
+        self.session_dir.mkdir(parents=True, exist_ok=False)
         self.save_frames = bool(save_frames)
         self.save_frame_every = max(1, int(save_frame_every))
         self.frames_dir = self.session_dir / "frames"
@@ -37,15 +42,38 @@ class RealtimeLogger:
                 "overlay_messages.jsonl",
             ],
         }
+        weights = config.get("yolo", {}).get("weights")
+        meta["model_sha256"] = None
+        if config.get("yolo", {}).get("enabled") and weights and Path(weights).is_file():
+            with Path(weights).open("rb") as f:
+                meta["model_sha256"] = hashlib.file_digest(f, "sha256").hexdigest()
+        try:
+            revision = subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parents[2],
+                capture_output=True, text=True, check=True, timeout=5,
+            )
+            meta["code_revision"] = revision.stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            meta["code_revision"] = None
         (self.session_dir / "meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
 
-        self.frames_file = (self.session_dir / "frames.csv").open("w", encoding="utf-8", newline="")
-        self.latency_file = (self.session_dir / "latency.csv").open("w", encoding="utf-8", newline="")
-        self.events_file = (self.session_dir / "events.csv").open("w", encoding="utf-8", newline="")
-        self.results_file = (self.session_dir / "results.jsonl").open("w", encoding="utf-8")
-        self.overlay_file = (self.session_dir / "overlay_messages.jsonl").open("w", encoding="utf-8")
+        self._files = ExitStack()
+        try:
+            for name, filename in (
+                ("frames_file", "frames.csv"), ("latency_file", "latency.csv"),
+                ("events_file", "events.csv"), ("results_file", "results.jsonl"),
+                ("overlay_file", "overlay_messages.jsonl"),
+            ):
+                setattr(self, name, self._files.enter_context(
+                    (self.session_dir / filename).open("x", encoding="utf-8", newline="")))
+        except BaseException:
+            self._files.close()
+            raise
 
-        self.frames_writer = csv.DictWriter(self.frames_file, fieldnames=["frame_id", "timestamp_ms", "source", "source_path", "saved_frame"])
+        self.frames_writer = csv.DictWriter(self.frames_file, fieldnames=[
+            "frame_id", "timestamp_ms", "source", "source_path", "saved_frame",
+            "source_frame_id", "source_timestamp_ms",
+        ])
         self.latency_writer = csv.DictWriter(
             self.latency_file,
             fieldnames=[
@@ -68,8 +96,12 @@ class RealtimeLogger:
     def log_frame(self, frame_packet, frame_bgr) -> str:
         saved = ""
         if self.save_frames and frame_packet.frame_id % self.save_frame_every == 0:
+            import cv2
             saved = f"frames/{frame_packet.frame_id:06d}.jpg"
-            cv2.imwrite(str(self.session_dir / saved), frame_bgr)
+            ok, encoded = cv2.imencode(".jpg", frame_bgr)
+            if not ok:
+                raise OSError("Frame JPEG encoding failed")
+            (self.session_dir / saved).write_bytes(encoded.tobytes())
         self.frames_writer.writerow(
             {
                 "frame_id": frame_packet.frame_id,
@@ -77,6 +109,8 @@ class RealtimeLogger:
                 "source": frame_packet.source,
                 "source_path": frame_packet.source_path,
                 "saved_frame": saved,
+                "source_frame_id": frame_packet.source_frame_id,
+                "source_timestamp_ms": frame_packet.source_timestamp_ms,
             }
         )
         return saved
@@ -85,7 +119,7 @@ class RealtimeLogger:
         self.latency_writer.writerow(row)
 
     def log_result(self, row: Dict[str, Any]) -> None:
-        self.results_file.write(json.dumps(row, ensure_ascii=False) + "\n")
+        self.results_file.write(json.dumps(row, ensure_ascii=False, allow_nan=False) + "\n")
 
     def log_overlay(self, message: Dict[str, Any]) -> None:
         self.overlay_file.write(json.dumps(message, ensure_ascii=False) + "\n")
@@ -102,7 +136,10 @@ class RealtimeLogger:
             }
         )
 
-    def close(self) -> None:
-        for f in [self.frames_file, self.latency_file, self.events_file, self.results_file, self.overlay_file]:
+    def flush_transition(self) -> None:
+        for f in (self.results_file, self.events_file):
             f.flush()
-            f.close()
+            os.fsync(f.fileno())
+
+    def close(self) -> None:
+        self._files.close()

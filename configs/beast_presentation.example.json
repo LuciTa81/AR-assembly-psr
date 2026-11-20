@@ -1,0 +1,4 @@
+{
+  "camera_profile": "C:/path/to/camera-candidate.json",
+  "workspace_profile": "C:/path/to/registered-workspace-candidate.json"
+}

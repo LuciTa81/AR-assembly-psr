@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+.nd{position:absolute;border-radius:14px;background:#fff;border:1.5px solid #D5DCE6}
+.nd img{position:absolute;left:16px;width:40px;height:40px;object-fit:contain}
+.nd .t{position:absolute;left:68px;font-size:19px;font-weight:800;color:#1F2733;white-space:nowrap}
+.nd .s{position:absolute;left:68px;font-size:14px;color:#6B7280;font-weight:500;white-space:nowrap}
+.box{position:absolute;border-radius:18px}
+.box .bl{position:absolute;left:22px;top:10px;font-size:15px;font-weight:800;white-space:nowrap}
+#n_http .lines{position:absolute;left:20px;top:150px;font-size:15px;line-height:1.75;color:#38577D;font-weight:600}
+#svg{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}
+.el{font-size:13px;fill:#8A93A3;font-weight:600}
+</style></head>
+<body><div id="stage">
+<div class="box" id="pbox" style="left:395px;top:296px;width:925px;height:604px;border:1.6px solid rgba(217,130,43,.65);background:rgba(251,235,221,.18)"><div class="bl" style="color:#D9822B">Python 실시간 서버 · Windows · 단일 프로세스</div></div>
+<div class="box" id="ubox" style="left:1350px;top:296px;width:460px;height:394px;border:1.6px solid #AEB6C3;background:rgba(238,242,247,.35)"><div class="bl" style="color:#6B7280">Unity 앱 · Windows · C#</div></div>
+<div id="nodes"></div>
+<svg id="svg" viewBox="0 0 1920 1080">
+  <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8A93A3"/></marker></defs>
+  <g id="edges"></g><g id="dots"></g>
+</svg>
+</div>
+<script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({chap:1, title:'카메라 영상에서 안경의 안내까지, 한 흐름으로 이어집니다', sub:'VITURE Beast · Windows 노트북 · Python 판단 · Unity SBS · 웹 관제'});
+// 노드: id, x, y, w, h, 아이콘, 제목, 설명
+const N=[
+ ['cam',110,344,268,92,'viture','VITURE Beast · 카메라','작업 영상 입력 · OpenCV'],
+ ['bench',110,564,268,92,'camera','작업대 (고정)','ArUco 마커 · 상자 · 나사'],
+ ['aruco',420,344,300,92,'opencv','ArUco 검출 · PnP 자세','마커 중심 4개 이상 · IPPE → LM'],
+ ['coords',750,344,300,92,'cube','A–D 카메라 좌표','등록한 3D 위치 → 영상 좌표'],
+ ['yolo',420,454,300,92,'yolo','YOLO 도구 검출','best-3.pt · 2프레임마다'],
+ ['tip',750,454,300,92,'ruler','도구 끝 · 거리 점수','목표 나사별 거리 · 근접 점수'],
+ ['mp',420,564,300,92,'mediapipe','MediaPipe 손 랜드마크','손 관절 · 동작 특징'],
+ ['gate',750,564,300,92,'python','시간 증거 게이트','접근 → 조임 동작 확인 → 체결 판단'],
+ ['hmm',420,674,300,92,'hmm','HMM · Viterbi 단계 추정','ROI · 도구 · 손 특징 결합'],
+ ['fsm',750,674,300,92,'python','FSM S0–S6','현재 목표 · 다음 행동 · 보류'],
+ ['log',420,784,300,92,'github','로그 · 평가','CSV · JSONL · 타임라인'],
+ ['diag',750,784,300,92,'image','진단 영상 · 상태 JSON','프레임마다 최신 상태'],
+ ['http',1080,344,215,532,'globe','로컬 HTTP','127.0.0.1:8765'],
+ ['recv',1370,340,420,72,'csharp','상태 · 관측 수신','GET /state.json · /observation'],
+ ['proj',1370,424,420,72,'csharp','눈별 투영 · 거리 보정','카메라 XYZ → 좌 · 우 3×4 투영'],
+ ['rend',1370,508,420,72,'unity','안내 렌더','나사 위치에 목표 원 · 안내 문구'],
+ ['sbs',1370,592,420,72,'unity','Full SBS 합성','좌 · 우 1920×1080 → 3840×1080'],
+ ['out',1350,714,460,80,'viture','VITURE Beast · 양안 표시','작업자 시야 위 목표 원 · 다음 행동'],
+ ['web',1350,816,460,80,'chrome','관제 페이지 (Chrome)','영상 · 단계 표시, 최종 확인 입력'],
+];
+const NB={};
+N.forEach(([id,x,y,w,h,ic,t,s])=>{ const e=document.createElement('div'); e.className='nd'; e.id='n_'+id;
+  Object.assign(e.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'});
+  const tall = h>200;
+  e.innerHTML = tall ? `<img src="../assets/ic/${ic}.png" style="top:22px;left:20px"><div class="t" style="left:20px;top:76px">${t}</div><div class="s" style="left:20px;top:106px">${s}</div><div class="lines">/state.json<br>/frame.jpg<br>/observation</div>`
+                     : `<img src="../assets/ic/${ic}.png" style="top:${h/2-20}px"><div class="t" style="top:${h<80?11:17}px">${t}</div><div class="s" style="top:${h<80?41:50}px">${s}</div>`;
+  if(id==='out') e.style.border='2px solid #1F2733';
+  $('nodes').appendChild(e); NB[id]=e; });
+// 연결선: id, 경로, 표시 시점 키
+const E=[
+ ['bench_cam','M244 564 V438','b'],
+ ['cam_aruco','M378 390 H418','b'],['cam_yolo','M388 390 V500 H418','b'],['cam_mp','M388 500 V610 H418','b'],
+ ['aruco_coords','M720 390 H748','c'],
+ ['coords_tip','M900 436 V452','d'],['yolo_tip','M720 500 H748','d'],
+ ['tip_gate','M900 546 V562','e'],['tip_hmm','M780 546 V556 H735 V700 H722','e'],['mp_hmm','M570 656 V672','e'],
+ ['hmm_fsm','M720 735 H748','f'],['gate_fsm','M900 656 V672','f'],
+ ['fsm_diag','M900 766 V782','g'],['fsm_log','M790 766 V775 H570 V782','g'],['coords_http','M1050 390 H1078','g'],['diag_http','M1050 830 H1078','g'],['http_recv','M1295 376 H1368','g'],
+ ['recv_proj','M1580 412 V422','h'],['proj_rend','M1580 496 V506','h'],['rend_sbs','M1580 580 V590','h'],['sbs_out','M1580 664 V712','h'],
+ ['http_web','M1295 846 H1348','i'],['web_http','M1350 868 H1297','i'],
+];
+const G=$('edges'), P={};
+E.forEach(([id,d])=>{ const p=document.createElementNS('http://www.w3.org/2000/svg','path'); p.setAttribute('d',d); p.setAttribute('fill','none');
+  p.setAttribute('stroke','#8A93A3'); p.setAttribute('stroke-width','2'); p.setAttribute('marker-end','url(#ah)'); G.appendChild(p); P[id]=p; p._L=p.getTotalLength(); });
+// 선 이름표
+[['촬영',256,505],['BGR 영상',304,474],['SBS 프레임',1592,694]].forEach(([s,x,y])=>{ const t=document.createElementNS('http://www.w3.org/2000/svg','text'); t.setAttribute('x',x); t.setAttribute('y',y); t.setAttribute('class','el'); t.textContent=s; t.id='lb_'+s; G.appendChild(t); });
+
+const T = KIT.timeline([
+  {k:'a', t:'전체 구조는 카메라 영상에서 안경의 안내까지 한 흐름입니다.', at:1.4},
+  {k:'b', t:'VITURE Beast 카메라가 작업대를 찍으면, 노트북의 Python 서버가 영상을 받습니다.'},
+  {k:'c', t:'ArUco 마커로 카메라 자세를 구해 나사 A부터 D의 위치를 계산하고,'},
+  {k:'d', t:'YOLO로 찾은 도구 끝과 목표 나사의 거리 점수를 냅니다.'},
+  {k:'e', t:'손 동작과 도구 특징은 HMM 단계 추정으로, 거리 점수는 시간 증거 게이트로 들어가고,'},
+  {k:'f', t:'두 결과가 FSM의 S0부터 S6 상태로 정리됩니다.'},
+  {k:'g', t:'결과는 로컬 HTTP 서버를 거쳐 Unity 앱으로 가고,'},
+  {k:'h', t:'Unity는 눈마다 따로 투영한 안내를 SBS 화면으로 합성해 안경에 띄웁니다.'},
+  {k:'i', t:'같은 상태는 웹 관제 페이지에도 보이고, 마지막 최종 확인만 관제에서 입력합니다.'},
+]);
+// 노드가 나오는 때와 강조되는 줄
+const NODE_AT={cam:['b',0],bench:['b',0.1],aruco:['c',0],coords:['c',0.35],yolo:['d',0],tip:['d',0.3],mp:['e',0],hmm:['e',0.25],gate:['e',0.6],fsm:['f',0],
+  http:['g',0],diag:['g',0.1],log:['g',0.15],recv:['g',0.6],proj:['h',0.1],rend:['h',0.35],sbs:['h',0.6],out:['h',0.8],web:['i',0]};
+const at=(k,f)=>T[k][0]+f*(T[k][1]-T[k][0]);
+// 연결선이 나오기 시작하는 때(두 끝 상자가 다 나온 뒤)와 다 그려진 때
+const edgeAt=id=>{ const [s1,s2]=id.split('_'); return Math.max(at(...NODE_AT[s1]),at(...NODE_AT[s2]))+0.15; };
+const edgeDone=id=>edgeAt(id)+0.5;
+// 흐르는 점은 지나갈 길이 모두 그려진 뒤에만 출발한다
+const ready=(edges,want)=>Math.max(want, ...edges.map(edgeDone))+0.1;
+// 흐르는 점: 경로(연결선 순서)
+const FLOWS=[
+ {edges:['cam_aruco','aruco_coords','coords_http','http_recv','recv_proj','proj_rend','rend_sbs','sbs_out'], color:'#13B8D4', want:()=>T.h[0]+0.3, period:3.2, n:2},
+ {edges:['cam_yolo','yolo_tip','tip_gate','gate_fsm','fsm_diag','diag_http','http_recv'], color:'#D9822B', want:()=>T.h[0]+1.4, period:3.2, n:2},
+ {edges:['http_web'], color:'#22B07D', want:()=>T.i[0]+0.2, period:1.2, n:1},
+ {edges:['web_http'], color:'#22B07D', want:()=>T.i[0]+(T.i[1]-T.i[0])*0.6, period:1.2, n:1},
+];
+const DOTS=[]; FLOWS.forEach((f,fi)=>{ for(let k=0;k<f.n;k++){ const c=document.createElementNS('http://www.w3.org/2000/svg','circle'); c.setAttribute('r','6'); c.setAttribute('fill',f.color);
+  c.style.filter=`drop-shadow(0 0 5px ${f.color})`; $('dots').appendChild(c); DOTS.push({c,f,k}); } });
+FLOWS.forEach(f=>{ f.st=ready(f.edges,f.want()); });
+function dotPos(f,u){ const Ls=f.edges.map(id=>P[id]._L); const tot=Ls.reduce((a,b)=>a+b,0); let s=u*tot;
+  for(let i=0;i<Ls.length;i++){ if(s<=Ls[i]) return [P[f.edges[i]].getPointAtLength(s),f.edges[i]]; s-=Ls[i]; } return [P[f.edges.at(-1)].getPointAtLength(Ls.at(-1)),f.edges.at(-1)]; }
+
+window.SCENE = t=>{
+  show('pbox',t,T.b[0]+0.2,0.6,0); show('ubox',t,T.g[0]+(T.g[1]-T.g[0])*0.5,0.6,0);
+  // 지금 말하는 줄
+  const line = Object.keys(T).find(k=>t>=T[k][0] && t<T[k][1]+0.35);
+  N.forEach(([id])=>{ const [k,f]=NODE_AT[id]; const a=at(k,f); const e=NB[id];
+    const kk=ramp(t,a,0.45); e.style.opacity=kk; e.style.transform=`translateY(${(1-kk)*14}px) scale(${0.97+0.03*kk})`;
+    const on = line===k && t>=a;
+    e.style.borderColor = on ? '#38577D' : (id==='out' ? '#1F2733' : '#D5DCE6');
+    e.style.boxShadow = on ? '0 10px 26px rgba(56,87,125,.20)' : '0 4px 14px rgba(31,39,51,.05)'; });
+  E.forEach(([id,d,k])=>{ const p=P[id]; const a=edgeAt(id); const kk=clamp((t-a)/0.5); p.style.strokeDasharray=p._L; p.style.strokeDashoffset=p._L*(1-ss(kk)); p.style.opacity=kk>0?1:0; });
+  // 선 이름표는 그 선이 그려질 때 함께
+  [['촬영','bench_cam'],['BGR 영상','cam_yolo'],['SBS 프레임','sbs_out']].forEach(([s,e])=>{ $('lb_'+s).style.opacity=ramp(t,edgeAt(e)+0.3,0.4); });
+  // 점은 차례로 길 처음에서 들어온다 (중간에서 갑자기 나타나지 않게)
+  DOTS.forEach(({c,f,k})=>{ const st=f.st+k*f.period/f.n; if(t<st){ c.style.opacity=0; c._edge=null; return; }
+    const u=((t-st)/f.period)%1; const [p,eid]=dotPos(f,u); c.setAttribute('cx',p.x); c.setAttribute('cy',p.y); c._edge=eid;
+    c.style.opacity = Math.min(1, u/0.05, (1-u)/0.05); });
+};
+</script></body></html>

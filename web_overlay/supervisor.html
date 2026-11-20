@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AR Assembly | 작업 관제</title>
+  <link rel="stylesheet" href="/supervisor.css">
+  <script defer src="/supervisor_state.js"></script>
+  <script defer src="/supervisor_video.js"></script>
+  <script defer src="/supervisor.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">AR Assembly <span>조립 작업 관제</span></div>
+    <div class="source"><span id="sourceKind">입력 확인 중</span><span class="local">LOCAL</span>
+      <button id="fullscreen" class="icon-button" type="button" title="전체 화면" aria-label="전체 화면" aria-pressed="false">
+        <!-- Lucide maximize/minimize; see lucide-LICENSE.txt. -->
+        <svg id="expandIcon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+        <svg id="collapseIcon" hidden aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>
+      </button>
+    </div>
+  </header>
+  <main>
+    <div class="status-line"><div><h1>조립 진행 상황</h1><p id="stepProgress">단계 수신 대기</p></div><span id="status" role="status" data-tone="neutral">연결 대기</span></div>
+    <ol id="steps" class="steps" aria-label="조립 순서">
+      <li data-state="S0"><b>S0</b><span>상자 배치</span></li>
+      <li data-state="S1"><b>S1</b><span>뚜껑 닫기</span></li>
+      <li data-state="S2"><b>S2</b><span>나사 A</span></li>
+      <li data-state="S3"><b>S3</b><span>나사 B</span></li>
+      <li data-state="S4"><b>S4</b><span>나사 C</span></li>
+      <li data-state="S5"><b>S5</b><span>나사 D</span></li>
+      <li data-state="S6"><b>S6</b><span>최종 확인</span></li>
+    </ol>
+    <div class="workspace">
+      <section class="guidance" aria-label="현재 작업 안내">
+        <div class="state-row">
+          <div><p class="label" id="stateCaption">현재 상태</p><div id="currentState">—</div></div>
+          <div class="state-detail"><h2 id="stateLabel">작업 대기</h2><p>작업 대상 <strong id="target">—</strong></p></div>
+          <span id="interactionMode" class="mode-label">안내 보류</span>
+        </div>
+        <div class="instruction-block" aria-live="polite">
+          <p class="label" id="instructionCaption">다음 행동</p>
+          <p id="actionTitle">입력 연결을 기다리고 있어요</p>
+          <p id="acknowledgement" class="ack">&nbsp;</p>
+        </div>
+        <div class="feedback" id="feedback" aria-live="polite" aria-atomic="true">
+          <h3 id="feedbackTitle">상태 수신 대기</h3>
+          <p id="feedbackDetail">로컬 인식 서버의 연결을 기다립니다.</p>
+        </div>
+        <ol class="phase-rail" id="phaseRail" aria-label="현재 나사의 관측 상태" hidden>
+          <li><span>1</span><b id="phaseStart">대상 접근</b></li>
+          <li><span>2</span><b>접근 유지</b></li>
+          <li><span>3</span><b id="phaseEnd">이탈 대기</b></li>
+        </ol>
+        <div id="operatorControls" class="operator-controls" hidden>
+          <button id="confirmStep" type="button" disabled>현재 작업 완료 확인</button>
+          <p id="confirmationHint"></p>
+          <p id="operatorResult" role="status"></p>
+        </div>
+      </section>
+      <section class="camera-view" aria-label="작업대 영상">
+        <div class="camera-heading"><h2>작업대 영상</h2><label class="video-toggle"><input id="videoEnabled" type="checkbox" role="switch">영상 표시</label></div>
+        <div class="video-stage" id="videoStage" data-status="OFF">
+          <img id="videoImage" alt="로컬 작업대 카메라 영상" hidden>
+          <div id="videoEmpty">영상 표시 꺼짐</div>
+          <span id="videoStatus" class="video-status" role="status">꺼짐</span>
+        </div>
+        <div class="video-meta"><strong id="videoSource">입력 미확인</strong><span id="videoFrame">영상 프레임 —</span><span id="videoAge">영상 나이 —</span></div>
+        <p class="video-note">원본 영상 · 상태와 별도 수신 · 실물 정합 표시 없음</p>
+        <p id="poseFeedback" class="pose-feedback" role="status">위치 안내 대기 · 상태 수신 대기</p>
+      </section>
+    </div>
+    <details id="diagnostics" class="diagnostics">
+      <summary>입력 상세</summary>
+      <div class="diagnostic-content">
+        <dl>
+          <div><dt>마커 추적</dt><dd id="marker">—</dd></div>
+          <div><dt>검출 마커</dt><dd id="markerCount">—</dd></div>
+          <div><dt id="qualityLabel">Warp 품질</dt><dd id="quality">—</dd></div>
+          <div><dt>드라이버 관측</dt><dd id="driverEvidence">정보 없음</dd></div>
+          <div><dt>처리 FPS</dt><dd id="fps">—</dd></div>
+          <div><dt>서버 처리 시간</dt><dd id="latency">—</dd></div>
+          <div><dt>수신 데이터 나이</dt><dd id="age">—</dd></div>
+          <div><dt>실물 위치 정합</dt><dd>후보 보정 · 정량 미검증</dd></div>
+        </dl>
+        <div class="server-instruction"><span class="label">서버 원문</span><p id="instruction">Waiting for the local vision server</p></div>
+        <div class="session-line"><span>SESSION</span><strong id="session">연결 대기</strong><span id="frame">프레임 —</span></div>
+      </div>
+    </details>
+    <footer><span id="dataNote">상태 데이터 수신 대기</span><a href="/" target="_blank" rel="noopener">카메라 진단 화면 ↗</a></footer>
+    <p id="displayError" role="status" hidden></p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,5 @@
+/* E 네 모서리: 네 색이 네 구석에 하나씩 */
+#b1{left:-300px!important;top:-330px!important;width:760px!important;height:760px!important;background:#CFEDE6!important}
+#b2{left:1460px!important;top:-300px!important;width:720px!important;height:720px!important;background:#DDD5F4!important}
+#b3{left:-280px!important;top:640px!important;width:720px!important;height:720px!important;background:#FBE3CF!important}
+#stage::before{content:'';position:absolute;left:1420px;top:620px;width:760px;height:760px;border-radius:50%;filter:blur(90px);opacity:.55;background:#C9D6EC}

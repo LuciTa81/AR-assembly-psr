@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+#vid{left:110px;top:290px;width:1120px;height:630px}
+#fn{left:112px;top:930px;font-size:14px;color:#9AA3B2;font-weight:500;white-space:nowrap}
+#rl{left:1270px;top:288px;font-size:17px;font-weight:800;color:#38577D}
+.st{position:absolute;left:1270px;width:540px;height:80px;border-radius:14px;background:#F3F6FA;border:1.5px solid transparent;overflow:hidden}
+.st .tm{position:absolute;left:18px;top:16px;font-size:16px;font-weight:700;color:#9AA3B2;font-variant-numeric:tabular-nums}
+.st .t{position:absolute;left:82px;top:12px;font-size:21px;font-weight:800;color:#1F2733;white-space:nowrap}
+.st .h{position:absolute;left:82px;top:44px;font-size:15.5px;color:#6B7280;font-weight:600;white-space:nowrap}
+.st .ck{position:absolute;right:18px;top:26px;width:26px;height:26px;border-radius:50%;background:#22B07D;color:#fff;font-size:15px;font-weight:800;text-align:center;line-height:26px}
+.st .pb{position:absolute;left:0;bottom:0;height:4px;background:#13B8D4}
+</style></head>
+<body><div id="stage">
+<div class="a media" id="vid"><video id="v" src="../assets/demo.mp4" muted preload="auto"></video><span class="mtag" style="position:absolute;left:14px;top:14px">카메라 화면에 안경의 조립 안내를 겹친 재현 영상</span></div>
+<div class="a" id="fn">재현 영상 · 최종 확인은 작업자 확인</div>
+<div class="a" id="rl">영상에서 볼 곳</div>
+<div id="list"></div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({chap:5, title:'상자 하나를 처음부터 끝까지 조립합니다', sub:'실제 시연 · 상자 배치 → 뚜껑 닫기 → 나사 A ~ D → 최종 확인'});
+const VS=1.6, VLEN=96.2;
+const S=[[0,'상자 배치','상자를 놓아주세요'],[13,'뚜껑 닫기','뚜껑을 덮어주세요'],[27,'나사 A','나사 A를 조여주세요'],[50,'나사 B','나사 B를 조여주세요'],
+         [61,'나사 C','나사 C를 조여주세요'],[76,'나사 D','나사 D를 조여주세요'],[94,'최종 확인','조립 상태를 확인해주세요']];
+S.forEach(([s,t,h],i)=>{ const e=document.createElement('div'); e.className='st'; e.id='s'+i; e.style.top=(322+i*86)+'px';
+  e.innerHTML=`<div class="tm">${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</div><div class="t">${t}</div><div class="h">${h}</div><div class="ck">✓</div><div class="pb"></div>`; $('list').appendChild(e); });
+const T = KIT.timeline([
+  {k:'a', t:'이제 상자 하나를 처음부터 끝까지 조립해 보겠습니다.', at:VS+0.2},
+  {k:'b', t:'상자를 놓으라는 안내와 함께 상자 윤곽이 나타나고,', at:VS+5.0},
+  {k:'c', t:'상자를 놓고 뚜껑을 닫으면, 카메라가 이를 확인해 자동으로 다음 단계로 넘어갑니다.', at:VS+13.4},
+  {k:'d', t:'나사 A부터는 노란 목표 표시를 따라 드라이버를 대고 조이면,', at:VS+27.4},
+  {k:'e', t:'도구의 움직임을 보고 버튼 없이 다음 나사로 넘어갑니다.', at:VS+33.5},
+  {k:'f', t:'나사 B와 C는 2배속으로 보여 드립니다.', at:VS+50.4},
+  {k:'g', t:'마지막 나사 D까지 마치면,', at:VS+76.4},
+  {k:'h', t:'조립 상태를 확인해 달라는 요청으로 안내가 끝납니다.', at:VS+94.2},
+],{tail:1.8});
+KIT.vid('v', t=>clamp(t-VS,0,VLEN));
+window.SCENE = t=>{
+  show('vid',t,0.3,0.6,20); show('fn',t,1.2,0.5,0); show('rl',t,0.6,0.4,0);
+  const v=clamp(t-VS,0,VLEN);
+  S.forEach(([s],i)=>{ const e=$('s'+i); show(e,t,0.7+i*0.08,0.4,10); const nx=S[i+1]?S[i+1][0]:VLEN+3;
+    const on=v>=s && v<nx && t>=VS, done=v>=nx;
+    e.style.background = on ? '#fff' : '#F3F6FA'; e.style.borderColor = on ? '#38577D' : 'transparent';
+    e.style.boxShadow = on ? '0 10px 26px rgba(56,87,125,.16)' : 'none';
+    e.querySelector('.tm').style.color = on ? '#38577D' : '#9AA3B2';
+    e.querySelector('.ck').style.opacity = done ? 1 : 0;
+    e.querySelector('.pb').style.width = on ? (100*clamp((v-s)/(nx-s)))+'%' : '0%'; });
+};
+</script></body></html>

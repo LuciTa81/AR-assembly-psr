@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+#top{left:110px;top:290px;width:680px;height:383px}
+.sp{position:absolute;left:830px;width:980px;height:88px;border-radius:14px;background:#F3F6FA;border:1.5px solid transparent}
+.sp .n{position:absolute;left:22px;top:22px;font-size:34px;font-weight:300;color:#AFC0D6;line-height:1}
+.sp .t{position:absolute;left:84px;top:14px;font-size:23px;font-weight:800;color:#1F2733;white-space:nowrap}
+.sp .d{position:absolute;left:84px;top:50px;font-size:17px;color:#6B7280;font-weight:500;white-space:nowrap}
+#blab{left:110px;top:698px;font-size:17px;font-weight:800;color:#38577D}
+.pn{position:absolute;top:728px;width:320px;height:180px;border-radius:12px;overflow:hidden;background:#0B0F14}
+.pn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pn .mtag{position:absolute;left:8px;bottom:8px;z-index:3}
+#exp{left:1150px;top:722px;width:660px}
+#exp .r{display:flex;gap:16px;align-items:baseline;margin-bottom:10px;white-space:nowrap}
+#exp .k{font-size:20px;font-weight:800;color:#1F2733;width:170px}
+#exp .v{font-size:19px;color:#4B5563;font-weight:600}
+#exp .fin{margin-top:8px;font-size:21px;font-weight:800;color:#38577D;white-space:nowrap}
+#note{left:832px;top:684px;font-size:15.5px;color:#8A93A3;font-weight:600;white-space:nowrap}
+</style></head>
+<body><div id="stage">
+<div class="a media" id="top"><img src="../assets/sp_top.jpg"><span class="mtag" style="position:absolute;left:12px;top:12px">재현 · 작업대 사진에 Unity 왼눈 화면을 맞춰 얹음</span></div>
+<div class="sp" id="s0" style="top:290px"><div class="n">01</div><div class="t">마커 자세 추정</div><div class="d">ArUco 검출과 PnP로 작업대에 대한 카메라의 위치와 방향을 구합니다.</div></div>
+<div class="sp" id="s1" style="top:388px"><div class="n">02</div><div class="t">나사의 3D 좌표</div><div class="d">등록한 나사 A ~ D의 위치를 카메라 기준 좌표로 바꿉니다.</div></div>
+<div class="sp" id="s2" style="top:486px"><div class="n">03</div><div class="t">눈별 투영</div><div class="d">화면 좌표 x = P · X 를 눈마다 따로 계산합니다 (P: 눈별 3×4 투영 행렬).</div></div>
+<div class="sp" id="s3" style="top:584px"><div class="n">04</div><div class="t">Full SBS 출력</div><div class="d">Unity가 서로 다른 좌우 화면을 나란히 붙여 안경으로 보냅니다.</div></div>
+<div class="a" id="note">보정값은 미리 구하고, 표시 위치는 움직일 때마다 다시 계산합니다.</div>
+<div class="a" id="blab">안경에 실제로 들어가는 화면 · Unity 양안 출력의 같은 순간</div>
+<div class="pn" id="pL" style="left:110px"><img src="../assets/sp_L.jpg"><span class="mtag">왼눈</span></div>
+<div class="pn" id="pR" style="left:450px"><img src="../assets/sp_R.jpg"><span class="mtag">오른눈</span></div>
+<div class="pn" id="pO" style="left:790px"><img src="../assets/sp_R.jpg"><img id="ov" src="../assets/sp_O.jpg"><span class="mtag">겹쳐 보기 · 주황 왼눈 · 청록 오른눈</span></div>
+<div class="a" id="exp">
+  <div class="r" id="e0"><span class="k">윤곽 · 나사 표시</span><span class="v">눈마다 다른 자리</span></div>
+  <div class="r" id="e1"><span class="k">안내 글자</span><span class="v">두 눈에 같은 자리</span></div>
+  <div class="fin" id="e2">그래서 실물의 깊이에 맞춰 하나로 겹쳐 보입니다.</div>
+</div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({chap:3, title:'같은 나사를 왼눈과 오른눈에 따로 계산해 그립니다', sub:'문제 2 · 양안 정합 — 실시간 처리'});
+const T = KIT.timeline([
+  {k:'a', t:'실시간으로는 이렇게 계산합니다.', at:1.4},
+  {k:'b', t:'ArUco와 PnP로 카메라 자세를 구하고, | 등록한 나사 A부터 D를 카메라 기준 3D 좌표로 바꾼 뒤,'},
+  {k:'c', t:'눈마다 다른 투영 행렬로 화면 좌표를 따로 계산합니다.'},
+  {k:'d', t:'Unity는 이렇게 서로 다른 좌우 화면을 나란히 붙여 안경으로 보냅니다.'},
+  {k:'e', t:'두 화면을 겹쳐 보면 윤곽과 나사 표시는 눈마다 다른 자리에, 안내 글자는 같은 자리에 있어서,', pre:0.2},
+  {k:'f', t:'실물의 깊이에 맞춰 하나로 겹쳐 보입니다.'},
+]);
+const b=T.b, SA=[b[0], b[0]+(b[1]-b[0])*0.5, T.c[0], T.d[0]];
+window.SCENE = t=>{
+  show('top',t,T.a[0]-0.1,0.6,22); $('top').querySelector('img').style.transform=`scale(${1.04-0.04*ss(t/KIT.dur)})`;
+  ['s0','s1','s2','s3'].forEach((id,i)=>{ show(id,t,T.a[0]+0.2+i*0.12,0.5,12); const on=t>=SA[i] && t<(SA[i+1]??T.e[0]);
+    $(id).style.background = on ? '#fff' : '#F3F6FA'; $(id).style.borderColor = on ? '#38577D' : 'transparent';
+    $(id).style.boxShadow = on ? '0 10px 26px rgba(56,87,125,.16)' : 'none'; $(id).querySelector('.n').style.color = t>=SA[i] ? '#38577D' : '#AFC0D6'; });
+  show('note',t,T.c[0]+1.0,0.5,0);
+  show('blab',t,T.d[0]-0.2,0.4,0); show('pL',t,T.d[0]+0.2,0.5,16); show('pR',t,T.d[0]+0.7,0.5,16); show('pO',t,T.e[0]-0.2,0.5,16);
+  $('ov').style.opacity = ramp(t,T.e[0]+0.6,0.8);
+  show('e0',t,T.e[0]+(T.e[1]-T.e[0])*0.3,0.4,8); show('e1',t,T.e[0]+(T.e[1]-T.e[0])*0.65,0.4,8); show('e2',t,T.f[0],0.5,8);
+};
+</script></body></html>

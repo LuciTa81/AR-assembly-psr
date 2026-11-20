@@ -1,0 +1,6 @@
+{"frame_id":1,"state":"S0","transition_event":"","filter_input":{"frame_id":1,"marker_ok":true,"features":{"box_present_score":0.5499996},"observation_id":-1,"evidence_valid":false}}
+{"frame_id":2,"state":"S1","transition_event":"S0->S1","filter_input":{"frame_id":2,"marker_ok":true,"features":{"box_present_score":0.6},"observation_id":-1,"evidence_valid":false}}
+{"frame_id":3,"state":"S2","transition_event":"S1->S2","filter_input":{"frame_id":3,"marker_ok":true,"features":{"lid_closed_score":0.7},"observation_id":-1,"evidence_valid":false}}
+{"frame_id":4,"state":"S2","transition_event":"","filter_input":{"frame_id":4,"marker_ok":true,"features":{"require_yolo_for_screw":1,"tool_score_a":0.9,"screw_confirm_frames":2},"observation_id":4,"evidence_valid":true}}
+{"frame_id":5,"state":"S2","transition_event":"","filter_input":{"frame_id":5,"marker_ok":true,"features":{"require_yolo_for_screw":1,"tool_score_a":0.9,"screw_confirm_frames":2},"observation_id":4,"evidence_valid":true}}
+{"frame_id":6,"state":"S3","transition_event":"S2->S3","filter_input":{"frame_id":6,"marker_ok":true,"features":{"require_yolo_for_screw":1,"tool_score_a":0.9,"screw_confirm_frames":2},"observation_id":6,"evidence_valid":true}}

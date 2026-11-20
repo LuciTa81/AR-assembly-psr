@@ -43,7 +43,9 @@ def clamp_rect(rect: Rect, image_width: int, image_height: int) -> Rect:
 
 
 def load_image(path: Path):
-    image = cv2.imread(str(path))
+    # Decode bytes so Windows Unicode paths work like session frame paths.
+    encoded = np.frombuffer(path.read_bytes(), dtype=np.uint8)
+    image = cv2.imdecode(encoded, cv2.IMREAD_COLOR) if encoded.size else None
     if image is None:
         raise FileNotFoundError(f"failed to read image: {path}")
     return image

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+.col{width:470px;height:245px;top:290px}
+.ch{top:548px;font-size:26px;font-weight:800;white-space:nowrap}
+.ch small{font-size:17px;font-weight:600;color:#9AA3B2;margin-left:8px}
+#aibg{left:1330px;top:278px;width:490px;height:600px;border-radius:20px;background:rgba(56,87,125,.06);border:1.5px solid rgba(56,87,125,.35)}
+.rl{left:110px;font-size:20px;font-weight:700;color:#1F2733;white-space:nowrap}
+.cell{font-size:21px;color:#6B7280;font-weight:500;white-space:nowrap}
+.ai{font-size:21px;color:#38577D;font-weight:800;white-space:nowrap}
+.sep{left:110px;width:1700px;height:1px;background:#E3E7EE}
+#lab1{left:110px;top:296px;font-size:17px;font-weight:800;color:var(--orange)}
+#lab2{left:110px;top:328px;font-size:30px;font-weight:800;line-height:1.35;white-space:nowrap}
+#key{left:110px;top:890px;width:1700px;height:64px}
+#key .tag{position:absolute;left:22px;top:17px;background:#FBEBDD;color:#D9822B}
+#key .k{position:absolute;left:150px;top:15px;font-size:25px;font-weight:800;white-space:nowrap}
+</style></head>
+<body><div id="stage">
+<div class="a" id="aibg"></div>
+<div class="a" id="lab1">비교</div>
+<div class="a" id="lab2">같은 조립,<br>세 가지 안내 방식</div>
+<div class="a media col" id="m0" style="left:380px"><img src="../assets/cmp_paper.jpg"></div>
+<div class="a media col" id="m1" style="left:860px"><img src="../assets/cmp_tablet.jpg"></div>
+<div class="a media col" id="m2" style="left:1340px;position:absolute"><video id="v" src="../assets/comp_cmp.mp4" muted preload="auto" style="position:absolute;inset:0"></video><video id="v2" src="../assets/comp_cmp.mp4" muted preload="auto" style="position:absolute;inset:0"></video></div>
+<div class="a mtag" id="vt" style="left:1352px;top:302px">시연 영상 · 재현</div>
+<div class="a ch" id="h0" style="left:380px">종이 설명서</div>
+<div class="a ch" id="h1" style="left:860px">화면 설명서<small>태블릿 · 영상</small></div>
+<div class="a ch" id="h2" style="left:1340px;color:#38577D">AI Assembly Guide</div>
+<div id="rows"></div>
+<div class="a panel" id="key"><span class="tag">핵심 차별점</span><div class="k">위치는 마커로, 단계는 도구의 움직임으로 판단해 작업 위치에 바로 안내합니다.</div></div>
+</div>
+<script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({kicker:'01 · 기존 방식과 비교', chap:0, title:'안내가 보이는 곳과 단계를 넘기는 방법이 다릅니다', sub:'종이 설명서 · 화면 설명서 · AI Assembly Guide'});
+const ROWS=[['안내가 보이는 곳','책상 위 설명서','옆에 둔 화면','작업 위치 위 (AR 안경)'],
+ ['다음 단계로 넘어가기','직접 페이지를 넘김','직접 누르거나 재생','나사 A ~ D는 AI 관측으로 자동 전환'],
+ ['작업 중 시선','설명서와 작업대를 오감','화면과 작업대를 오감','작업대에 머묾, 시각적 피드백 명확'],
+ ['진행 상황 확인','작업자가 이해하고 기억해야 함','작업자가 매번 파악','관제 화면에 현재 단계와 다음 행동 표시']];
+const st=$('stage');
+ROWS.forEach((r,i)=>{ const y=598+i*70;
+  const s=document.createElement('div'); s.className='a sep'; s.id='sep'+i; s.style.top=(y-2)+'px'; st.insertBefore(s,$('key'));
+  [[110,'rl'],[380,'cell'],[860,'cell'],[1360,'ai']].forEach(([x,c],j)=>{ const e=document.createElement('div'); e.className='a '+c; e.id=`c${i}${j}`; e.style.left=x+'px'; e.style.top=(y+20)+'px'; e.textContent=r[j]; st.insertBefore(e,$('key')); }); });
+const T = KIT.timeline([
+  {k:'a', t:'기존 방식과 비교해 보겠습니다.', at:1.5},
+  {k:'b', t:'종이나 화면 설명서는 안내가 책상 위나 옆 화면에 있지만,'},
+  {k:'c', t:'저희는 작업할 위치 위에 바로 보여줍니다.'},
+  {k:'d', t:'다음 단계로 넘길 때도 직접 넘기거나 누를 필요 없이,'},
+  {k:'e', t:'나사 A부터 D까지는 AI 관측으로 자동으로 넘어갑니다.'},
+  {k:'f', t:'그래서 시선은 작업대에 머물고, 진행 상황은 관제 화면에서 확인합니다.'},
+  {k:'g', t:'위치는 마커로, 단계는 도구의 움직임으로 판단하는 것이 핵심 차별점입니다.', pre:0.2},
+]);
+const f=T.f; const RT=[[T.b[0],T.c[0]],[T.d[0],T.e[0]],[f[0],f[0]+0.9],[f[0]+(f[1]-f[0])*0.5,f[0]+(f[1]-f[0])*0.5+0.6]];
+const V0=T.a[0]+0.6;
+// 나사 A 한 사이클(원본 43.1~48.9초)을 반복, 이음매는 0.3초 겹쳐 넘김
+const C0=3.1, LP=5.8, XF=0.3, P=LP-XF;
+function loopState(t){ const u=Math.max(0,t-V0); const k=Math.floor(u/P); const w=u-k*P; return {k,w,u}; }
+function elT(t,which){ const {k,u}=loopState(t); const kk = (k%2===which) ? k : k-1; if(kk<0) return C0; return Math.min(C0+LP, C0+(u-kk*P)); }
+KIT.vid('v', t=>elT(t,0)); KIT.vid('v2', t=>elT(t,1));
+window.SCENE = t=>{
+  show('lab1',t,T.a[0]-0.3,0.5,0); show('lab2',t,T.a[0]-0.2,0.5,14);
+  ['m0','m1','m2'].forEach((id,i)=>show(id,t,T.a[0]+i*0.25,0.55,22));
+  ['h0','h1','h2'].forEach((id,i)=>show(id,t,T.a[0]+0.3+i*0.25,0.5,10));
+  show('vt',t,T.a[0]+1.0,0.4,0); show('aibg',t,T.a[0]+0.6,0.6,0);
+  const {k,w}=loopState(t); const top = k%2===0 ? 'v' : 'v2', under = k%2===0 ? 'v2' : 'v';
+  $(top).style.zIndex=2; $(under).style.zIndex=1; $(top).style.opacity = k===0 ? 1 : clamp(w/XF); $(under).style.opacity = k===0 ? 0 : 1;
+  ROWS.forEach((r,i)=>{ show('sep'+i,t,RT[i][0]-0.2,0.4,0);
+    for(let j=0;j<3;j++) show(`c${i}${j}`,t,RT[i][0]+j*0.12,0.45,10);
+    const k=show(`c${i}3`,t,RT[i][1],0.45,0,-16); });
+  const hi = RT.findIndex((r,i)=>t>=r[1] && t<(RT[i+1]?RT[i+1][1]:T.g[0]));
+  show('key',t,T.g[0]-0.1,0.5,16);
+  $('key').style.borderColor = t>=T.g[0] ? '#38577D' : '#E3E7EE';
+};
+</script></body></html>

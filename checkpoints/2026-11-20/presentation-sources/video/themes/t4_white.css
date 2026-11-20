@@ -1,0 +1,6 @@
+/* 4 흰 바탕 (덱과 같은 네이비 한 색) */
+.blob{display:none!important}
+#stage{background:#fff}
+.panel,.chip,.node{background:#fff!important;border-color:#D5DCE6!important;box-shadow:none!important}
+.kicker{background:transparent!important;padding-left:0!important;color:#38577D!important;letter-spacing:.06em}
+.lab,#gk,#lab1{color:#38577D!important}

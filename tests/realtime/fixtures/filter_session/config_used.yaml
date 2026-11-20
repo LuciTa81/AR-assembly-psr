@@ -1,0 +1,6 @@
+state_filter:
+  initial_state: S0
+  min_confidence: 0.55
+  min_dwell_frames: 1
+  dummy_auto_advance_frames: 0
+  max_state: S6

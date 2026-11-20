@@ -1,0 +1,12 @@
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
+description = "Runtime token variable passed to JSON; this line contains no literal credential."
+condition = "AND"
+paths = ['''(^|/)server/realtime/presentation_bridge\.py$''']
+regexTarget = "line"
+regexes = ['''token=token, observation_url=f'http://127\.0\.0\.1:''']

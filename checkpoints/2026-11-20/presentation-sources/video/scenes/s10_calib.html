@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../kit.css">
+<style>
+#geo{left:110px;top:290px;width:660px;height:410px;border-radius:16px;border:1.5px solid #D5DCE6;background:#fff}
+#svg{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.gl{font-size:15px;fill:#6B7280;font-weight:600}
+.gb{font-size:16px;fill:#1F2733;font-weight:800}
+#gcap{left:130px;top:708px;font-size:16px;color:#6B7280;font-weight:500;width:640px;line-height:1.5}
+#plab{left:820px;top:290px;font-size:17px;font-weight:800;color:#38577D}
+.st{position:absolute;left:820px;width:990px;height:96px}
+.st .dot{position:absolute;left:0;top:6px;width:22px;height:22px;border-radius:50%;border:3px solid #38577D;background:#fff}
+.st .ln{position:absolute;left:10px;top:30px;width:3px;height:84px;background:#D5DCE6}
+.st .t{position:absolute;left:44px;top:0;font-size:25px;font-weight:800;color:#1F2733;white-space:nowrap}
+.st .d{position:absolute;left:44px;top:40px;font-size:18px;color:#6B7280;font-weight:500;white-space:nowrap}
+#chg{left:820px;top:626px;width:990px;height:62px;border-radius:14px;background:#EEF2F7;display:flex;align-items:center;gap:14px;padding:0 22px;font-size:19px;font-weight:700;color:#4B5563;white-space:nowrap}
+#chg b{color:#38577D}
+#chk{left:110px;top:734px;width:1700px;height:186px;border-radius:16px;border:1.5px solid #D5DCE6;background:#fff}
+#chk .lab{position:absolute;left:26px;top:18px;font-size:17px;font-weight:800;color:#38577D}
+.cr{position:absolute;left:26px;width:1648px;height:56px;border-top:1px solid #E3E7EE}
+.cr .k{position:absolute;left:0;top:16px;font-size:17px;font-weight:800;color:#D9822B}
+.cr .v{position:absolute;left:80px;top:13px;font-size:22px;font-weight:800;color:#1F2733;white-space:nowrap}
+.cr .ab{position:absolute;left:560px;top:12px;display:flex;gap:10px}
+.cr .ab span{width:32px;height:32px;border-radius:50%;background:#EEF2F7;color:#38577D;font-size:15px;font-weight:800;text-align:center;line-height:32px}
+.cr .r{position:absolute;left:820px;top:13px;font-size:22px;font-weight:800;color:#1F2733;white-space:nowrap}
+#ref{left:112px;top:932px;font-size:14px;color:#9AA3B2;font-weight:500;white-space:nowrap}
+</style></head>
+<body><div id="stage">
+<div class="a" id="geo"></div>
+<svg id="svg" viewBox="0 0 1920 1080"><g id="g"></g></svg>
+<div class="a" id="gcap">같은 점 P가 왼눈 · 오른눈 화면의 서로 다른 자리에 맺히고, 그 차이는 거리에 따라 달라집니다.</div>
+<div class="a" id="plab">보정 절차</div>
+<div class="st" id="s0" style="top:330px"><div class="dot"></div><div class="ln"></div><div class="t">관측 수집</div><div class="d">같은 착용 상태에서 목표 원을 나사에 맞추고, 3D 좌표와 좌우 화면 좌표를 저장</div></div>
+<div class="st" id="s1" style="top:426px"><div class="dot"></div><div class="ln"></div><div class="t">양안 공동 최적화</div><div class="d">두 눈이 하나의 기하를 공유하도록 묶어, 좌우 투영 행렬을 함께 구함</div></div>
+<div class="st" id="s2" style="top:522px"><div class="dot"></div><div class="t">저장 후 자동 적용</div><div class="d">보정값을 저장해 두고, 실행할 때 불러와 눈별 투영에 씀</div></div>
+<div class="a" id="chg"><span>처음</span><span>눈마다 따로 계산 · 독립 DLT 22변수</span><span style="color:#9AA3B2">→</span><b>지금</b><b>공통 양안 모델 · 13변수, PD 64mm</b></div>
+<div class="a" id="chk"><div class="lab">정합 확인</div>
+  <div class="cr" id="r0" style="top:56px"><div class="k">거리</div><div class="v">가까이 ↔ 기준 거리</div><div class="ab" id="ab0"><span>A</span><span>B</span><span>C</span><span>D</span></div><div class="r">각도와 눈 위치 고려</div></div>
+  <div class="cr" id="r1" style="top:116px"><div class="k">시점</div><div class="v">작은 측면 이동 → 정면 복귀</div><div class="ab" id="ab1"><span>A</span><span>B</span><span>C</span><span>D</span></div><div class="r">오버레이 일관성 유지</div></div>
+</div>
+<div class="a" id="ref">참고: Hartley · Zisserman, Multiple View Geometry / Seitz, Camera Calibration — 논문의 투영 기하의 원리를 적용했습니다</div>
+</div>
+<script src="../vo_data.js"></script><script src="../kit.js"></script>
+<script>
+KIT.build();
+KIT.header({chap:3, title:'보정은 한 번 해 두고, 거리와 시점을 바꿔 가며 확인했습니다', sub:'문제 2 · 양안 정합 — 카메라에서 맞는 위치가 안경에서는 어긋나는 문제'});
+// 스테레오 기하 그림
+const NS='http://www.w3.org/2000/svg', g=$('g');
+const el=(n,a,txt)=>{ const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); if(txt!=null) e.textContent=txt; g.appendChild(e); return e; };
+const OL=[300,640], OR=[580,640], PY=560, PL=[220,380], PR=[500,660];
+el('line',{x1:PL[0],x2:PL[1],y1:PY,y2:PY,stroke:'#38577D','stroke-width':4,'stroke-linecap':'round'});
+el('line',{x1:PR[0],x2:PR[1],y1:PY,y2:PY,stroke:'#38577D','stroke-width':4,'stroke-linecap':'round'});
+el('text',{x:PL[0],y:PY-14,class:'gl'},'왼눈 화면'); el('text',{x:PR[1]-74,y:PY-14,class:'gl'},'오른눈 화면');
+const dl=el('line',{stroke:'#9AA3B2','stroke-width':2,'stroke-dasharray':'7 6'}), dr=el('line',{stroke:'#9AA3B2','stroke-width':2,'stroke-dasharray':'7 6'});
+el('circle',{cx:OL[0],cy:OL[1],r:9,fill:'#AFC0D6',stroke:'#38577D','stroke-width':2}); el('circle',{cx:OR[0],cy:OR[1],r:9,fill:'#AFC0D6',stroke:'#38577D','stroke-width':2});
+el('text',{x:OL[0]-22,y:OL[1]+32,class:'gb'},'왼눈'); el('text',{x:OR[0]-30,y:OR[1]+32,class:'gb'},'오른눈');
+el('line',{x1:OL[0]+14,x2:OR[0]-14,y1:OL[1],y2:OR[1],stroke:'#D9822B','stroke-width':2,'marker-start':'url(#m)','marker-end':'url(#m)'});
+const defs=document.createElementNS(NS,'defs'); defs.innerHTML='<marker id="m" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D9822B"/></marker>'; g.appendChild(defs);
+el('text',{x:(OL[0]+OR[0])/2-86,y:OL[1]-12,class:'gl',fill:'#D9822B'},'B = 눈 사이 거리 (PD)');
+const xl=el('circle',{r:7,fill:'#D9822B'}), xr=el('circle',{r:7,fill:'#13B8D4'});
+const P=el('circle',{r:11,fill:'#D9822B'}), Pt=el('text',{class:'gb'},'P (나사)');
+const cl=el('line',{y1:PY+14,y2:PY+14,stroke:'#D9822B','stroke-width':3}), cr=el('line',{y1:PY+14,y2:PY+14,stroke:'#13B8D4','stroke-width':3});
+const dtx=el('text',{x:620,y:330,class:'gl'});
+function proj(p,o){ const k=(PY-o[1])/(p[1]-o[1]); return [o[0]+(p[0]-o[0])*k, PY]; }
+const T = KIT.timeline([
+  {k:'a', t:'두 번째 문제는 카메라에서 맞는 위치가 안경에서는 어긋나는 것이었습니다.', at:1.4},
+  {k:'b', t:'같은 점이라도 왼눈과 오른눈 화면에서는 서로 다른 자리에 맺히고, | 그 차이는 거리에 따라 달라집니다.'},
+  {k:'c', t:'그래서 같은 착용 상태에서 목표 원을 나사에 맞춘 순간의 3D 좌표와 좌우 화면 좌표를 모으고,', pre:0.2},
+  {k:'d', t:'두 눈이 하나의 기하를 공유하도록 묶어 좌우 투영 행렬을 함께 구했습니다.'},
+  {k:'e', t:'보정값은 저장해 두고, 실행할 때 불러와 씁니다.'},
+  {k:'f', t:'그리고 착용한 채 거리를 바꾸고 옆으로 움직였다 돌아오며, | 네 나사가 모두 겹쳐 보이는지 눈으로 확인했습니다.', pre:0.2},
+]);
+const ST=[T.c[0],T.d[0],T.e[0]];
+window.SCENE = t=>{
+  show('geo',t,T.a[0]-0.2,0.6,18); g.style.opacity=ramp(t,T.a[0]+0.2,0.6); show('gcap',t,T.b[0],0.5,0);
+  // P 가 가까워졌다 멀어졌다 (깊이), 좌우 맺힌 점이 따라 움직임
+  const ph = t<T.b[0] ? 0 : (t-T.b[0]);
+  const py = 400 + 70*Math.sin(ph*0.9), px = 440 + 26*Math.sin(ph*0.55+0.6);
+  const p=[px,py], l=proj(p,OL), r=proj(p,OR);
+  P.setAttribute('cx',px); P.setAttribute('cy',py); Pt.setAttribute('x',px+18); Pt.setAttribute('y',py-12);
+  dl.setAttribute('x1',px); dl.setAttribute('y1',py); dl.setAttribute('x2',OL[0]); dl.setAttribute('y2',OL[1]);
+  dr.setAttribute('x1',px); dr.setAttribute('y1',py); dr.setAttribute('x2',OR[0]); dr.setAttribute('y2',OR[1]);
+  xl.setAttribute('cx',l[0]); xl.setAttribute('cy',l[1]); xr.setAttribute('cx',r[0]); xr.setAttribute('cy',r[1]);
+  const cL=(PL[0]+PL[1])/2, cR=(PR[0]+PR[1])/2;
+  cl.setAttribute('x1',cL); cl.setAttribute('x2',l[0]); cr.setAttribute('x1',cR); cr.setAttribute('x2',r[0]);
+  dtx.textContent='가까울수록 좌우 차이가 커집니다'; dtx.setAttribute('x',140); dtx.setAttribute('y',330);
+  [cl,cr,dtx].forEach(e=>e.style.opacity=ramp(t,T.b[0]+0.8,0.5));
+  show('plab',t,T.c[0]-0.3,0.4,0);
+  ['s0','s1','s2'].forEach((id,i)=>{ show(id,t,ST[i]-0.1,0.5,14); const on=t>=ST[i] && t<(ST[i+1]??T.f[0]);
+    $(id).querySelector('.dot').style.background = t>=ST[i] ? '#38577D' : '#fff'; $(id).querySelector('.t').style.color = on ? '#38577D' : '#1F2733'; });
+  show('chg',t,T.d[0]+(T.d[1]-T.d[0])*0.45,0.5,10);
+  show('chk',t,T.f[0]-0.2,0.5,16);
+  const f=T.f, sp=f[1]-f[0];
+  [0,1].forEach(i=>{ show('r'+i,t,f[0]+sp*(0.05+i*0.35),0.4,8);
+    $('ab'+i).querySelectorAll('span').forEach((s,j)=>{ const a=f[0]+sp*(0.15+i*0.35+j*0.06); const k=ramp(t,a,0.3);
+      s.style.background = k>0.5 ? '#22B07D' : '#EEF2F7'; s.style.color = k>0.5 ? '#fff' : '#38577D'; s.textContent = k>0.5 ? '✓' : 'ABCD'[j]; s.style.transform=`scale(${1+0.15*Math.sin(Math.PI*clamp((t-a)/0.3))})`; }); });
+  show('ref',t,f[0]+sp*0.6,0.5,0);
+};
+</script></body></html>

@@ -1,0 +1,7 @@
+/* 3 작업대 격자 (시연 영상의 커팅 매트) */
+.blob{display:none!important}
+#stage{background-color:#F3F6F4;background-image:
+ linear-gradient(rgba(17,111,123,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(17,111,123,.11) 1px,transparent 1px),
+ linear-gradient(rgba(17,111,123,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(17,111,123,.045) 1px,transparent 1px);
+ background-size:200px 200px,200px 200px,40px 40px,40px 40px;background-position:-10px -10px,-10px -10px,-10px -10px,-10px -10px}
+.panel,.chip,.node{background:#fff!important}
