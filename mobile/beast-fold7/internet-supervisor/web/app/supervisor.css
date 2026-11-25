@@ -1,0 +1,192 @@
+.supervisor-header.topbar{min-height:58px;height:58px;padding:0 24px;gap:32px;box-shadow:none}
+.supervisor-header .brand{font-size:16px;gap:9px}
+.supervisor-header .brand small{font-size:11px}
+.supervisor-header .brand-icon{width:27px;height:27px}
+.supervisor-header .main-nav [role=tablist]{min-height:58px}
+.supervisor-header .main-nav button{min-height:58px;font-size:13px;padding:0 16px;gap:8px}
+.supervisor-header .header-tools{gap:2px}
+.supervisor-header .icon-button{width:38px;height:38px}
+main.supervisor{max-width:1680px;padding:0 24px}
+.supervisor .page-heading{min-height:64px;gap:16px;border:0;padding:10px 0}
+.supervisor .page-heading-left{gap:18px;flex-direction:row;align-items:center}
+.supervisor h1{font-size:18px}
+.supervisor #connection{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+.supervisor #connection:before{content:'';width:6px;height:6px;flex-shrink:0;border-radius:50%;background:currentColor}
+.supervisor #connection[data-state=live]{color:var(--green)}
+.supervisor #connection[data-state=stale]{color:var(--amber)}
+.supervisor #connection[data-state=offline]{color:var(--red)}
+.supervisor .device-toolbar{padding:0;gap:6px;flex-shrink:0}
+.supervisor .device-toolbar label{gap:8px}
+.supervisor .device-toolbar select{min-height:36px;min-width:150px;max-width:240px;font-size:13px;padding:6px 10px}
+.supervisor .device-toolbar .icon-button{width:36px;height:36px}
+.supervisor .observer-workspace.media-workspace{grid-template-columns:minmax(0,1.9fr) minmax(320px,1fr);gap:24px;align-items:stretch}
+.supervisor .media-workspace .video-preview{grid-column:auto;min-width:0;margin:0;padding:0;border:0}
+.supervisor .video-heading{height:40px;margin:0 0 4px;gap:12px}
+.supervisor .video-heading h2{font-size:14px;gap:8px}
+.supervisor .video-heading h2 svg{color:var(--muted);width:18px;height:18px}
+.supervisor .video-toggle{font-size:12px;min-height:40px;gap:8px;flex-shrink:0}
+.supervisor .video-toggle input{margin:0;width:34px;height:20px}
+.supervisor .video-toggle input:before{width:12px;height:12px}
+.supervisor .video-toggle input:checked:before{left:17px}
+.supervisor .video-surface{width:100%;max-width:none;height:clamp(280px,calc(100dvh - 470px),620px);aspect-ratio:auto;border:1px solid var(--line);border-radius:6px;background:#121615}
+.supervisor .video-surface canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.supervisor .video-placeholder{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;font-size:13px;color:#9eaca5}
+.supervisor .video-placeholder svg{opacity:.7}
+.supervisor .video-caption{height:26px;max-width:none;margin:0;align-items:center;font-size:11px}
+.supervisor .video-badge{font-size:11px;padding:4px 8px}
+.supervisor .media-workspace .guidance{min-height:0;padding:0 0 0 24px;border-top:0;border-left:1px solid var(--line);background:none;border-radius:0;box-shadow:none}
+.supervisor .guidance .state-row{min-height:44px;height:44px;font-size:12px}
+.supervisor .guidance .state-row>span:last-child{color:var(--cue);font-weight:500}
+.supervisor .guidance .target-heading{min-height:72px;padding:8px 0 16px;gap:14px}
+.supervisor .target-heading>strong{font-size:32px;min-width:36px}
+.supervisor .target-heading h2{font-size:21px;font-weight:600}
+.supervisor .instruction-block{padding-top:18px}
+.supervisor #actionTitle{font-size:23px;line-height:1.55;min-height:84px;margin-top:8px;font-weight:500}
+.supervisor .phase-rail{margin:12px 0 14px;gap:10px}
+.supervisor .phase-rail[aria-hidden=true]{visibility:hidden}
+.supervisor .phase-rail li{font-size:12px;min-height:38px;line-height:1.5;align-items:flex-start}
+.supervisor .target-map-row{display:flex;justify-content:space-between;min-height:98px;margin-top:auto;padding:16px 4px 10px;gap:16px}
+.supervisor .target-map{width:104px;height:48px;margin:8px 8px 20px}
+.supervisor .work-clock{text-align:right;min-width:76px}
+.supervisor .work-clock strong{display:block;font-size:23px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.5;margin-top:4px}
+.supervisor .sequence{margin-top:16px;padding-top:6px;order:initial}
+.supervisor .section-heading{min-height:36px}
+.supervisor .section-heading h2,.supervisor .observer-status h2{font-size:14px}
+.supervisor .section-heading>span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.supervisor .steps{gap:16px;margin:4px 0 14px}
+.supervisor .steps li{min-height:36px;padding-top:8px;font-size:13px;gap:8px}
+.supervisor .steps .past{color:var(--muted)}
+.supervisor .observer-status{padding-top:14px;border-top:1px solid var(--line)}
+.supervisor .observer-status>dl{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:20px;margin:12px 0 0}
+.supervisor .observer-status>dl>div{display:block;min-width:0;padding:0 16px 0 0;border:0;border-right:1px solid var(--line);min-height:48px}
+.supervisor .observer-status>dl>div:last-child{border-right:0;padding-right:0}
+.supervisor .observer-status dt{font-size:12px}
+.supervisor .observer-status>dl dd{font-size:13px;text-align:left;margin-top:8px;line-height:1.6}
+.supervisor .observer-status details{font-size:12px;margin-top:4px}
+.supervisor .observer-status summary{min-height:32px;padding:8px 0}
+.supervisor .observer-status details dl{max-width:560px;margin:0 0 12px}
+.supervisor .observer-status details dl>div{padding:8px 0}
+.supervisor .warning{font-size:13px;line-height:1.6;margin-bottom:12px;padding:10px 14px;border-left:2px solid var(--amber);background:var(--surface)}
+.supervisor footer{margin-top:8px;padding:12px 0;font-size:11px}
+.supervisor #view-history,.supervisor #view-devices{padding-top:8px}
+.supervisor table{font-size:13px}
+.supervisor th{font-size:12px}
+.supervisor th,.supervisor td{padding:14px 16px}
+.supervisor .table-toolbar select{min-height:36px;font-size:12px}
+.supervisor .recordings{margin-top:28px;padding-top:20px}
+.supervisor .recordings h2{font-size:15px}
+@media(min-width:801px) and (max-width:1100px){
+  .supervisor-header.topbar{gap:20px}
+  main.supervisor{padding-inline:20px}
+  .supervisor .observer-workspace.media-workspace{grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:20px}
+  .supervisor .media-workspace .guidance{padding-left:20px}
+  .supervisor #actionTitle{font-size:21px}
+  .supervisor .video-surface{height:400px}
+  .supervisor .observer-status>dl{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .supervisor .observer-status>dl>div:nth-child(3){border-right:0}
+  .supervisor .steps{gap:8px}
+  .supervisor .steps li{flex-direction:column;align-items:flex-start;gap:4px}
+}
+@media(max-width:800px){
+  .supervisor-header.topbar{height:auto;min-height:0;padding:10px 16px 0;gap:8px}
+  .supervisor-header .brand{font-size:15px}
+  .supervisor-header .brand small{font-size:10px}
+  .supervisor-header .main-nav{height:auto;flex-basis:100%;order:3}
+  .supervisor-header .main-nav [role=tablist]{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));min-height:44px}
+  .supervisor-header .main-nav button{min-height:44px;padding:8px 4px;flex-direction:row;gap:6px;font-size:12px}
+  .supervisor-header .main-nav button svg{width:17px;height:17px;flex-shrink:0}
+  .supervisor-header .header-tools .icon-button{width:32px;height:36px}
+  main.supervisor{padding:0 16px}
+  .supervisor .page-heading{min-height:92px;flex-wrap:wrap;align-items:center;gap:8px;padding:14px 0}
+  .supervisor .page-heading-left{flex:1;flex-direction:row;gap:12px;justify-content:space-between}
+  .supervisor h1{font-size:16px}
+  .supervisor #connection{font-size:11px}
+  .supervisor .device-toolbar{width:100%;justify-content:space-between;gap:8px}
+  .supervisor .device-toolbar label{flex:1}
+  .supervisor .device-toolbar select{width:100%;max-width:none;min-width:0}
+  .supervisor .observer-workspace.media-workspace{grid-template-columns:minmax(0,1fr);gap:16px}
+  .supervisor .media-workspace .video-preview{grid-column:1;padding:0}
+  .supervisor .video-surface{height:auto;aspect-ratio:16/9;min-height:150px}
+  .supervisor .video-caption{font-size:10px;gap:8px;height:30px}
+  .supervisor .media-workspace .guidance{border-left:0;border-top:1px solid var(--line);padding:0;min-height:0}
+  .supervisor .guidance .target-heading{min-height:64px;padding:8px 0 14px}
+  .supervisor .target-heading h2{font-size:20px}
+  .supervisor .instruction-block{padding-top:14px}
+  .supervisor #actionTitle{font-size:21px;min-height:74px;line-height:1.5}
+  .supervisor .phase-rail{margin:8px 0 16px;gap:8px}
+  .supervisor .target-map-row{min-height:102px;padding:16px 4px 10px}
+  .supervisor .steps{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 8px}
+  .supervisor .steps li{flex-direction:column;align-items:flex-start;font-size:12px;gap:4px}
+  .supervisor .observer-status>dl{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .supervisor .observer-status>dl>div{min-height:56px;padding-right:12px}
+  .supervisor .observer-status>dl>div:nth-child(even){border-right:0;padding-right:0}
+  .supervisor .observer-status>dl dd{font-size:12px;margin-top:6px}
+  .supervisor .warning{font-size:12px;padding:10px}
+  .supervisor footer{align-items:flex-start;gap:12px}
+}
+@media(max-width:700px){.supervisor .recordings td{padding:4px 0}}
+
+html[data-auto-scrollbar]{scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:transparent transparent}
+html[data-auto-scrollbar] .history-scroll,html[data-auto-scrollbar] .recordings-scroll{scrollbar-width:thin;scrollbar-color:transparent transparent}
+html[data-scrollbar-visible=true],html[data-scrollbar-visible=true] .history-scroll,html[data-scrollbar-visible=true] .recordings-scroll{scrollbar-color:var(--line-strong) transparent}
+html[data-auto-scrollbar]::-webkit-scrollbar{width:8px;height:8px}
+html[data-auto-scrollbar]::-webkit-scrollbar-thumb{background:transparent;border-radius:4px}
+html[data-auto-scrollbar][data-scrollbar-visible=true]::-webkit-scrollbar-thumb{background:var(--line-strong)}
+@media(forced-colors:active){html[data-auto-scrollbar],html[data-auto-scrollbar] .history-scroll,html[data-auto-scrollbar] .recordings-scroll{scrollbar-color:auto}}
+.supervisor .history-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:20px 0 24px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.supervisor .history-heading .label{font-size:12px}
+.supervisor .history-heading h2{font-size:20px;font-weight:500;margin-top:8px;line-height:1.5}
+.supervisor .history-heading select{max-width:280px;font-size:13px;min-height:38px}
+.supervisor .history-scroll{overflow-x:auto}
+.supervisor .history-scroll table{width:100%;table-layout:fixed}
+.supervisor .history-scroll th:first-child{width:140px}
+.supervisor .history-scroll th:nth-child(2){width:120px}
+.supervisor .history-scroll td{overflow-wrap:anywhere;line-height:1.6}
+.supervisor .table-toolbar{font-size:12px;color:var(--muted)}
+.supervisor #view-recordings .recordings{margin:0;padding:16px 0 0;border:0}
+.recordings-toolbar,.recordings-total,.recording-filters,.recording-filters label{display:flex;align-items:center;gap:12px}
+.recordings-toolbar{justify-content:space-between;margin-bottom:20px}
+.recordings-total svg{color:var(--muted)}
+.recordings-total span,.recording-filters label{font-size:12px;color:var(--muted)}
+.recording-filters input{min-height:36px;min-width:0;max-width:180px;padding:6px 10px;border:1px solid var(--line-strong);border-radius:4px;font:inherit;color:var(--text);background:var(--surface);color-scheme:dark}
+[data-theme=light] .recording-filters input{color-scheme:light}
+.recording-status{display:inline-flex;align-items:center;gap:7px}
+.recording-status:before{content:'';width:5px;height:5px;border-radius:50%;background:var(--amber);flex-shrink:0}
+.recording-status[data-status=ready]:before{background:var(--green)}
+.assembly-login{position:relative;isolation:isolate;display:grid;place-items:center;min-height:100dvh;max-width:none;margin:0;padding:64px 24px;background:#121817;color:#e6e9e5;overflow:hidden}
+.assembly-backdrop{position:absolute;inset:0;z-index:-1;background:url('/assembly-plan.png') center/cover no-repeat;pointer-events:none}
+.assembly-login .login-center{width:min(100%,410px);display:flex;flex-direction:column;align-items:center;gap:28px}
+.assembly-login .brand{font-size:23px;gap:12px;color:#e6e9e5}
+.assembly-login .brand-icon{width:38px;height:38px;color:#52b3bf}
+.assembly-login .brand small{color:#a6b3ad;font-size:12px;margin-top:6px}
+.assembly-login .login-form{width:100%;max-width:none;margin:0;padding:32px;border:1px solid #35413c;border-radius:8px;background:#1d2421f5;box-shadow:0 20px 60px #0003;gap:18px}
+.assembly-login .login-title-row{display:flex;justify-content:space-between;align-items:center;gap:16px;width:100%}
+.assembly-login .login-title-row svg{color:#91aaa0}
+.assembly-login .login-form h1{font-size:24px;font-weight:600}
+.assembly-login .login-form p{font-size:14px;color:#acb8b1;line-height:1.7}
+.assembly-login .login-form .primary-button{margin-top:16px;min-height:48px;font-size:14px;background:#50afba;color:#102c2f;border-radius:5px}
+.assembly-login .login-form .warning{font-size:13px;margin:0;padding:0;color:#dcb96b!important}
+.assembly-login .login-caption{font-size:10px;color:#82988c}
+@media(max-width:1000px) and (min-width:801px){
+  .supervisor-header.topbar{height:auto;flex-wrap:wrap;padding-top:10px;gap:8px}
+  .supervisor-header .main-nav{flex-basis:100%;order:3}
+  .supervisor-header .main-nav [role=tablist]{min-height:44px}
+  .supervisor-header .main-nav button{min-height:44px;flex:1}
+  .supervisor-header .header-tools{margin-left:auto}
+}
+@media(max-width:800px){
+  .supervisor-header .main-nav button{flex-direction:column;gap:4px;font-size:11px;min-height:54px}
+  .supervisor .history-heading{align-items:flex-start;flex-direction:column;gap:16px}
+  .supervisor .history-heading h2{font-size:18px}
+  .supervisor .history-heading label,.supervisor .history-heading select{width:100%;max-width:none}
+  .supervisor .history-scroll th:first-child{width:100px}
+  .supervisor .history-scroll th:nth-child(2){width:82px}
+  .supervisor .history-scroll th,.supervisor .history-scroll td{padding:12px 8px;font-size:12px}
+  .recordings-toolbar{flex-wrap:wrap;gap:16px}
+  .recording-filters{gap:4px;flex-wrap:wrap}
+  .recording-filters label{gap:8px}
+  .assembly-login{padding:40px 20px}
+  .assembly-login .login-form{padding:28px 24px}
+  .assembly-login .login-center{gap:24px}
+  .assembly-backdrop{background-size:auto 100%;background-position:left center;opacity:.65}
+}

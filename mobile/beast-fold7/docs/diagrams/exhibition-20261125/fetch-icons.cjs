@@ -1,0 +1,10 @@
+const fs=require('node:fs');
+const path=require('node:path');
+const dir=path.join(__dirname,'icons');fs.mkdirSync(dir,{recursive:true});
+const dev='https://raw.githubusercontent.com/devicons/devicon/master/icons/';
+const simple='https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/';
+const sources={python:dev+'python/python-original.svg',unity:dev+'unity/unity-original.svg',opencv:dev+'opencv/opencv-original.svg',numpy:dev+'numpy/numpy-original.svg',android:dev+'android/android-original.svg',java:dev+'java/java-original.svg',github:dev+'github/github-original.svg',chrome:dev+'chrome/chrome-original.svg',postgresql:dev+'postgresql/postgresql-original.svg',nextjs:dev+'nextjs/nextjs-original.svg',nodejs:dev+'nodejs/nodejs-original.svg',nginx:dev+'nginx/nginx-original.svg',aws:dev+'amazonwebservices/amazonwebservices-original-wordmark.svg',threejs:dev+'threejs/threejs-original.svg',mediapipe:simple+'mediapipe.svg',onnx:simple+'onnx.svg',ultralytics:simple+'ultralytics.svg',vercel:simple+'vercel.svg'};
+sources.aws=dev+'amazonwebservices/amazonwebservices-original.svg';
+sources.ec2='https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/main/dist/Compute/EC2.png';
+sources.s3='https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/main/dist/Storage/SimpleStorageService.png';
+(async()=>{for(const [name,url] of Object.entries(sources)){const file=path.join(dir,name+path.extname(url));if(fs.existsSync(file))continue;const r=await fetch(url);if(!r.ok){console.log(name+': '+r.status);continue;}fs.writeFileSync(file,Buffer.from(await r.arrayBuffer()));console.log(name+': downloaded');}fs.writeFileSync(path.join(dir,'sources.json'),JSON.stringify(sources,null,2));})();

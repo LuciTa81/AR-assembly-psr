@@ -1,0 +1,51 @@
+{
+  "schema_version": "beast_box_outline_trial_v1",
+  "candidate_only": true,
+  "camera_profile_sha256": "25f025bc5c2f71e4c83e6645e5cdc742bda81cd75d30c55ff7e5aca99924872e",
+  "workspace_profile_sha256": "5d4f4c6610af3264e0583eb64b038b3d66b12a9fc4844849d21d4f770d5c7acc",
+  "vertices_mm": [
+    142.68747060937847,
+    162.94099770785152,
+    60,
+    266.64855636922294,
+    166.04731662909464,
+    60,
+    269.7548752904661,
+    42.086230869250144,
+    60,
+    145.7937895306216,
+    38.97991194800701,
+    60,
+    142.68747060937847,
+    162.94099770785152,
+    0,
+    266.64855636922294,
+    166.04731662909464,
+    0,
+    269.7548752904661,
+    42.086230869250144,
+    0,
+    145.7937895306216,
+    38.97991194800701,
+    0
+  ],
+  "provenance": {
+    "exterior_mm": [
+      124,
+      124,
+      60
+    ],
+    "measurement": "User lid height 10mm; approximate closed height 60mm retained; body height 50mm derived.",
+    "positioning": "Center and orientation from unchanged A-D workspace points",
+    "assumptions": [
+      "Upright 124mm square reference from unchanged prior outline",
+      "3mm rounded joins are a display approximation, not measured corner geometry",
+      "Hidden edge emphasis uses box face orientation only; hands/tools are not modeled"
+    ],
+    "activation_status": "not_activated",
+    "optical_validation": false
+  },
+  "staged_rounded": true,
+  "lid_height_mm": 10,
+  "corner_radius_mm": 3
+}

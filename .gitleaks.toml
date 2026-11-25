@@ -10,3 +10,10 @@ condition = "AND"
 paths = ['''(^|/)server/realtime/presentation_bridge\.py$''']
 regexTarget = "line"
 regexes = ['''token=token, observation_url=f'http://127\.0\.0\.1:''']
+
+[[rules.allowlists]]
+description = "Public WebSocket sample nonce in a loopback rejection test; not an authentication credential."
+condition = "AND"
+paths = ['''^mobile/beast-fold7/internet-supervisor/tests/relay\.test\.ts$''']
+regexTarget = "line"
+regexes = ['''Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==''']

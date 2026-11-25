@@ -4,7 +4,15 @@
 
 VITURE Beast로 작업대를 보면서 상자 배치, 뚜껑 닫기, 나사 A~D 작업과 최종 확인을 순서대로 안내하는 졸업프로젝트입니다. Windows 노트북이 카메라 입력과 단계 판단을 처리하고, Unity는 안경에 양안 오버레이를, 웹 관제는 작업 영상과 진행 상태를 제공합니다.
 
-현재 대표 사용 경로는 **Windows 노트북 + Beast + 로컬 웹 관제**입니다. Android 단독 실행은 아직 구현하지 않았습니다.
+## 2026-11-26 전시 백업
+
+현재 전시 경로는 **Fold7 Android 앱 + Beast 직결 + 인터넷 웹 관제**입니다. 최신 소스는 [mobile/beast-fold7](mobile/beast-fold7), 버전·복원 범위·검증 내역은 [전시 체크포인트](checkpoints/2026-11-26/README.md)에 있습니다.
+
+부분 마커 추적 후보는 `1.4.2-partial-markers-c3.2`입니다. 기존 v1과 205/205 배치 및 A~D 눈별 보정은 유지합니다. 원격 영상·상태 관제, 동의 기반 S3 녹화·다운로드 소스도 포함합니다. 모델·APK·촬영 영상·PPT·원본 로그·인증정보는 공개 소스와 분리합니다.
+
+**아래는 이전 Windows/Unity 실행 경로의 보존 문서입니다.** Android의 현재 동작과 혼동하지 마세요. Python/Unity 코드를 삭제하거나 모바일 런타임에서 사용한다고 표시하지 않습니다.
+
+## 기존 Windows 경로
 
 [관제 실행 안내](docs/beast_self_service_console.md) · [실행 버전 구분](docs/current_runtime.md) · [오프라인 HMM 실험](docs/offline_pipeline.md) · [모바일 이전 전 백업](checkpoints/2026-11-20/README.md)
 

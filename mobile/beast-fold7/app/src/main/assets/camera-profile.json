@@ -1,0 +1,1293 @@
+{
+  "schema_version": "beast_camera_intrinsics_candidate_v1",
+  "status": "candidate",
+  "display_alignment_verified": false,
+  "image_size": [
+    1280,
+    720
+  ],
+  "camera_matrix": [
+    [
+      819.990151979961,
+      0.0,
+      640.0339598216655
+    ],
+    [
+      0.0,
+      824.1336438748913,
+      374.13473379341264
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "distortion_coefficients": [
+    0.11044510583224944,
+    -0.3396024513417218,
+    0.002348967376443971,
+    -0.0033747221400983697,
+    0.2781253573103911
+  ],
+  "distortion_model": "opencv_pinhole_k1_k2_p1_p2_k3",
+  "square_mm": 25.0,
+  "fit_indices": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8,
+    10,
+    11,
+    12,
+    13,
+    15,
+    16,
+    17,
+    18,
+    20,
+    21,
+    22,
+    23,
+    25,
+    26,
+    27,
+    28,
+    30,
+    31,
+    32,
+    33,
+    35,
+    36,
+    37,
+    38
+  ],
+  "holdout_indices": [
+    4,
+    9,
+    14,
+    19,
+    24,
+    29,
+    34,
+    39
+  ],
+  "fit_rms_px": 0.28537076345434337,
+  "holdout_rms_px": 0.377395364119181,
+  "per_view": [
+    {
+      "view_index": 0,
+      "split": "fit",
+      "rms_px": 0.27670061588287354
+    },
+    {
+      "view_index": 1,
+      "split": "fit",
+      "rms_px": 0.302442342042923
+    },
+    {
+      "view_index": 2,
+      "split": "fit",
+      "rms_px": 0.2838273346424103
+    },
+    {
+      "view_index": 3,
+      "split": "fit",
+      "rms_px": 0.2690730392932892
+    },
+    {
+      "view_index": 4,
+      "split": "holdout",
+      "rms_px": 0.36651402711868286
+    },
+    {
+      "view_index": 5,
+      "split": "fit",
+      "rms_px": 0.24245266616344452
+    },
+    {
+      "view_index": 6,
+      "split": "fit",
+      "rms_px": 0.23433151841163635
+    },
+    {
+      "view_index": 7,
+      "split": "fit",
+      "rms_px": 0.27857986092567444
+    },
+    {
+      "view_index": 8,
+      "split": "fit",
+      "rms_px": 0.21985192596912384
+    },
+    {
+      "view_index": 9,
+      "split": "holdout",
+      "rms_px": 0.2624448239803314
+    },
+    {
+      "view_index": 10,
+      "split": "fit",
+      "rms_px": 0.38309183716773987
+    },
+    {
+      "view_index": 11,
+      "split": "fit",
+      "rms_px": 0.2686366140842438
+    },
+    {
+      "view_index": 12,
+      "split": "fit",
+      "rms_px": 0.2409776896238327
+    },
+    {
+      "view_index": 13,
+      "split": "fit",
+      "rms_px": 0.1822391301393509
+    },
+    {
+      "view_index": 14,
+      "split": "holdout",
+      "rms_px": 0.3837187886238098
+    },
+    {
+      "view_index": 15,
+      "split": "fit",
+      "rms_px": 0.3597986102104187
+    },
+    {
+      "view_index": 16,
+      "split": "fit",
+      "rms_px": 0.6929214000701904
+    },
+    {
+      "view_index": 17,
+      "split": "fit",
+      "rms_px": 0.3301696479320526
+    },
+    {
+      "view_index": 18,
+      "split": "fit",
+      "rms_px": 0.29491809010505676
+    },
+    {
+      "view_index": 19,
+      "split": "holdout",
+      "rms_px": 0.30611640214920044
+    },
+    {
+      "view_index": 20,
+      "split": "fit",
+      "rms_px": 0.2632533013820648
+    },
+    {
+      "view_index": 21,
+      "split": "fit",
+      "rms_px": 0.21617847681045532
+    },
+    {
+      "view_index": 22,
+      "split": "fit",
+      "rms_px": 0.26702308654785156
+    },
+    {
+      "view_index": 23,
+      "split": "fit",
+      "rms_px": 0.29926472902297974
+    },
+    {
+      "view_index": 24,
+      "split": "holdout",
+      "rms_px": 0.126600444316864
+    },
+    {
+      "view_index": 25,
+      "split": "fit",
+      "rms_px": 0.23213715851306915
+    },
+    {
+      "view_index": 26,
+      "split": "fit",
+      "rms_px": 0.22851911187171936
+    },
+    {
+      "view_index": 27,
+      "split": "fit",
+      "rms_px": 0.18726296722888947
+    },
+    {
+      "view_index": 28,
+      "split": "fit",
+      "rms_px": 0.20642800629138947
+    },
+    {
+      "view_index": 29,
+      "split": "holdout",
+      "rms_px": 0.26274529099464417
+    },
+    {
+      "view_index": 30,
+      "split": "fit",
+      "rms_px": 0.271418035030365
+    },
+    {
+      "view_index": 31,
+      "split": "fit",
+      "rms_px": 0.21158473193645477
+    },
+    {
+      "view_index": 32,
+      "split": "fit",
+      "rms_px": 0.24308302998542786
+    },
+    {
+      "view_index": 33,
+      "split": "fit",
+      "rms_px": 0.2722778916358948
+    },
+    {
+      "view_index": 34,
+      "split": "holdout",
+      "rms_px": 0.6136590242385864
+    },
+    {
+      "view_index": 35,
+      "split": "fit",
+      "rms_px": 0.24660058319568634
+    },
+    {
+      "view_index": 36,
+      "split": "fit",
+      "rms_px": 0.24346008896827698
+    },
+    {
+      "view_index": 37,
+      "split": "fit",
+      "rms_px": 0.21289779245853424
+    },
+    {
+      "view_index": 38,
+      "split": "fit",
+      "rms_px": 0.22757510840892792
+    },
+    {
+      "view_index": 39,
+      "split": "holdout",
+      "rms_px": 0.48334330320358276
+    }
+  ],
+  "coverage": {
+    "center_span_fraction": [
+      0.5723891496658324,
+      0.6353312068515353
+    ],
+    "area_ratio": 10.069396378428385,
+    "max_normal_difference_degrees": 48.81529207519152
+  },
+  "warnings": [],
+  "validation_scope": "Held-out K/distortion; each held-out pose is fitted from its own corners. Not physical mm or eye alignment validation.",
+  "profile_id": "beast-combined-20260927T065914Z-89414bbe",
+  "source_captures": [
+    "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+    "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d"
+  ],
+  "source_manifests": [
+    {
+      "directory": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "manifest": {
+        "schema_version": "beast_camera_capture_v1",
+        "created_at_utc": "2026-09-27T06:34:58.061442+00:00",
+        "status": "captured",
+        "opencv_version": "4.14.0",
+        "image_size": [
+          1280,
+          720
+        ],
+        "target": {
+          "inner_corners": [
+            9,
+            6
+          ],
+          "square_mm": 25.0
+        },
+        "camera": {
+          "index": 1,
+          "backend": "dshow",
+          "requested_size": [
+            1280,
+            720
+          ],
+          "identity_confirmation": "user_preview",
+          "inventory": {
+            "schema_version": "beast_device_inventory_v1",
+            "scope": "device_enumeration_only",
+            "checked_at_utc": "2026-09-27T06:34:55.506186+00:00",
+            "device_id_source": "https://www.viture.com/developer/glasses-sdk/glasses",
+            "camera_status": "candidate_found",
+            "ready_for_capture_probe": true,
+            "beast_camera_candidates": [
+              {
+                "Name": "USB Camera",
+                "PNPClass": "Camera",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_0C45&PID_6368&MI_00\\7&DC33326&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Composite Device",
+                "PNPClass": "USB",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_0C45&PID_6368\\SN0001",
+                "ConfigManagerErrorCode": 0
+              }
+            ],
+            "viture_control_candidates": [
+              {
+                "Name": "USB Input Device",
+                "PNPClass": "HIDClass",
+                "Status": "Error",
+                "DeviceID": "USB\\VID_35CA&PID_1102&MI_02\\7&315633E2&0&0002",
+                "ConfigManagerErrorCode": 10
+              },
+              {
+                "Name": "HID-compliant consumer control device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "HID\\VID_35CA&PID_1102&MI_04\\8&DF0244&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB \uc9c1\ub82c \uc7a5\uce58(COM7)",
+                "PNPClass": "Ports",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1211&MI_00\\7&21839F10&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Input Device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1211&MI_05\\7&21839F10&0&0005",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Input Device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1102&MI_03\\7&315633E2&0&0003",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Composite Device",
+                "PNPClass": "USB",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1102\\1234333333",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Input Device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1102&MI_04\\7&315633E2&0&0004",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "HID-compliant vendor-defined device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "HID\\VID_35CA&PID_1211&MI_05\\8&2F78979&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "VITURE Speak",
+                "PNPClass": "MEDIA",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1211&MI_02\\7&21839F10&0&0002",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "HID-compliant consumer control device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "HID\\VID_35CA&PID_1102&MI_03\\8&18A28E89&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "VITURE Microphone",
+                "PNPClass": "MEDIA",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1102&MI_00\\7&315633E2&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Composite Device",
+                "PNPClass": "USB",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1211\\00000001",
+                "ConfigManagerErrorCode": 0
+              }
+            ],
+            "monitor_candidates": [
+              {
+                "Name": "Generic Monitor (VITURE Beast)",
+                "PNPClass": "Monitor",
+                "Status": "OK",
+                "DeviceID": "DISPLAY\\VIT0120\\4&11172CA2&0&UID4165",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "Samsung OLED Display",
+                "PNPClass": "Monitor",
+                "Status": "OK",
+                "DeviceID": "DISPLAY\\SDC4228\\4&11172CA2&0&UID8388688",
+                "ConfigManagerErrorCode": 0
+              }
+            ],
+            "capture_verified": false,
+            "display_alignment_verified": false,
+            "next_check": "Match the camera preview to Beast; then measure capture with display output."
+          },
+          "fps_property": 0.0,
+          "fourcc_property": 844715353.0
+        },
+        "images": [
+          {
+            "image_path": "view-001.png",
+            "sha256": "26e10a6f0d89c9c4df1887c1f5928aa94edbccf2cd52da27c8de112fc2aa4848",
+            "frame_id": 5568,
+            "saved_at_utc": "2026-09-27T06:44:26.300995+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-002.png",
+            "sha256": "c91b94c5e93b1b27300ff10bc8a0070546474788c0db9a912396deedc62fb15b",
+            "frame_id": 5608,
+            "saved_at_utc": "2026-09-27T06:44:30.304893+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-003.png",
+            "sha256": "bd4b81243ee0960dffb66d98c2dcdb62534b944b1d9c71a6402f3454d5c5b9f2",
+            "frame_id": 5789,
+            "saved_at_utc": "2026-09-27T06:44:48.395577+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-004.png",
+            "sha256": "eae9e503a405db64b4049696c774935fd0986ea78a80a28e890532971cc5a061",
+            "frame_id": 5851,
+            "saved_at_utc": "2026-09-27T06:44:54.604805+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-005.png",
+            "sha256": "3f8fa094d7e2885bd7036fe4f55d6fa8a85d4e491b64cd0f78fbc5a873e69e0b",
+            "frame_id": 5963,
+            "saved_at_utc": "2026-09-27T06:45:05.805780+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-006.png",
+            "sha256": "820858c237d0ea5f651a4adefa832fe98d9463a69a0205464c445878e6e6e00c",
+            "frame_id": 6300,
+            "saved_at_utc": "2026-09-27T06:45:39.523867+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-007.png",
+            "sha256": "3241f092de2eb59ea9836afbaec3028242d4c57e3d42c031dd7769675ff1b94a",
+            "frame_id": 6356,
+            "saved_at_utc": "2026-09-27T06:45:45.120184+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-008.png",
+            "sha256": "2e2175695ad09bf7c27f817c47c53f46b7bde240bdd6809c03e3b4b793ef59ff",
+            "frame_id": 6438,
+            "saved_at_utc": "2026-09-27T06:45:53.328279+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-009.png",
+            "sha256": "f56499fed94c10359dc5690473f1f462cd8efd0994ed5cf69d9f4d0b236f9d93",
+            "frame_id": 6459,
+            "saved_at_utc": "2026-09-27T06:45:55.421949+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-010.png",
+            "sha256": "82ea6311729d8f290478de766347775dbc1a36642131a131cef3bdc46ff2cca2",
+            "frame_id": 6494,
+            "saved_at_utc": "2026-09-27T06:45:58.922708+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-011.png",
+            "sha256": "a090b2d078b4248cf06d5546ffb446ee356273f1b78950507eda9abcd00f34f5",
+            "frame_id": 6571,
+            "saved_at_utc": "2026-09-27T06:46:06.621979+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-012.png",
+            "sha256": "4ed1b645fd2404a8b94a329eb3207109d2d46715e69efe6dcb0bc66f76075023",
+            "frame_id": 6625,
+            "saved_at_utc": "2026-09-27T06:46:12.031077+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-013.png",
+            "sha256": "164fede58d99b0b6b7a208dbc3604c3e82aca69ea25dd9c89ac79b03a4421036",
+            "frame_id": 6664,
+            "saved_at_utc": "2026-09-27T06:46:15.933738+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-014.png",
+            "sha256": "80243a1642057df814d2fe4b859e896ccf547cfc49dab7a4bf80f9710471be20",
+            "frame_id": 6718,
+            "saved_at_utc": "2026-09-27T06:46:21.328206+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-015.png",
+            "sha256": "dddecd6af33c1b264f0a90a906c0860d3f338ce61fd49ac24e4fc79a102aa554",
+            "frame_id": 6773,
+            "saved_at_utc": "2026-09-27T06:46:26.830962+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-016.png",
+            "sha256": "bd5a709ee78fcf7121d1d15b6f847e902678500626cb7b4ce83495a81ace24c5",
+            "frame_id": 6803,
+            "saved_at_utc": "2026-09-27T06:46:29.838341+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-017.png",
+            "sha256": "f5fdfa1785117cb5140f4b654ae5afbf742c358535d5d1748471a88609b42bb7",
+            "frame_id": 6862,
+            "saved_at_utc": "2026-09-27T06:46:35.741442+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-018.png",
+            "sha256": "42ce323f612f01c4ba21eb79faf993d951f1b778890c82632ccfdaa3160fd48b",
+            "frame_id": 6934,
+            "saved_at_utc": "2026-09-27T06:46:42.941698+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-019.png",
+            "sha256": "7ada85c30a2ac67e01b6ac7ec91117f11e9dbcfa99b646d72c164827b9c6cbbb",
+            "frame_id": 6988,
+            "saved_at_utc": "2026-09-27T06:46:48.345410+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-020.png",
+            "sha256": "66f00d07cb2a22e6e5a2ea97c27610eaa7700b27de7c938f680259e1fa0066ce",
+            "frame_id": 7074,
+            "saved_at_utc": "2026-09-27T06:46:56.939730+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-021.png",
+            "sha256": "f27d38fb8f3b0f412be110cac9d73f73f2e94c80cb2681366de6988a9f4e868c",
+            "frame_id": 7105,
+            "saved_at_utc": "2026-09-27T06:47:00.050567+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-022.png",
+            "sha256": "652120411fba66d42468956c2c69489be9038a7002c105fa9bb621b0fae9139f",
+            "frame_id": 7175,
+            "saved_at_utc": "2026-09-27T06:47:07.062678+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-023.png",
+            "sha256": "9a8635a5c586bc52cbecbc7a748c11306ba0e271ea3e3ff4b0a82f8a772cc79e",
+            "frame_id": 7268,
+            "saved_at_utc": "2026-09-27T06:47:16.349816+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-024.png",
+            "sha256": "cbbf00276d4d1e497272bd9c2119afad216857fff18a777e0d5a030641cd473c",
+            "frame_id": 7292,
+            "saved_at_utc": "2026-09-27T06:47:18.758083+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-025.png",
+            "sha256": "ac634afec8d3f07163adf29f2044b957a8ca46065cb174d2b22ce86f3932ccca",
+            "frame_id": 7402,
+            "saved_at_utc": "2026-09-27T06:47:29.763543+00:00",
+            "inner_corners_detected": 54
+          }
+        ]
+      }
+    },
+    {
+      "directory": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "manifest": {
+        "schema_version": "beast_camera_capture_v1",
+        "created_at_utc": "2026-09-27T06:52:59.519148+00:00",
+        "status": "captured",
+        "opencv_version": "4.14.0",
+        "image_size": [
+          1280,
+          720
+        ],
+        "target": {
+          "inner_corners": [
+            9,
+            6
+          ],
+          "square_mm": 25.0
+        },
+        "camera": {
+          "index": 1,
+          "backend": "dshow",
+          "requested_size": [
+            1280,
+            720
+          ],
+          "identity_confirmation": "user_preview",
+          "inventory": {
+            "schema_version": "beast_device_inventory_v1",
+            "scope": "device_enumeration_only",
+            "checked_at_utc": "2026-09-27T06:52:57.585201+00:00",
+            "device_id_source": "https://www.viture.com/developer/glasses-sdk/glasses",
+            "camera_status": "candidate_found",
+            "ready_for_capture_probe": true,
+            "beast_camera_candidates": [
+              {
+                "Name": "USB Camera",
+                "PNPClass": "Camera",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_0C45&PID_6368&MI_00\\7&DC33326&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Composite Device",
+                "PNPClass": "USB",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_0C45&PID_6368\\SN0001",
+                "ConfigManagerErrorCode": 0
+              }
+            ],
+            "viture_control_candidates": [
+              {
+                "Name": "USB Input Device",
+                "PNPClass": "HIDClass",
+                "Status": "Error",
+                "DeviceID": "USB\\VID_35CA&PID_1102&MI_02\\7&315633E2&0&0002",
+                "ConfigManagerErrorCode": 10
+              },
+              {
+                "Name": "HID-compliant consumer control device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "HID\\VID_35CA&PID_1102&MI_04\\8&DF0244&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB \uc9c1\ub82c \uc7a5\uce58(COM7)",
+                "PNPClass": "Ports",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1211&MI_00\\7&21839F10&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Input Device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1211&MI_05\\7&21839F10&0&0005",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Input Device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1102&MI_03\\7&315633E2&0&0003",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Composite Device",
+                "PNPClass": "USB",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1102\\1234333333",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Input Device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1102&MI_04\\7&315633E2&0&0004",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "HID-compliant vendor-defined device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "HID\\VID_35CA&PID_1211&MI_05\\8&2F78979&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "VITURE Speak",
+                "PNPClass": "MEDIA",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1211&MI_02\\7&21839F10&0&0002",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "HID-compliant consumer control device",
+                "PNPClass": "HIDClass",
+                "Status": "OK",
+                "DeviceID": "HID\\VID_35CA&PID_1102&MI_03\\8&18A28E89&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "VITURE Microphone",
+                "PNPClass": "MEDIA",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1102&MI_00\\7&315633E2&0&0000",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "USB Composite Device",
+                "PNPClass": "USB",
+                "Status": "OK",
+                "DeviceID": "USB\\VID_35CA&PID_1211\\00000001",
+                "ConfigManagerErrorCode": 0
+              }
+            ],
+            "monitor_candidates": [
+              {
+                "Name": "Generic Monitor (VITURE Beast)",
+                "PNPClass": "Monitor",
+                "Status": "OK",
+                "DeviceID": "DISPLAY\\VIT0120\\4&11172CA2&0&UID4165",
+                "ConfigManagerErrorCode": 0
+              },
+              {
+                "Name": "Samsung OLED Display",
+                "PNPClass": "Monitor",
+                "Status": "OK",
+                "DeviceID": "DISPLAY\\SDC4228\\4&11172CA2&0&UID8388688",
+                "ConfigManagerErrorCode": 0
+              }
+            ],
+            "capture_verified": false,
+            "display_alignment_verified": false,
+            "next_check": "Match the camera preview to Beast; then measure capture with display output."
+          },
+          "fps_property": 0.0,
+          "fourcc_property": 844715353.0
+        },
+        "images": [
+          {
+            "image_path": "view-001.png",
+            "sha256": "41eb6aa8d3209e43fcaf7f856fcb5d8efe9580386316be0fcf3d89f31e82b074",
+            "frame_id": 393,
+            "saved_at_utc": "2026-09-27T06:53:39.800579+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-002.png",
+            "sha256": "2c2fb57ffb6d6a17e6c10a5cf52b78b21e69bc2d5099ea7fea155c8bc17e442c",
+            "frame_id": 475,
+            "saved_at_utc": "2026-09-27T06:53:47.900598+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-003.png",
+            "sha256": "d5af83e479ff4e7fe1c370d15e6ff285cf8df804111b0ffc5f551a2a2783b8d2",
+            "frame_id": 557,
+            "saved_at_utc": "2026-09-27T06:53:56.094384+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-004.png",
+            "sha256": "aa849f027d6201b9f1e8643d313de0425364fac5eac7248881f9005f91489f3f",
+            "frame_id": 670,
+            "saved_at_utc": "2026-09-27T06:54:07.409714+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-005.png",
+            "sha256": "221209797445a7a3880a3bcfa200df8118672a55e85f1471f9a17f20514d1318",
+            "frame_id": 733,
+            "saved_at_utc": "2026-09-27T06:54:13.708820+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-006.png",
+            "sha256": "e8be623beb051e7419652629a5a3f968b60073322ece009f79b11ce4d382707c",
+            "frame_id": 816,
+            "saved_at_utc": "2026-09-27T06:54:22.015007+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-007.png",
+            "sha256": "bf2cb0ef09a7d7fdc10ce626b7c23609c6cae412a732cf9131e1ccae94c681c9",
+            "frame_id": 920,
+            "saved_at_utc": "2026-09-27T06:54:32.419194+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-008.png",
+            "sha256": "e84b504b0a782a7dbc7b82b7f2b4d6b21570393ff092a609b112aa1d60d4226f",
+            "frame_id": 1018,
+            "saved_at_utc": "2026-09-27T06:54:42.207395+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-009.png",
+            "sha256": "78c94203385046b23714304d502c2f986fef49e72b2d576e7ac061a27661cfbe",
+            "frame_id": 1115,
+            "saved_at_utc": "2026-09-27T06:54:51.923891+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-010.png",
+            "sha256": "a927391e332473a670553c54188a2ef3ac6826487debc99d3e0aa98600392c17",
+            "frame_id": 1304,
+            "saved_at_utc": "2026-09-27T06:55:10.827089+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-011.png",
+            "sha256": "04c2cfdb885bc393983221941d53da86bf304f0e66992aa41ef6bc520f07189c",
+            "frame_id": 1381,
+            "saved_at_utc": "2026-09-27T06:55:18.525762+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-012.png",
+            "sha256": "a10cb6ab396ac059673c67230ad5232bf9a0c3e36d9bf4058ccf6d82fadcc7e9",
+            "frame_id": 1483,
+            "saved_at_utc": "2026-09-27T06:55:28.743193+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-013.png",
+            "sha256": "b34a675073302ac405a8901125c92c11e2b451507b5d535f39a11a0e28836680",
+            "frame_id": 1533,
+            "saved_at_utc": "2026-09-27T06:55:33.736695+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-014.png",
+            "sha256": "1ddbd430156a216abb9c8a348e91191d2115168f38c6c42951832be64b0008a1",
+            "frame_id": 1662,
+            "saved_at_utc": "2026-09-27T06:55:46.638089+00:00",
+            "inner_corners_detected": 54
+          },
+          {
+            "image_path": "view-015.png",
+            "sha256": "e0d250a0f67b8ae4463a20d696cd9ef3dfc5343b7e2a57003665eef6a86e3597",
+            "frame_id": 1745,
+            "saved_at_utc": "2026-09-27T06:55:54.944006+00:00",
+            "inner_corners_detected": 54
+          }
+        ]
+      }
+    }
+  ],
+  "images": [
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-001.png",
+      "sha256": "26e10a6f0d89c9c4df1887c1f5928aa94edbccf2cd52da27c8de112fc2aa4848"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-002.png",
+      "sha256": "c91b94c5e93b1b27300ff10bc8a0070546474788c0db9a912396deedc62fb15b"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-003.png",
+      "sha256": "bd4b81243ee0960dffb66d98c2dcdb62534b944b1d9c71a6402f3454d5c5b9f2"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-004.png",
+      "sha256": "eae9e503a405db64b4049696c774935fd0986ea78a80a28e890532971cc5a061"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-005.png",
+      "sha256": "3f8fa094d7e2885bd7036fe4f55d6fa8a85d4e491b64cd0f78fbc5a873e69e0b"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-006.png",
+      "sha256": "820858c237d0ea5f651a4adefa832fe98d9463a69a0205464c445878e6e6e00c"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-007.png",
+      "sha256": "3241f092de2eb59ea9836afbaec3028242d4c57e3d42c031dd7769675ff1b94a"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-008.png",
+      "sha256": "2e2175695ad09bf7c27f817c47c53f46b7bde240bdd6809c03e3b4b793ef59ff"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-009.png",
+      "sha256": "f56499fed94c10359dc5690473f1f462cd8efd0994ed5cf69d9f4d0b236f9d93"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-010.png",
+      "sha256": "82ea6311729d8f290478de766347775dbc1a36642131a131cef3bdc46ff2cca2"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-011.png",
+      "sha256": "a090b2d078b4248cf06d5546ffb446ee356273f1b78950507eda9abcd00f34f5"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-012.png",
+      "sha256": "4ed1b645fd2404a8b94a329eb3207109d2d46715e69efe6dcb0bc66f76075023"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-013.png",
+      "sha256": "164fede58d99b0b6b7a208dbc3604c3e82aca69ea25dd9c89ac79b03a4421036"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-014.png",
+      "sha256": "80243a1642057df814d2fe4b859e896ccf547cfc49dab7a4bf80f9710471be20"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-015.png",
+      "sha256": "dddecd6af33c1b264f0a90a906c0860d3f338ce61fd49ac24e4fc79a102aa554"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-016.png",
+      "sha256": "bd5a709ee78fcf7121d1d15b6f847e902678500626cb7b4ce83495a81ace24c5"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-017.png",
+      "sha256": "f5fdfa1785117cb5140f4b654ae5afbf742c358535d5d1748471a88609b42bb7"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-018.png",
+      "sha256": "42ce323f612f01c4ba21eb79faf993d951f1b778890c82632ccfdaa3160fd48b"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-019.png",
+      "sha256": "7ada85c30a2ac67e01b6ac7ec91117f11e9dbcfa99b646d72c164827b9c6cbbb"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-020.png",
+      "sha256": "66f00d07cb2a22e6e5a2ea97c27610eaa7700b27de7c938f680259e1fa0066ce"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-021.png",
+      "sha256": "f27d38fb8f3b0f412be110cac9d73f73f2e94c80cb2681366de6988a9f4e868c"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-022.png",
+      "sha256": "652120411fba66d42468956c2c69489be9038a7002c105fa9bb621b0fae9139f"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-023.png",
+      "sha256": "9a8635a5c586bc52cbecbc7a748c11306ba0e271ea3e3ff4b0a82f8a772cc79e"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-024.png",
+      "sha256": "cbbf00276d4d1e497272bd9c2119afad216857fff18a777e0d5a030641cd473c"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T063458Z-6e9910e4",
+      "image_path": "view-025.png",
+      "sha256": "ac634afec8d3f07163adf29f2044b957a8ca46065cb174d2b22ce86f3932ccca"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-001.png",
+      "sha256": "41eb6aa8d3209e43fcaf7f856fcb5d8efe9580386316be0fcf3d89f31e82b074"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-002.png",
+      "sha256": "2c2fb57ffb6d6a17e6c10a5cf52b78b21e69bc2d5099ea7fea155c8bc17e442c"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-003.png",
+      "sha256": "d5af83e479ff4e7fe1c370d15e6ff285cf8df804111b0ffc5f551a2a2783b8d2"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-004.png",
+      "sha256": "aa849f027d6201b9f1e8643d313de0425364fac5eac7248881f9005f91489f3f"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-005.png",
+      "sha256": "221209797445a7a3880a3bcfa200df8118672a55e85f1471f9a17f20514d1318"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-006.png",
+      "sha256": "e8be623beb051e7419652629a5a3f968b60073322ece009f79b11ce4d382707c"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-007.png",
+      "sha256": "bf2cb0ef09a7d7fdc10ce626b7c23609c6cae412a732cf9131e1ccae94c681c9"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-008.png",
+      "sha256": "e84b504b0a782a7dbc7b82b7f2b4d6b21570393ff092a609b112aa1d60d4226f"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-009.png",
+      "sha256": "78c94203385046b23714304d502c2f986fef49e72b2d576e7ac061a27661cfbe"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-010.png",
+      "sha256": "a927391e332473a670553c54188a2ef3ac6826487debc99d3e0aa98600392c17"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-011.png",
+      "sha256": "04c2cfdb885bc393983221941d53da86bf304f0e66992aa41ef6bc520f07189c"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-012.png",
+      "sha256": "a10cb6ab396ac059673c67230ad5232bf9a0c3e36d9bf4058ccf6d82fadcc7e9"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-013.png",
+      "sha256": "b34a675073302ac405a8901125c92c11e2b451507b5d535f39a11a0e28836680"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-014.png",
+      "sha256": "1ddbd430156a216abb9c8a348e91191d2115168f38c6c42951832be64b0008a1"
+    },
+    {
+      "source_capture": "C:\\Users\\fresh\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\ARAssembly\\beast-mvp\\camera_calibration\\beast-calibration-20260927T065259Z-910aab1d",
+      "image_path": "view-015.png",
+      "sha256": "e0d250a0f67b8ae4463a20d696cd9ef3dfc5343b7e2a57003665eef6a86e3597"
+    }
+  ],
+  "camera": {
+    "index": 1,
+    "backend": "dshow",
+    "requested_size": [
+      1280,
+      720
+    ],
+    "identity_confirmation": "user_preview",
+    "inventory": {
+      "schema_version": "beast_device_inventory_v1",
+      "scope": "device_enumeration_only",
+      "checked_at_utc": "2026-09-27T06:34:55.506186+00:00",
+      "device_id_source": "https://www.viture.com/developer/glasses-sdk/glasses",
+      "camera_status": "candidate_found",
+      "ready_for_capture_probe": true,
+      "beast_camera_candidates": [
+        {
+          "Name": "USB Camera",
+          "PNPClass": "Camera",
+          "Status": "OK",
+          "DeviceID": "USB\\VID_0C45&PID_6368&MI_00\\7&DC33326&0&0000",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "USB Composite Device",
+          "PNPClass": "USB",
+          "Status": "OK",
+          "DeviceID": "USB\\VID_0C45&PID_6368\\SN0001",
+          "ConfigManagerErrorCode": 0
+        }
+      ],
+      "viture_control_candidates": [
+        {
+          "Name": "USB Input Device",
+          "PNPClass": "HIDClass",
+          "Status": "Error",
+          "DeviceID": "USB\\VID_35CA&PID_1102&MI_02\\7&315633E2&0&0002",
+          "ConfigManagerErrorCode": 10
+        },
+        {
+          "Name": "HID-compliant consumer control device",
+          "PNPClass": "HIDClass",
+          "Status": "OK",
+          "DeviceID": "HID\\VID_35CA&PID_1102&MI_04\\8&DF0244&0&0000",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "USB \uc9c1\ub82c \uc7a5\uce58(COM7)",
+          "PNPClass": "Ports",
+          "Status": "OK",
+          "DeviceID": "USB\\VID_35CA&PID_1211&MI_00\\7&21839F10&0&0000",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "USB Input Device",
+          "PNPClass": "HIDClass",
+          "Status": "OK",
+          "DeviceID": "USB\\VID_35CA&PID_1211&MI_05\\7&21839F10&0&0005",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "USB Input Device",
+          "PNPClass": "HIDClass",
+          "Status": "OK",
+          "DeviceID": "USB\\VID_35CA&PID_1102&MI_03\\7&315633E2&0&0003",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "USB Composite Device",
+          "PNPClass": "USB",
+          "Status": "OK",
+          "DeviceID": "USB\\VID_35CA&PID_1102\\1234333333",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "USB Input Device",
+          "PNPClass": "HIDClass",
+          "Status": "OK",
+          "DeviceID": "USB\\VID_35CA&PID_1102&MI_04\\7&315633E2&0&0004",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "HID-compliant vendor-defined device",
+          "PNPClass": "HIDClass",
+          "Status": "OK",
+          "DeviceID": "HID\\VID_35CA&PID_1211&MI_05\\8&2F78979&0&0000",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "VITURE Speak",
+          "PNPClass": "MEDIA",
+          "Status": "OK",
+          "DeviceID": "USB\\VID_35CA&PID_1211&MI_02\\7&21839F10&0&0002",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "HID-compliant consumer control device",
+          "PNPClass": "HIDClass",
+          "Status": "OK",
+          "DeviceID": "HID\\VID_35CA&PID_1102&MI_03\\8&18A28E89&0&0000",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "VITURE Microphone",
+          "PNPClass": "MEDIA",
+          "Status": "OK",
+          "DeviceID": "USB\\VID_35CA&PID_1102&MI_00\\7&315633E2&0&0000",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "USB Composite Device",
+          "PNPClass": "USB",
+          "Status": "OK",
+          "DeviceID": "USB\\VID_35CA&PID_1211\\00000001",
+          "ConfigManagerErrorCode": 0
+        }
+      ],
+      "monitor_candidates": [
+        {
+          "Name": "Generic Monitor (VITURE Beast)",
+          "PNPClass": "Monitor",
+          "Status": "OK",
+          "DeviceID": "DISPLAY\\VIT0120\\4&11172CA2&0&UID4165",
+          "ConfigManagerErrorCode": 0
+        },
+        {
+          "Name": "Samsung OLED Display",
+          "PNPClass": "Monitor",
+          "Status": "OK",
+          "DeviceID": "DISPLAY\\SDC4228\\4&11172CA2&0&UID8388688",
+          "ConfigManagerErrorCode": 0
+        }
+      ],
+      "capture_verified": false,
+      "display_alignment_verified": false,
+      "next_check": "Match the camera preview to Beast; then measure capture with display output."
+    },
+    "fps_property": 0.0,
+    "fourcc_property": 844715353.0
+  },
+  "target": {
+    "inner_corners": [
+      9,
+      6
+    ],
+    "square_mm": 25.0
+  },
+  "opencv_version": "4.14.0",
+  "edge_audit": {
+    "scope": "Sampled mathematical consistency, NOT measured edge/eye accuracy or a global invertibility proof",
+    "corner_bounds_px": [
+      [
+        97.07221221923828,
+        32.90434265136719
+      ],
+      [
+        1214.9539794921875,
+        661.1802978515625
+      ]
+    ],
+    "corner_counts_3x3": [
+      [
+        65,
+        419,
+        138
+      ],
+      [
+        159,
+        990,
+        149
+      ],
+      [
+        26,
+        209,
+        5
+      ]
+    ],
+    "min_sampled_radial_derivative": 0.98260969259624,
+    "min_sampled_distortion_jacobian_determinant": 0.9658791731062264,
+    "max_pixel_roundtrip_error": 0.0014096948669766619,
+    "folding_detected_in_sampled_domain": false,
+    "observed_max_normalized_radius": 0.7075539864670638,
+    "sampled_max_normalized_radius": 0.9029575423143149,
+    "remaining_limit": "Bottom-right corner has few observations; real workspace target validation still required"
+  },
+  "activation_status": "not_activated",
+  "review_recommendation": "controlled_workspace_projection_trial_only"
+}
