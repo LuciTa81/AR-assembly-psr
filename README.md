@@ -156,4 +156,10 @@ Windows 버전의 실행 방법은 [관제 실행 안내](docs/beast_self_servic
 
 오프라인 `session_17` 실험에서는 Framewise, FSM, HMM/Viterbi를 비교했습니다. HMM v2의 Accuracy는 94.12%, Macro-F1은 94.85%였습니다. 이 수치는 해당 데이터셋의 단계 분류 결과이며 현재 앱의 체결 검증 정확도를 의미하지 않습니다. [평가 조건과 결과](docs/session17_hmm_v2_status.md) · [실험 실행 방법](docs/offline_pipeline.md)
 
+| 방법 | Accuracy | Macro-F1 |
+| --- | ---: | ---: |
+| Framewise v2 | 88.24% | 89.52% |
+| FSM v2 | 91.60% | 93.23% |
+| HMM v2 | 94.12% | 94.85% |
+
 MediaPipe와 HMM을 결합한 확장 구성은 설계 자료에 포함돼 있지만, 현재 Android 실시간 경로에는 적용하지 않았습니다.
