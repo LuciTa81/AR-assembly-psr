@@ -102,6 +102,16 @@ Beast 카메라의 영상에서 OpenCV로 ArUco 마커의 ID와 모서리를 찾
 
 관련 코드: [상태·영상 중계](mobile/beast-fold7/internet-supervisor/server/relay.ts), [녹화 처리](mobile/beast-fold7/internet-supervisor/server/recorder.ts), [S3 저장·다운로드](mobile/beast-fold7/internet-supervisor/server/s3-recordings.ts).
 
+## 단계 인식 평가
+
+오프라인 `session_17` 실험에서는 Framewise, FSM, HMM/Viterbi를 비교했습니다. HMM v2의 Accuracy는 94.12%, Macro-F1은 94.85%였습니다. 이 수치는 해당 데이터셋의 단계 분류 결과이며 현재 앱의 체결 검증 정확도를 의미하지 않습니다. [평가 조건과 결과](docs/session17_hmm_v2_status.md) · [실험 실행 방법](docs/offline_pipeline.md)
+
+| 방법 | Accuracy | Macro-F1 |
+| --- | ---: | ---: |
+| Framewise v2 | 88.24% | 89.52% |
+| FSM v2 | 91.60% | 93.23% |
+| HMM v2 | 94.12% | 94.85% |
+
 ## 확인한 내용
 
 C3.2에서 상자부터 최종 확인까지의 착용 시험, 좌우 마커 가림, 웹 작업 기록, 영상 저장과 다운로드를 확인했습니다. 통합 시험에서 내려받은 2분 1초 영상은 전체 819프레임을 오류 없이 디코딩했습니다. 이 파일의 평균은 약 6.7fps로, 30fps 목표에는 아직 못 미칩니다.
@@ -153,13 +163,5 @@ pnpm typecheck
 ## 이전 구현과 실험
 
 Windows 버전의 실행 방법은 [관제 실행 안내](docs/beast_self_service_console.md)와 [런타임 문서](docs/current_runtime.md)에 남겨두었습니다. Unity 코드는 초기 양안 표시 구현이며 현재 Android 앱의 실행 의존성은 아닙니다.
-
-오프라인 `session_17` 실험에서는 Framewise, FSM, HMM/Viterbi를 비교했습니다. HMM v2의 Accuracy는 94.12%, Macro-F1은 94.85%였습니다. 이 수치는 해당 데이터셋의 단계 분류 결과이며 현재 앱의 체결 검증 정확도를 의미하지 않습니다. [평가 조건과 결과](docs/session17_hmm_v2_status.md) · [실험 실행 방법](docs/offline_pipeline.md)
-
-| 방법 | Accuracy | Macro-F1 |
-| --- | ---: | ---: |
-| Framewise v2 | 88.24% | 89.52% |
-| FSM v2 | 91.60% | 93.23% |
-| HMM v2 | 94.12% | 94.85% |
 
 MediaPipe와 HMM을 결합한 확장 구성은 설계 자료에 포함돼 있지만, 현재 Android 실시간 경로에는 적용하지 않았습니다.
