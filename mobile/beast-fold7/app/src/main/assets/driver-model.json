@@ -1,0 +1,25 @@
+{
+  "source_sha256": "a69070553f50eb124896f237107db9ff5653b19d0f1869fd5e01573ccbb34efe",
+  "onnx_sha256": "a44d5a558d6e3a693df2df92f80f1b7c4c89f84ef9531af0431b4f5429e4f179",
+  "classes": {
+    "0": "driver",
+    "1": "handle",
+    "2": "screw"
+  },
+  "input_shape": [
+    1,
+    3,
+    384,
+    640
+  ],
+  "output_shape": [
+    1,
+    7,
+    5040
+  ],
+  "conf": 0.2,
+  "iou": 0.7,
+  "provider": "CPU",
+  "recorded_samples": 3,
+  "note": "Recorded video frames, not newly captured; no physical contact/torque verification."
+}

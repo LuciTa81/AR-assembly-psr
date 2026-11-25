@@ -1,0 +1,12 @@
+<resources>
+    <style name="AssemblyTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:colorAccent">#79D6BB</item>
+        <item name="android:windowBackground">#151A19</item>
+        <item name="android:statusBarColor">#151A19</item>
+        <item name="android:navigationBarColor">#151A19</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:colorControlActivated">#79D6BB</item>
+    </style>
+</resources>
